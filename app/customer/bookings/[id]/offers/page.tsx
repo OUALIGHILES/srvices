@@ -203,7 +203,7 @@ export default function BookingOffersPage() {
                       <div className="flex items-center gap-2">
                         <h3 className="text-lg font-bold text-slate-900 dark:text-white">{offer.driver.name}</h3>
                         <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star className="h-4 w-4 fill-blue-400 text-blue-400" />
                           <span className="text-sm font-medium">{offer.driver.rating.toFixed(1)}</span>
                           <span className="text-sm text-slate-500">({offer.driver.total_reviews} reviews)</span>
                         </div>

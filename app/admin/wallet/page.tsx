@@ -219,7 +219,7 @@ export default function AdminWalletPage() {
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h4 className="font-bold">Next Payout Cycle</h4>
-              <span className="px-2 py-1 bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 text-[10px] font-bold rounded uppercase">In 2 Days</span>
+              <span className="px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-[10px] font-bold rounded uppercase">In 2 Days</span>
             </div>
             <div className="flex items-end justify-between">
               <div>

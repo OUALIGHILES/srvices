@@ -383,8 +383,8 @@ export default function Home() {
                     <div className="p-5">
                       <div className="flex justify-between items-start mb-1">
                         <h3 className="font-bold text-slate-900 dark:text-white">{service.name}</h3>
-                        <div className="flex items-center gap-1 text-yellow-500">
-                          <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                        <div className="flex items-center gap-1 text-blue-500">
+                          <Star className="h-4 w-4 fill-blue-500 text-blue-500" />
                           <span className="text-xs font-bold">{service.rating || 0}</span>
                         </div>
                       </div>

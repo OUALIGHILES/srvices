@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, createElement } from 'react';
+import React, { useState, useEffect, createElement } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase';
@@ -33,7 +33,6 @@ interface Booking {
   service_id: string;
   status: string;
   created_at: string;
-  amount: number;
 }
 
 interface User {
@@ -81,12 +80,11 @@ export default function AdminOrdersPage() {
         const { data: bookingsData, error: bookingsError } = await supabase
           .from('bookings')
           .select(`
-            id, 
-            customer_id, 
-            service_id, 
-            status, 
-            created_at,
-            amount
+            id,
+            customer_id,
+            service_id,
+            status,
+            created_at
           `)
           .order('created_at', { ascending: false });
 
@@ -160,7 +158,7 @@ export default function AdminOrdersPage() {
   const getStatusClass = (status: string) => {
     switch (status.toLowerCase()) {
       case 'pending':
-        return 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400';
+        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400';
       case 'ongoing':
         return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400';
       case 'completed':
@@ -257,7 +255,7 @@ export default function AdminOrdersPage() {
                         <span className="text-sm">{serviceName}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm font-bold">${booking.amount.toFixed(2)}</td>
+                    <td className="px-6 py-4 text-sm font-bold">-</td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${getStatusClass(booking.status)}`}>
                         {booking.status}

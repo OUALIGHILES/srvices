@@ -131,10 +131,10 @@ export default function DriverEarningsPage() {
             <p className="text-xs text-gray-600 mt-2">Total</p>
           </Card>
 
-          <Card className="p-6 bg-yellow-50 border-yellow-200">
-            <p className="text-sm text-yellow-800 mb-2 font-medium">Pending Amount</p>
-            <p className="text-3xl font-bold text-yellow-900">{stats.pendingAmount.toFixed(0)} SR</p>
-            <p className="text-xs text-yellow-700 mt-2">Awaiting completion</p>
+          <Card className="p-6 bg-blue-50 border-blue-200">
+            <p className="text-sm text-blue-800 mb-2 font-medium">Pending Amount</p>
+            <p className="text-3xl font-bold text-blue-900">{stats.pendingAmount.toFixed(0)} SR</p>
+            <p className="text-xs text-blue-700 mt-2">Awaiting completion</p>
           </Card>
         </div>
 
@@ -178,7 +178,7 @@ export default function DriverEarningsPage() {
                           transaction.status === 'completed'
                             ? 'bg-green-100'
                             : transaction.status === 'pending'
-                              ? 'bg-yellow-100'
+                              ? 'bg-blue-100'
                               : 'bg-gray-100'
                         }`}
                       >
@@ -186,7 +186,7 @@ export default function DriverEarningsPage() {
                           className={
                             transaction.status === 'completed'
                               ? 'h-6 w-6 text-green-600'
-                              : 'h-6 w-6 text-yellow-600'
+                              : 'h-6 w-6 text-blue-600'
                           }
                         />
                       </div>
@@ -208,7 +208,7 @@ export default function DriverEarningsPage() {
                         className={
                           transaction.status === 'completed'
                             ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
+                            : 'bg-blue-100 text-blue-800'
                         }
                       >
                         {transaction.status}

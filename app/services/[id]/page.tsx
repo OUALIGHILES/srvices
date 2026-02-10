@@ -224,7 +224,7 @@ export default function ServiceDetailsPage() {
 
               {/* Rating */}
               <div className="flex items-center gap-2 mb-4">
-                <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                <Star className="h-5 w-5 fill-blue-400 text-blue-400" />
                 <span className="text-lg font-semibold text-gray-900">4.9</span>
                 <span className="text-gray-600">(248 reviews)</span>
               </div>

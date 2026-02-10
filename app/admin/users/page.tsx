@@ -241,7 +241,7 @@ export default function AdminUsersPage() {
       case 'suspended':
         return 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400';
       case 'pending_approval':
-        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400';
+        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400';
       default:
         return 'bg-gray-100 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400';
     }
@@ -255,7 +255,7 @@ export default function AdminUsersPage() {
       case 'suspended':
         return <XCircle className="h-4 w-4 text-red-600" />;
       case 'pending_approval':
-        return <Clock className="h-4 w-4 text-yellow-600" />;
+        return <Clock className="h-4 w-4 text-blue-600" />;
       default:
         return <Clock className="h-4 w-4 text-gray-600" />;
     }

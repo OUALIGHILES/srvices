@@ -39,7 +39,7 @@ interface Service {
   base_price: number;
   is_active: boolean;
   category: string;
-  position: number;
+  position?: number; // Optional since it might not exist in the database
 }
 
 interface PricingRule {
@@ -89,7 +89,7 @@ export default function AdminPricingPage() {
           .from('services')
           .select('*')
           .eq('is_active', true)
-          .order('position', { ascending: true });
+          .order('name', { ascending: true }); // Fallback to ordering by name if position column doesn't exist
 
         if (!servicesError) {
           setServices(servicesData || []);
@@ -115,7 +115,7 @@ export default function AdminPricingPage() {
 
               const { data: serviceData } = await mapSupabase
                 .from('services')
-                .select('id, name, base_price, is_active, position')
+                .select('id, name, base_price, is_active') // Removed position since it might not exist
                 .eq('id', rule.service_id)
                 .single();
 
@@ -190,7 +190,7 @@ export default function AdminPricingPage() {
         position: index + 1
       }));
 
-      // Update positions in the database
+      // Update positions in the database (only if position column exists)
       for (const service of updatedServices) {
         const { error } = await supabase
           .from('services')
@@ -198,8 +198,9 @@ export default function AdminPricingPage() {
           .eq('id', service.id);
 
         if (error) {
-          console.error('Error updating service position:', error);
-          throw error;
+          console.warn('Warning: Could not update service position (column may not exist):', error);
+          // Don't throw error if it's just a missing column - continue with other updates
+          break; // Stop trying to update positions if the column doesn't exist
         }
       }
 
@@ -232,6 +233,8 @@ export default function AdminPricingPage() {
     // Update positions in the database
     try {
       const supabase = createClient();
+      let hasPositionColumn = true;
+      
       for (const service of updatedServices) {
         const { error } = await supabase
           .from('services')
@@ -239,8 +242,9 @@ export default function AdminPricingPage() {
           .eq('id', service.id);
 
         if (error) {
-          console.error('Error updating service position:', error);
-          throw error;
+          console.warn('Warning: Could not update service position (column may not exist):', error);
+          hasPositionColumn = false;
+          break; // Stop trying to update positions if the column doesn't exist
         }
       }
 
@@ -257,9 +261,13 @@ export default function AdminPricingPage() {
     try {
       const supabase = createClient();
       
-      // Calculate the next position based on current services
-      const newPosition = services.length > 0 
-        ? Math.max(...services.map(s => s.position)) + 1 
+      // Calculate the next position based on current services (only if position exists)
+      const existingPositions = services
+        .map(s => s.position)
+        .filter(pos => pos !== undefined) as number[];
+      
+      const newPosition = existingPositions.length > 0 
+        ? Math.max(...existingPositions) + 1 
         : 1;
       
       // Insert the new service into the database
@@ -302,8 +310,14 @@ export default function AdminPricingPage() {
     );
   }
 
-  // Sort services by position for the drag-and-drop list
-  const sortedServices = [...services].sort((a, b) => a.position - b.position);
+  // Sort services by position for the drag-and-drop list (fallback to name if position is undefined)
+  const sortedServices = [...services].sort((a, b) => {
+    if (a.position !== undefined && b.position !== undefined) {
+      return a.position - b.position;
+    }
+    // Fallback to alphabetical order by name if position is not available
+    return a.name.localeCompare(b.name);
+  });
 
   // Get service icon based on category
   const getServiceIcon = (category: string) => {
@@ -387,12 +401,12 @@ export default function AdminPricingPage() {
         
         <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex justify-between items-start">
-            <div className="p-2 bg-orange-100 dark:bg-orange-900/20 rounded-lg text-orange-600">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg text-blue-600">
               <Ticket className="h-5 w-5" />
             </div>
             <button 
               onClick={() => setShowFixedFeeModal(true)}
-              className="text-orange-600 text-xs font-bold bg-orange-50 dark:bg-orange-900/10 px-2 py-1 rounded hover:bg-orange-100 transition-colors"
+              className="text-blue-600 text-xs font-bold bg-blue-50 dark:bg-blue-900/10 px-2 py-1 rounded hover:bg-blue-100 transition-colors"
             >
               Manage
             </button>
@@ -443,11 +457,11 @@ export default function AdminPricingPage() {
           </div>
           <div className="p-0">
             <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="services-list">
+              <Droppable droppableId="services-list" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
                 {(provided) => (
-                  <ul 
-                    className="divide-y divide-slate-100 dark:divide-slate-800" 
-                    {...provided.droppableProps} 
+                  <ul
+                    className="divide-y divide-slate-100 dark:divide-slate-800"
+                    {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
                     {sortedServices.map((service, index) => {
@@ -958,7 +972,7 @@ export default function AdminPricingPage() {
                   <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/30">
                     <td className="py-3 px-4 text-sm">Oct 22, 2023 16:45</td>
                     <td className="py-3 px-4 text-sm">Admin User</td>
-                    <td className="py-3 px-4 text-sm font-medium text-amber-600">Modified</td>
+                    <td className="py-3 px-4 text-sm font-medium text-blue-600">Modified</td>
                     <td className="py-3 px-4 text-sm">Updated fixed service fee to $1.50</td>
                   </tr>
                   <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/30">

@@ -98,7 +98,7 @@ export default function CustomerBookingsPage() {
       case 'active':
         return <Badge variant="secondary">Active</Badge>;
       case 'pending_offers':
-        return <Badge variant="outline" className="border-yellow-500 text-yellow-600 dark:border-yellow-900 dark:text-yellow-400">Pending Offers</Badge>;
+        return <Badge variant="outline" className="border-blue-500 text-blue-600 dark:border-blue-900 dark:text-blue-400">Pending Offers</Badge>;
       case 'completed':
         return <Badge variant="outline" className="border-gray-500 text-gray-600 dark:border-gray-700 dark:text-gray-400">Completed</Badge>;
       case 'cancelled':

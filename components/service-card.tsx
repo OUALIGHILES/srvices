@@ -42,7 +42,7 @@ export function ServiceCard({
       case 'available':
         return 'bg-emerald-100 text-emerald-700 border border-emerald-200'
       case 'waiting_for_offers':
-        return 'bg-amber-100 text-amber-700 border border-amber-200'
+        return 'bg-blue-100 text-blue-700 border border-blue-200'
       case 'booked':
         return 'bg-primary/10 text-primary border border-primary/20'
       default:
@@ -108,7 +108,7 @@ export function ServiceCard({
 
           {/* Rating */}
           <div className="mb-3 flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <Star className="h-4 w-4 fill-blue-400 text-blue-400" />
             <span className="text-sm font-medium text-foreground">
               {rating.toFixed(1)}
               <span className="text-muted-foreground"> ({review_count})</span>

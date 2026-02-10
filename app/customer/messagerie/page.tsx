@@ -263,7 +263,7 @@ export default function CustomerMessagerie({ params }: { params: { bookingId?: s
                   <div>
                     <div className="flex items-center gap-2">
                       <h2 className="font-bold text-gray-900">{selectedConversation.other_user.full_name}</h2>
-                      <div className="flex items-center bg-yellow-100 px-1.5 py-0.5 rounded text-yellow-800 text-xs font-bold">
+                      <div className="flex items-center bg-blue-100 px-1.5 py-0.5 rounded text-blue-800 text-xs font-bold">
                         <Star className="h-3 w-3 mr-1 fill-current" />
                         {selectedConversation.other_user.rating}
                       </div>
@@ -427,7 +427,7 @@ export default function CustomerMessagerie({ params }: { params: { bookingId?: s
                 {selectedConversation.other_user.full_name.split(' - ')[0]}
               </h3>
               <p className="text-sm text-gray-500 mb-2">{selectedConversation.other_user.job_title}</p>
-              <div className="flex items-center gap-1 text-yellow-500">
+              <div className="flex items-center gap-1 text-blue-500">
                 <Star className="h-4 w-4 fill-current" />
                 <Star className="h-4 w-4 fill-current" />
                 <Star className="h-4 w-4 fill-current" />

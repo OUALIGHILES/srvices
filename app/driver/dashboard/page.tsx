@@ -164,7 +164,7 @@ export default function DriverDashboard() {
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white">{driverStats.name}</h3>
                   <div className="flex items-center text-xs text-slate-500">
-                    <Star className="h-3 w-3 text-amber-500 fill-current" />
+                    <Star className="h-3 w-3 text-blue-500 fill-current" />
                     <span className="ml-1 font-semibold text-slate-700 dark:text-slate-300">{driverStats.rating.toFixed(1)}</span>
                     <span className="mx-1">•</span>
                     <span>Driver</span>
@@ -317,7 +317,7 @@ export default function DriverDashboard() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-slate-600 dark:text-slate-400">Shopping District</span>
-                  <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-600 text-[10px] font-bold rounded">HIGH</span>
+                  <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-600 text-[10px] font-bold rounded">HIGH</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-slate-600 dark:text-slate-400">Business Park</span>

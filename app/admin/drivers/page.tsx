@@ -250,7 +250,7 @@ export default function AdminDriversPage() {
       case 'suspended':
         return 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400';
       case 'pending_approval':
-        return 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400';
+        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400';
       default:
         return 'bg-gray-100 dark:bg-gray-900/30 text-gray-600 dark:text-gray-400';
     }
@@ -265,7 +265,7 @@ export default function AdminDriversPage() {
       case 'suspended':
         return <Ban className="h-4 w-4 text-red-600" />;
       case 'pending_approval':
-        return <AlertTriangle className="h-4 w-4 text-amber-600" />;
+        return <AlertTriangle className="h-4 w-4 text-blue-600" />;
       default:
         return <AlertTriangle className="h-4 w-4 text-gray-600" />;
     }
@@ -499,7 +499,7 @@ export default function AdminDriversPage() {
         </div>
         <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-amber-100 dark:bg-amber-900/30 text-amber-600 rounded-xl">
+            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-xl">
               <AlertTriangle className="h-6 w-6" />
             </div>
             <div>
@@ -898,7 +898,7 @@ export default function AdminDriversPage() {
                         ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200' 
                         : doc.status === 'rejected' 
                           ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200' 
-                          : 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200';
+                          : 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200';
                       
                       return (
                         <div key={doc.id} className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">

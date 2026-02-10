@@ -174,7 +174,7 @@ export default function AdminDashboard() {
           {/* Card 2 */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <div className="flex justify-between items-start">
-              <div className="p-2 bg-orange-100 rounded-lg text-orange-600">
+              <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
                 <Car className="h-5 w-5" />
               </div>
               <span className="text-emerald-500 text-xs font-bold bg-emerald-100 px-2 py-1 rounded-full flex items-center gap-1">
@@ -314,7 +314,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 flex-shrink-0">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 flex-shrink-0">
                     <span className="text-sm">⚠️</span>
                   </div>
                   <div>
@@ -403,7 +403,7 @@ export default function AdminDashboard() {
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         trans.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
-                        trans.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        trans.status === 'pending' ? 'bg-blue-100 text-blue-800' :
                         trans.status === 'cancelled' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
                       }`}>
@@ -477,7 +477,7 @@ export default function AdminDashboard() {
                     <span className="text-sm font-medium text-gray-700">10%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-amber-500 h-2 rounded-full" style={{ width: '10%' }}></div>
+                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '10%' }}></div>
                   </div>
                 </div>
               </div>
