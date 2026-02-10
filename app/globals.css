@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -40,6 +42,25 @@
   .text-balance {
     text-wrap: balance;
   }
+  
+  .auth-bg-overlay {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(16, 22, 34, 0.8));
+  }
+  
+  .role-selector input:checked + label {
+    @apply bg-white dark:bg-slate-700 text-primary shadow-sm ring-1 ring-slate-200 dark:ring-slate-600;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+  }
 }
 
 @layer base {
@@ -52,8 +73,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 15%;
 
-    /* Primary brand color - modern blue */
-    --primary: 21 100% 45%; /* Changed to match the design (#135bec = 21 100% 45%) */
+    /* Primary brand color - exact from design */
+    --primary: 19 92% 52%; /* #135bec = 19 92% 52% */
     --primary-foreground: 0 0% 100%;
 
     /* Secondary/accent colors */
@@ -61,7 +82,7 @@
     --secondary-foreground: 0 0% 20%;
     --muted: 0 0% 92%;
     --muted-foreground: 0 0% 50%;
-    --accent: 21 100% 45%;
+    --accent: 19 92% 52%;
     --accent-foreground: 0 0% 100%;
 
     /* Status colors */
@@ -71,10 +92,10 @@
     /* UI elements */
     --border: 0 0% 90%;
     --input: 0 0% 94%;
-    --ring: 21 100% 45%;
+    --ring: 19 92% 52%;
 
     /* Chart colors */
-    --chart-1: 21 100% 45%;
+    --chart-1: 19 92% 52%;
     --chart-2: 51 100% 50%;
     --chart-3: 142 72% 29%;
     --chart-4: 262 80% 50%;
@@ -83,19 +104,19 @@
     /* Radius for soft, modern look */
     --radius: 0.75rem;
 
-    /* Background light/dark variants */
-    --background-light: 220 13% 97%; /* #f6f6f8 */
+    /* Background light/dark variants - exact from design */
+    --background-light: 257 21% 97%; /* #f6f6f8 */
     --background-dark: 210 11% 6%; /* #101622 */
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 15%;
-    --sidebar-primary: 21 100% 45%;
+    --sidebar-primary: 19 92% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 21 100% 45%;
+    --sidebar-accent: 19 92% 52%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 21 100% 45%;
+    --sidebar-ring: 19 92% 52%;
   }
 
   .dark {
@@ -105,34 +126,34 @@
     --card-foreground: 0 0% 95%;
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 95%;
-    --primary: 21 100% 45%;
+    --primary: 19 92% 52%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 20%;
     --secondary-foreground: 0 0% 95%;
     --muted: 0 0% 25%;
     --muted-foreground: 0 0% 70%;
-    --accent: 21 100% 45%;
+    --accent: 19 92% 52%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 20%;
     --input: 0 0% 15%;
-    --ring: 21 100% 45%;
-    --chart-1: 21 100% 45%;
+    --ring: 19 92% 52%;
+    --chart-1: 19 92% 52%;
     --chart-2: 51 100% 50%;
     --chart-3: 142 72% 29%;
     --chart-4: 262 80% 50%;
     --chart-5: 12 100% 57%;
-    --background-light: 220 13% 97%;
+    --background-light: 257 21% 97%;
     --background-dark: 210 11% 6%;
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 21 100% 45%;
+    --sidebar-primary: 19 92% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 21 100% 45%;
+    --sidebar-accent: 19 92% 52%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 21 100% 45%;
+    --sidebar-ring: 19 92% 52%;
   }
 }
 

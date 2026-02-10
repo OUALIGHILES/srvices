@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | FleetPro Service Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .auth-bg-overlay {
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(16, 22, 34, 0.8));
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen flex items-center justify-center overflow-hidden">
+<div class="flex w-full min-h-screen">
+<!-- Left Side: Marketing Panel (Visible on large screens) -->
+<div class="hidden lg:flex lg:w-3/5 relative overflow-hidden">
+<img alt="Heavy machinery at dusk" class="absolute inset-0 w-full h-full object-cover" data-alt="Modern yellow excavator working at construction site sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCydVSgTxb5LPUZkRYTBv9iFhBjrlnJmY1w8IlfieUxb78HSCVaLPCeo_V7qcj7gMbZSGWysifD1BprVWa7kjhLsypDJdvPu2IF2xDR5pFujV2vpTVA2UYCWzIJOUtqFy5jyLsbBPoQhZFUJwOOTTEJjuKoRkk7280hOuN86SLJZbztopp3R1gh8pn3kbeSSH7WvYpUb941fgd4E5xpSkmhJlP3QiG-cdhbLXL3-jf_gzFDlVOe9IJm0DvP_4mKrg-pLEYTdESBFA4"/>
+<div class="absolute inset-0 auth-bg-overlay flex flex-col justify-between p-16">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-icons text-white">construction</span>
+</div>
+<span class="text-white font-bold text-2xl tracking-tight">FleetPro</span>
+</div>
+<div class="max-w-xl">
+<h1 class="text-5xl font-bold text-white leading-tight mb-6">
+                        Manage your fleet and services with ease.
+                    </h1>
+<p class="text-blue-100 text-xl leading-relaxed">
+                        The all-in-one platform for modern construction logistics. Track, schedule, and optimize your operations from a single dashboard.
+                    </p>
+</div>
+<div class="flex items-center space-x-8">
+<div class="text-white">
+<div class="text-3xl font-bold">500+</div>
+<div class="text-blue-200 text-sm">Active Fleets</div>
+</div>
+<div class="h-10 w-px bg-white/20"></div>
+<div class="text-white">
+<div class="text-3xl font-bold">12k</div>
+<div class="text-blue-200 text-sm">Service Points</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Authentication Form -->
+<div class="w-full lg:w-2/5 flex flex-col justify-center items-center p-8 md:p-16 bg-white dark:bg-background-dark">
+<div class="w-full max-w-md">
+<!-- Mobile Logo (Hidden on desktop) -->
+<div class="lg:hidden flex items-center space-x-2 mb-12">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-icons text-white text-sm">construction</span>
+</div>
+<span class="text-slate-900 dark:text-white font-bold text-xl tracking-tight">FleetPro</span>
+</div>
+<!-- Header -->
+<div class="mb-10">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Welcome back</h2>
+<p class="text-slate-500 dark:text-slate-400">Please enter your details to access your dashboard.</p>
+</div>
+<!-- Form -->
+<form class="space-y-6">
+<div>
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2" for="email">Email Address</label>
+<div class="relative">
+<span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail_outline</span>
+<input class="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-slate-400 dark:text-white shadow-sm" id="email" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300" for="password">Password</label>
+<a class="text-sm font-medium text-primary hover:underline transition-all" href="#">Forgot password?</a>
+</div>
+<div class="relative">
+<span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">lock_outline</span>
+<input class="w-full pl-12 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-slate-400 dark:text-white shadow-sm" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" type="button">
+<span class="material-icons text-xl">visibility_off</span>
+</button>
+</div>
+</div>
+<div class="flex items-center">
+<input class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary" id="remember-me" type="checkbox"/>
+<label class="ml-3 block text-sm text-slate-700 dark:text-slate-300" for="remember-me">Remember me for 30 days</label>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-primary/25 active:scale-[0.98]" type="submit">
+                        Sign In
+                    </button>
+<div class="relative flex items-center py-4">
+<div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+<span class="flex-shrink mx-4 text-slate-400 text-sm">or</span>
+<div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+</div>
+<a class="w-full flex items-center justify-center space-x-2 py-3 px-4 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-medium text-slate-700 dark:text-slate-200" href="#">
+<span class="material-icons text-xl">person_outline</span>
+<span>Continue as Guest</span>
+</a>
+</form>
+<!-- Footer -->
+<p class="mt-10 text-center text-slate-600 dark:text-slate-400">
+                    Don't have an account? 
+                    <a class="font-semibold text-primary hover:underline ml-1" href="#">Create an account</a>
+</p>
+<!-- Bottom Support -->
+<div class="mt-12 flex justify-center space-x-6 text-sm text-slate-400">
+<a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Terms of Service</a>
+<a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Privacy Policy</a>
+<a class="hover:text-slate-600 dark:hover:text-slate-300" href="#">Support</a>
+</div>
+</div>
+</div>
+</div>
+</body></html>

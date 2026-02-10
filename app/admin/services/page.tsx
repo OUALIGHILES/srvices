@@ -30,6 +30,11 @@ import {
   X
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 // Define interfaces
 interface Service {
@@ -76,12 +81,16 @@ export default function AdminServicesPage() {
           .select('*')
           .order('created_at', { ascending: false });
 
-        if (!servicesError && servicesData) {
+        if (servicesError) {
+          throw servicesError;
+        }
+
+        if (servicesData) {
           setServices(servicesData as Service[]);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching data:', error);
-        toast.error('Failed to fetch services');
+        toast.error(`Failed to fetch services: ${error.message || 'Unknown error'}`);
       } finally {
         setLoading(false);
       }
@@ -93,7 +102,10 @@ export default function AdminServicesPage() {
   // Handle service activation/deactivation
   const toggleServiceStatus = async (serviceId: string) => {
     const service = services.find(s => s.id === serviceId);
-    if (!service) return;
+    if (!service) {
+      toast.error('Service not found');
+      return;
+    }
 
     const supabase = createClient();
     const newStatus = !service.is_active;
@@ -107,14 +119,14 @@ export default function AdminServicesPage() {
       if (error) throw error;
 
       // Update local state
-      setServices(prev => prev.map(s => 
+      setServices(prev => prev.map(s =>
         s.id === serviceId ? { ...s, is_active: newStatus } : s
       ));
 
       toast.success(`Service ${newStatus ? 'activated' : 'deactivated'} successfully!`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Update error:', error);
-      toast.error(`Failed to ${newStatus ? 'activate' : 'deactivate'} service`);
+      toast.error(`Failed to ${newStatus ? 'activate' : 'deactivate'} service: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -138,9 +150,9 @@ export default function AdminServicesPage() {
       setServices(prev => prev.filter(s => s.id !== serviceId));
 
       toast.success('Service deleted successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Delete error:', error);
-      toast.error('Failed to delete service');
+      toast.error(`Failed to delete service: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -156,7 +168,16 @@ export default function AdminServicesPage() {
 
   // Save edited service
   const saveEditedService = async () => {
-    if (!editingService) return;
+    if (!editingService) {
+      toast.error('No service selected for editing');
+      return;
+    }
+
+    // Validate required fields
+    if (!editingService.name.trim()) {
+      toast.error('Service name is required');
+      return;
+    }
 
     const supabase = createClient();
 
@@ -175,20 +196,36 @@ export default function AdminServicesPage() {
       if (error) throw error;
 
       // Update local state
-      setServices(prev => prev.map(s => 
+      setServices(prev => prev.map(s =>
         s.id === editingService.id ? editingService : s
       ));
 
       toast.success('Service updated successfully!');
       setEditingService(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Update error:', error);
-      toast.error('Failed to update service');
+      toast.error(`Failed to update service: ${error.message || 'Unknown error'}`);
     }
   };
 
   // Add new service
   const addNewService = async () => {
+    // Validate required fields
+    if (!newService.name.trim()) {
+      toast.error('Service name is required');
+      return;
+    }
+
+    if (newService.base_price < 0) {
+      toast.error('Base price cannot be negative');
+      return;
+    }
+
+    if (newService.platform_fee < 0 || newService.platform_fee > 100) {
+      toast.error('Platform fee must be between 0 and 100');
+      return;
+    }
+
     const supabase = createClient();
 
     try {
@@ -216,7 +253,7 @@ export default function AdminServicesPage() {
       }
 
       toast.success('Service added successfully!');
-      
+
       // Reset form
       setNewService({
         name: '',
@@ -227,9 +264,9 @@ export default function AdminServicesPage() {
         platform_fee: 0,
         icon: 'package'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Insert error:', error);
-      toast.error('Failed to add service');
+      toast.error(`Failed to add service: ${error.message || 'Unknown error'}`);
     }
   };
 
@@ -282,12 +319,139 @@ export default function AdminServicesPage() {
           <p className="text-slate-500 text-sm">Configure available services, icons, and pricing units.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button 
-            onClick={() => document.getElementById('add-service-modal')?.classList.remove('hidden')}
-            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20"
-          >
-            <Plus className="h-4 w-4" /> Add New Category
-          </button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+                <Plus className="h-4 w-4" /> Add New Category
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add New Service Category</DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-4 py-4">
+                <div>
+                  <Label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Service Name</Label>
+                  <Input
+                    type="text"
+                    value={newService.name}
+                    onChange={(e) => setNewService({...newService, name: e.target.value})}
+                    placeholder="Enter service name..."
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                    aria-label="Service name"
+                  />
+                </div>
+
+                <div>
+                  <Label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Category</Label>
+                  <Input
+                    type="text"
+                    value={newService.category}
+                    onChange={(e) => setNewService({...newService, category: e.target.value})}
+                    placeholder="Enter category..."
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                    aria-label="Service category"
+                  />
+                </div>
+
+                <div>
+                  <Label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Billing Unit</Label>
+                  <Select
+                    value={newService.billing_unit}
+                    onValueChange={(value) => setNewService({...newService, billing_unit: value as any})}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select billing unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hour">Per Hour</SelectItem>
+                      <SelectItem value="load">Per Load</SelectItem>
+                      <SelectItem value="trip">Per Trip</SelectItem>
+                      <SelectItem value="item">Per Item</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Base Price ($)</Label>
+                    <Input
+                      type="number"
+                      value={newService.base_price || ''}
+                      onChange={(e) => setNewService({...newService, base_price: Math.max(0, parseFloat(e.target.value) || 0)})}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      min="0"
+                      step="0.01"
+                      aria-label="Base price"
+                    />
+                  </div>
+                  <div>
+                    <Label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Platform Fee (%)</Label>
+                    <Input
+                      type="number"
+                      value={newService.platform_fee || ''}
+                      onChange={(e) => setNewService({...newService, platform_fee: Math.min(100, Math.max(0, parseFloat(e.target.value) || 0))})}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      min="0"
+                      max="100"
+                      step="0.1"
+                      aria-label="Platform fee percentage"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <div>
+                    <p className="text-sm font-bold">Service Visibility</p>
+                    <p className="text-[10px] text-slate-500">Make service visible to customers</p>
+                  </div>
+                  <button
+                    onClick={() => setNewService({...newService, is_active: !newService.is_active})}
+                    className={`w-10 h-6 rounded-full relative transition-colors ${
+                      newService.is_active ? 'bg-primary' : 'bg-slate-300'
+                    }`}
+                    aria-label="Toggle service visibility"
+                    role="switch"
+                    aria-checked={newService.is_active}
+                  >
+                    <span className={`absolute top-1 w-4 h-4 rounded-full transition-transform ${
+                      newService.is_active
+                        ? 'left-5 bg-white'
+                        : 'left-1 bg-white'
+                    }`}></span>
+                  </button>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    setNewService({
+                      name: '',
+                      category: '',
+                      base_price: 0,
+                      is_active: true,
+                      billing_unit: 'hour',
+                      platform_fee: 0,
+                      icon: 'package'
+                    });
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  onClick={addNewService}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" /> Add Service
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       
@@ -334,15 +498,17 @@ export default function AdminServicesPage() {
                   <div className="flex items-center gap-2">
                     {!isEditing ? (
                       <>
-                        <button 
+                        <button
                           onClick={() => startEditing(service)}
                           className="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                          aria-label={`Edit ${service.name}`}
                         >
                           <Edit className="h-4 w-4" />
                         </button>
-                        <button 
+                        <button
                           onClick={() => deleteService(service.id)}
                           className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                          aria-label={`Delete ${service.name}`}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -365,6 +531,7 @@ export default function AdminServicesPage() {
                           value={editingService.name}
                           onChange={(e) => setEditingService({...editingService, name: e.target.value})}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:ring-primary focus:border-primary"
+                          aria-label={`Service name for ${editingService.name}`}
                         />
                       </div>
                       <div>
@@ -373,6 +540,7 @@ export default function AdminServicesPage() {
                           value={editingService.billing_unit}
                           onChange={(e) => setEditingService({...editingService, billing_unit: e.target.value as any})}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:ring-primary focus:border-primary"
+                          aria-label="Select billing unit"
                         >
                           <option value="hour">Per Hour</option>
                           <option value="load">Per Load</option>
@@ -385,8 +553,11 @@ export default function AdminServicesPage() {
                         <input
                           type="number"
                           value={editingService.base_price}
-                          onChange={(e) => setEditingService({...editingService, base_price: parseFloat(e.target.value) || 0})}
+                          onChange={(e) => setEditingService({...editingService, base_price: Math.max(0, parseFloat(e.target.value) || 0)})}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:ring-primary focus:border-primary"
+                          min="0"
+                          step="0.01"
+                          aria-label="Base price"
                         />
                       </div>
                       <div>
@@ -394,8 +565,12 @@ export default function AdminServicesPage() {
                         <input
                           type="number"
                           value={editingService.platform_fee}
-                          onChange={(e) => setEditingService({...editingService, platform_fee: parseFloat(e.target.value) || 0})}
+                          onChange={(e) => setEditingService({...editingService, platform_fee: Math.min(100, Math.max(0, parseFloat(e.target.value) || 0))})}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:ring-primary focus:border-primary"
+                          min="0"
+                          max="100"
+                          step="0.1"
+                          aria-label="Platform fee percentage"
                         />
                       </div>
                     </div>
@@ -405,30 +580,35 @@ export default function AdminServicesPage() {
                         <p className="text-sm font-bold">Service Visibility</p>
                         <p className="text-[10px] text-slate-500">Currently {service.is_active ? 'visible' : 'hidden'} to all customers</p>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setEditingService({...editingService, is_active: !editingService.is_active})}
                         className={`w-10 h-6 rounded-full relative transition-colors ${
                           editingService.is_active ? 'bg-primary' : 'bg-slate-300'
                         }`}
+                        aria-label={`Toggle service visibility for ${editingService.name}`}
+                        role="switch"
+                        aria-checked={editingService.is_active}
                       >
                         <span className={`absolute top-1 w-4 h-4 rounded-full transition-transform ${
-                          editingService.is_active 
-                            ? 'left-5 bg-white' 
+                          editingService.is_active
+                            ? 'left-5 bg-white'
                             : 'left-1 bg-white'
                         }`}></span>
                       </button>
                     </div>
                     
                     <div className="pt-4 flex items-center gap-3">
-                      <button 
+                      <button
                         onClick={saveEditedService}
                         className="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                        aria-label="Save changes to service"
                       >
                         <Save className="h-4 w-4" /> Save Changes
                       </button>
-                      <button 
+                      <button
                         onClick={cancelEditing}
                         className="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+                        aria-label="Cancel editing"
                       >
                         <X className="h-4 w-4" /> Cancel
                       </button>
@@ -455,110 +635,6 @@ export default function AdminServicesPage() {
         </div>
       </div>
       
-      {/* Add Service Modal */}
-      <div id="add-service-modal" className="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg w-full max-w-md">
-          <div className="p-6">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Add New Service Category</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Service Name</label>
-                <input
-                  type="text"
-                  value={newService.name}
-                  onChange={(e) => setNewService({...newService, name: e.target.value})}
-                  placeholder="Enter service name..."
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Category</label>
-                <input
-                  type="text"
-                  value={newService.category}
-                  onChange={(e) => setNewService({...newService, category: e.target.value})}
-                  placeholder="Enter category..."
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Billing Unit</label>
-                <select
-                  value={newService.billing_unit}
-                  onChange={(e) => setNewService({...newService, billing_unit: e.target.value as any})}
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                >
-                  <option value="hour">Per Hour</option>
-                  <option value="load">Per Load</option>
-                  <option value="trip">Per Trip</option>
-                  <option value="item">Per Item</option>
-                </select>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Base Price ($)</label>
-                  <input
-                    type="number"
-                    value={newService.base_price}
-                    onChange={(e) => setNewService({...newService, base_price: parseFloat(e.target.value) || 0})}
-                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Platform Fee (%)</label>
-                  <input
-                    type="number"
-                    value={newService.platform_fee}
-                    onChange={(e) => setNewService({...newService, platform_fee: parseFloat(e.target.value) || 0})}
-                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  />
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                <div>
-                  <p className="text-sm font-bold">Service Visibility</p>
-                  <p className="text-[10px] text-slate-500">Make service visible to customers</p>
-                </div>
-                <button 
-                  onClick={() => setNewService({...newService, is_active: !newService.is_active})}
-                  className={`w-10 h-6 rounded-full relative transition-colors ${
-                    newService.is_active ? 'bg-primary' : 'bg-slate-300'
-                  }`}
-                >
-                  <span className={`absolute top-1 w-4 h-4 rounded-full transition-transform ${
-                    newService.is_active 
-                      ? 'left-5 bg-white' 
-                      : 'left-1 bg-white'
-                  }`}></span>
-                </button>
-              </div>
-            </div>
-            
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => {
-                  const modal = document.getElementById('add-service-modal');
-                  if (modal) modal.classList.add('hidden');
-                }}
-                className="px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={addNewService}
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
-              >
-                <Plus className="h-4 w-4" /> Add Service
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

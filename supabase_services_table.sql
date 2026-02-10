@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS services (
   image_url TEXT,
   base_price DECIMAL(10, 2) NOT NULL DEFAULT 0,
   price_type VARCHAR(20) DEFAULT 'fixed' CHECK (price_type IN ('fixed', 'hourly', 'per_unit')),
+  billing_unit TEXT DEFAULT 'hour' CHECK (billing_unit IN ('hour', 'load', 'trip', 'item')),
+  platform_fee DECIMAL(5,2) DEFAULT 0,
   rating DECIMAL(3, 2) DEFAULT 0,
   review_count INTEGER DEFAULT 0,
   provider_name VARCHAR(255),
@@ -33,12 +35,12 @@ FOR SELECT TO anon, authenticated
 USING (is_active = true);
 
 -- Insert sample data
-INSERT INTO services (name, description, category, image_url, base_price, price_type, rating, review_count, provider_name, distance, is_instant_booking, is_available_today, is_active) VALUES
-('Excavator Rental', 'Professional excavator rental service with experienced operators', 'heavy_equipment', 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800', 1200.00, 'hourly', 4.8, 42, 'Construction Pros Inc.', 'Within 15km', true, true, true),
-('Bulldozer Service', 'Heavy-duty bulldozer for land clearing and grading projects', 'heavy_equipment', 'https://images.unsplash.com/photo-1563959159176-6293e3e704a6?w=800', 1500.00, 'hourly', 4.6, 38, 'Earth Movers Ltd', 'Within 20km', false, true, true),
-('Water Tank Delivery', 'Fresh water delivery with certified clean tanks', 'water_tanks', 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800', 450.00, 'fixed', 4.9, 56, 'Clean Water Services', 'Within 25km', true, true, true),
-('Sand Supply', 'High-quality construction sand delivery service', 'sand_materials', 'https://images.unsplash.com/photo-1605733513597-a8f8341084e6?w=800', 300.00, 'per_unit', 4.5, 29, 'Material Masters', 'Within 18km', false, false, true),
-('Skilled Labor Team', 'Professional construction workers for various projects', 'labor_hire', 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800', 200.00, 'daily', 4.7, 63, 'Workforce Solutions', 'Within 10km', true, true, true);
+INSERT INTO services (name, description, category, image_url, base_price, price_type, billing_unit, platform_fee, rating, review_count, provider_name, distance, is_instant_booking, is_available_today, is_active) VALUES
+('Excavator Rental', 'Professional excavator rental service with experienced operators', 'heavy_equipment', 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800', 1200.00, 'hourly', 'hour', 10.0, 4.8, 42, 'Construction Pros Inc.', 'Within 15km', true, true, true),
+('Bulldozer Service', 'Heavy-duty bulldozer for land clearing and grading projects', 'heavy_equipment', 'https://images.unsplash.com/photo-1563959159176-6293e3e704a6?w=800', 1500.00, 'hourly', 'hour', 10.0, 4.6, 38, 'Earth Movers Ltd', 'Within 20km', false, true, true),
+('Water Tank Delivery', 'Fresh water delivery with certified clean tanks', 'water_tanks', 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800', 450.00, 'fixed', 'item', 8.0, 4.9, 56, 'Clean Water Services', 'Within 25km', true, true, true),
+('Sand Supply', 'High-quality construction sand delivery service', 'sand_materials', 'https://images.unsplash.com/photo-1605733513597-a8f8341084e6?w=800', 300.00, 'per_unit', 'load', 8.0, 4.5, 29, 'Material Masters', 'Within 18km', false, false, true),
+('Skilled Labor Team', 'Professional construction workers for various projects', 'labor_hire', 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800', 200.00, 'daily', 'hour', 12.0, 4.7, 63, 'Workforce Solutions', 'Within 10km', true, true, true);
 
 -- Create a trigger to update the updated_at column
 CREATE OR REPLACE FUNCTION update_updated_at_column()

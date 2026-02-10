@@ -14,7 +14,7 @@ const config: Config = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: 'hsl(var(--primary))', // Using CSS variable for consistency
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
@@ -53,8 +53,8 @@ const config: Config = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
-        'background-light': 'hsl(var(--background-light))',
-        'background-dark': 'hsl(var(--background-dark))',
+        'background-light': 'hsl(var(--background-light))', // Using CSS variable for consistency
+        'background-dark': 'hsl(var(--background-dark))', // Using CSS variable for consistency
       },
       borderRadius: {
         lg: 'var(--radius)',

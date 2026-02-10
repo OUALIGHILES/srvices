@@ -75,20 +75,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               created_at: new Date().toISOString(),
               updated_at: new Date().toISOString(),
             }
-            
-            const { error: insertError } = await supabase
-              .from('users')
-              .upsert(defaultProfile, { onConflict: ['id'] })
 
-            if (insertError) {
-              // Handle AbortError specifically to prevent console errors
-              if (insertError.name === 'AbortError') {
-                console.warn('Profile creation/update was aborted:', insertError.message)
+            try {
+              const { error: insertError } = await supabase
+                .from('users')
+                .upsert(defaultProfile, { onConflict: ['id'] })
+
+              if (insertError) {
+                // Handle AbortError specifically to prevent console errors
+                if (insertError.name === 'AbortError') {
+                  console.warn('Profile creation/update was aborted:', insertError.message)
+                } else {
+                  console.error('Error creating/updating default profile:', insertError.message)
+                }
               } else {
-                console.error('Error creating/updating default profile:', insertError.message)
+                setProfile(defaultProfile)
               }
-            } else {
-              setProfile(defaultProfile)
+            } catch (upsertError: any) {
+              // Catch any other errors during upsert
+              if (upsertError.name === 'AbortError') {
+                console.warn('Profile creation/update was aborted:', upsertError.message)
+              } else {
+                console.error('Unexpected error during profile creation/update:', upsertError.message)
+              }
             }
           } else {
             setProfile(profileData)
@@ -133,20 +142,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           }
-          
-          const { error: insertError } = await supabase
-            .from('users')
-            .upsert(defaultProfile, { onConflict: ['id'] })
 
-          if (insertError) {
-            // Handle AbortError specifically to prevent console errors
-            if (insertError.name === 'AbortError') {
-              console.warn('Profile creation/update was aborted:', insertError.message)
+          try {
+            const { error: insertError } = await supabase
+              .from('users')
+              .upsert(defaultProfile, { onConflict: ['id'] })
+
+            if (insertError) {
+              // Handle AbortError specifically to prevent console errors
+              if (insertError.name === 'AbortError') {
+                console.warn('Profile creation/update was aborted:', insertError.message)
+              } else {
+                console.error('Error creating/updating default profile:', insertError.message)
+              }
             } else {
-              console.error('Error creating/updating default profile:', insertError.message)
+              setProfile(defaultProfile)
             }
-          } else {
-            setProfile(defaultProfile)
+          } catch (upsertError: any) {
+            // Catch any other errors during upsert
+            if (upsertError.name === 'AbortError') {
+              console.warn('Profile creation/update was aborted:', upsertError.message)
+            } else {
+              console.error('Unexpected error during profile creation/update:', upsertError.message)
+            }
           }
         } else {
           setProfile(profileData)
@@ -186,32 +204,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single()
       
       if (fetchError) {
-        // User doesn't exist in the users table, so create it
-        const { error: profileError } = await supabase.from('users').upsert({
-          id: data.user.id,
-          email,
-          full_name: userData.full_name || email.split('@')[0],
-          phone_number: userData.phone_number || '',
-          user_type: userData.user_type || 'customer',
-          rating: 0,
-          total_reviews: 0,
-          wallet_balance: 0,
-          status: 'active',
-          language: userData.language || 'en',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }, { onConflict: ['id'] })
-        
-        if (profileError) {
-          // Handle AbortError specifically to prevent console errors
-          if (profileError.name === 'AbortError') {
-            console.warn('Profile creation/update was aborted during sign up:', profileError.message)
-          } else {
-            throw profileError
-          }
-        } else {
-          // Set the profile after successful creation
-          const newProfile = {
+        try {
+          // User doesn't exist in the users table, so create it
+          const { error: profileError } = await supabase.from('users').upsert({
             id: data.user.id,
             email,
             full_name: userData.full_name || email.split('@')[0],
@@ -224,8 +219,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             language: userData.language || 'en',
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
-          };
-          setProfile(newProfile);
+          }, { onConflict: ['id'] })
+
+          if (profileError) {
+            // Handle AbortError specifically to prevent console errors
+            if (profileError.name === 'AbortError') {
+              console.warn('Profile creation/update was aborted during sign up:', profileError.message)
+            } else {
+              throw profileError
+            }
+          } else {
+            // Set the profile after successful creation
+            const newProfile = {
+              id: data.user.id,
+              email,
+              full_name: userData.full_name || email.split('@')[0],
+              phone_number: userData.phone_number || '',
+              user_type: userData.user_type || 'customer',
+              rating: 0,
+              total_reviews: 0,
+              wallet_balance: 0,
+              status: 'active',
+              language: userData.language || 'en',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            };
+            setProfile(newProfile);
+          }
+        } catch (upsertError: any) {
+          // Handle any other errors during upsert
+          if (upsertError.name === 'AbortError') {
+            console.warn('Profile creation/update was aborted during sign up:', upsertError.message)
+          } else {
+            throw upsertError
+          }
         }
       } else {
         // User already exists in the users table, update if needed
@@ -266,16 +293,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           updated_at: new Date().toISOString(),
         }
 
-        const { error: insertError } = await supabase
-          .from('users')
-          .upsert(defaultProfile, { onConflict: ['id'] })
+        try {
+          const { error: insertError } = await supabase
+            .from('users')
+            .upsert(defaultProfile, { onConflict: ['id'] })
 
-        if (insertError) {
-          // Handle AbortError specifically to prevent console errors
-          if (insertError.name === 'AbortError') {
-            console.warn('Profile creation/update was aborted:', insertError.message)
+          if (insertError) {
+            // Handle AbortError specifically to prevent console errors
+            if (insertError.name === 'AbortError') {
+              console.warn('Profile creation/update was aborted:', insertError.message)
+            } else {
+              console.error('Error creating/updating default profile:', insertError.message)
+            }
+          }
+        } catch (upsertError: any) {
+          // Catch any other errors during upsert
+          if (upsertError.name === 'AbortError') {
+            console.warn('Profile creation/update was aborted:', upsertError.message)
           } else {
-            console.error('Error creating/updating default profile:', insertError.message)
+            console.error('Unexpected error during profile creation/update:', upsertError.message)
           }
         }
       } else {
