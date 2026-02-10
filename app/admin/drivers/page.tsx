@@ -61,7 +61,24 @@ export default function AdminDriversPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
-  
+  const [showAddDriverModal, setShowAddDriverModal] = useState(false);
+  const [showDocumentModal, setShowDocumentModal] = useState(false);
+  const [selectedDriverForDocuments, setSelectedDriverForDocuments] = useState<Driver | null>(null);
+  const [driverDocuments, setDriverDocuments] = useState<any[]>([]);
+  const [loadingDocuments, setLoadingDocuments] = useState(false);
+  const [newDriver, setNewDriver] = useState({
+    email: '',
+    full_name: '',
+    phone: '',
+    license_number: '',
+    vehicle_make: '',
+    vehicle_model: '',
+    vehicle_color: '',
+    vehicle_plate: '',
+    password: '',
+    confirmPassword: ''
+  });
+
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -254,6 +271,131 @@ export default function AdminDriversPage() {
     }
   };
 
+  // Update document status
+  const updateDocumentStatus = async (documentId: string, newStatus: string) => {
+    try {
+      const supabase = createClient();
+      
+      const { error } = await supabase
+        .from('driver_documents')
+        .update({ status: newStatus })
+        .eq('id', documentId);
+        
+      if (error) throw error;
+      
+      // Refresh the documents list
+      if (selectedDriverForDocuments) {
+        await fetchDriverDocuments(selectedDriverForDocuments.id);
+      }
+      
+      toast.success(`Document ${newStatus} successfully!`);
+    } catch (error) {
+      console.error('Error updating document status:', error);
+      toast.error('Failed to update document status');
+    }
+  };
+
+  // Fetch driver documents
+  const fetchDriverDocuments = async (driverId: string) => {
+    setLoadingDocuments(true);
+    try {
+      const supabase = createClient();
+      
+      const { data: documents, error } = await supabase
+        .from('driver_documents')
+        .select('*')
+        .eq('driver_id', driverId);
+        
+      if (error) throw error;
+      
+      setDriverDocuments(documents || []);
+    } catch (error) {
+      console.error('Error fetching driver documents:', error);
+      toast.error('Failed to fetch driver documents');
+      setDriverDocuments([]); // Set empty array on error
+    } finally {
+      setLoadingDocuments(false);
+    }
+  };
+
+  // Add new driver
+  const addNewDriver = async () => {
+    if (!newDriver.email || !newDriver.full_name) {
+      toast.error('Email and Full Name are required');
+      return;
+    }
+
+    // Validate password fields
+    if (!newDriver.password || !newDriver.confirmPassword) {
+      toast.error('Password and Confirmation Password are required');
+      return;
+    }
+
+    if (newDriver.password !== newDriver.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/drivers/add-driver', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: newDriver.email,
+          full_name: newDriver.full_name,
+          phone: newDriver.phone,
+          license_number: newDriver.license_number,
+          vehicle_make: newDriver.vehicle_make,
+          vehicle_model: newDriver.vehicle_model,
+          vehicle_color: newDriver.vehicle_color,
+          vehicle_plate: newDriver.vehicle_plate,
+          password: newDriver.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to add driver');
+      }
+
+      // Refresh the drivers list
+      const supabase = createClient();
+      const { data: driversData, error: driversError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('user_type', 'driver')
+        .order('created_at', { ascending: false });
+
+      if (!driversError && driversData) {
+        setDrivers(driversData as Driver[]);
+        setFilteredDrivers(driversData as Driver[]);
+      }
+
+      // Reset form and close modal
+      setNewDriver({
+        email: '',
+        full_name: '',
+        phone: '',
+        license_number: '',
+        vehicle_make: '',
+        vehicle_model: '',
+        vehicle_color: '',
+        vehicle_plate: '',
+        password: '',
+        confirmPassword: ''
+      });
+      setShowAddDriverModal(false);
+
+      toast.success('Driver added successfully! Awaiting approval.');
+    } catch (error: any) {
+      console.error('Add driver error:', error);
+      toast.error(error.message || 'Failed to add driver');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -323,7 +465,10 @@ export default function AdminDriversPage() {
               </div>
             )}
           </div>
-          <button className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+          <button 
+            onClick={() => setShowAddDriverModal(true)}
+            className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20"
+          >
             <Plus className="h-4 w-4" /> Add New Driver
           </button>
         </div>
@@ -447,8 +592,12 @@ export default function AdminDriversPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       {driver.status === 'pending_approval' ? (
-                        <button 
-                          onClick={() => updateDriverStatus(driver.id, 'verified')}
+                        <button
+                          onClick={async () => {
+                            setSelectedDriverForDocuments(driver);
+                            await fetchDriverDocuments(driver.id);
+                            setShowDocumentModal(true);
+                          }}
                           className="px-4 py-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg text-xs font-bold transition-colors"
                         >
                           Inspect Documents
@@ -554,6 +703,338 @@ export default function AdminDriversPage() {
           </div>
         </div>
       </div>
+
+      {/* Add Driver Modal */}
+      {showAddDriverModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl w-full max-w-md">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Add New Driver</h3>
+              <p className="text-slate-500 text-sm">Enter driver details to create a new account</p>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                <input
+                  type="text"
+                  value={newDriver.full_name}
+                  onChange={(e) => setNewDriver({...newDriver, full_name: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                <input
+                  type="email"
+                  value={newDriver.email}
+                  onChange={(e) => setNewDriver({...newDriver, email: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                  placeholder="john@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+                <input
+                  type="password"
+                  value={newDriver.password}
+                  onChange={(e) => setNewDriver({...newDriver, password: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                  placeholder="Enter password"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Confirm Password</label>
+                <input
+                  type="password"
+                  value={newDriver.confirmPassword}
+                  onChange={(e) => setNewDriver({...newDriver, confirmPassword: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                  placeholder="Confirm password"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  value={newDriver.phone}
+                  onChange={(e) => setNewDriver({...newDriver, phone: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                  placeholder="+1234567890"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">License Number</label>
+                <input
+                  type="text"
+                  value={newDriver.license_number}
+                  onChange={(e) => setNewDriver({...newDriver, license_number: e.target.value})}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                  placeholder="ABC123456"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Vehicle Make</label>
+                  <input
+                    type="text"
+                    value={newDriver.vehicle_make}
+                    onChange={(e) => setNewDriver({...newDriver, vehicle_make: e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                    placeholder="Toyota"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Model</label>
+                  <input
+                    type="text"
+                    value={newDriver.vehicle_model}
+                    onChange={(e) => setNewDriver({...newDriver, vehicle_model: e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                    placeholder="Camry"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Color</label>
+                  <input
+                    type="text"
+                    value={newDriver.vehicle_color}
+                    onChange={(e) => setNewDriver({...newDriver, vehicle_color: e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                    placeholder="Black"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Plate Number</label>
+                  <input
+                    type="text"
+                    value={newDriver.vehicle_plate}
+                    onChange={(e) => setNewDriver({...newDriver, vehicle_plate: e.target.value})}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                    placeholder="XYZ123"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="p-6 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
+              <button
+                onClick={() => setShowAddDriverModal(false)}
+                className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addNewDriver}
+                className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              >
+                Add Driver
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Document Inspection Modal */}
+      {showDocumentModal && selectedDriverForDocuments && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Document Verification</h3>
+                  <p className="text-slate-500 text-sm">Review documents for {selectedDriverForDocuments.full_name || selectedDriverForDocuments.email}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowDocumentModal(false);
+                    setSelectedDriverForDocuments(null);
+                  }}
+                  className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <div className="mb-6">
+                <h4 className="font-medium text-slate-900 dark:text-white mb-3">Driver Information</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                    <p className="text-slate-500">Name</p>
+                    <p className="font-medium">{selectedDriverForDocuments.full_name || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                    <p className="text-slate-500">Email</p>
+                    <p className="font-medium">{selectedDriverForDocuments.email}</p>
+                  </div>
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                    <p className="text-slate-500">Phone</p>
+                    <p className="font-medium">{selectedDriverForDocuments.phone || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
+                    <p className="text-slate-500">License Number</p>
+                    <p className="font-medium">{selectedDriverForDocuments.license_number || 'N/A'}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="font-medium text-slate-900 dark:text-white mb-3">Required Documents</h4>
+                {loadingDocuments ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="h-8 w-8 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin mr-3" />
+                    <span>Loading documents...</span>
+                  </div>
+                ) : driverDocuments.length > 0 ? (
+                  <div className="space-y-4">
+                    {driverDocuments.map((doc) => {
+                      const docTypeDisplay = doc.document_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                      const statusClass = doc.status === 'approved' 
+                        ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200' 
+                        : doc.status === 'rejected' 
+                          ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200' 
+                          : 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200';
+                      
+                      return (
+                        <div key={doc.id} className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                          <div className="bg-slate-50 dark:bg-slate-800 p-3 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <FileDown className="h-5 w-5 text-slate-500" />
+                              <span className="font-medium">{docTypeDisplay}</span>
+                            </div>
+                            <span className={`text-xs px-2 py-1 rounded-full ${statusClass}`}>
+                              {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+                            </span>
+                          </div>
+                          <div className="p-4 bg-slate-100 dark:bg-slate-900/30 min-h-[200px] flex flex-col">
+                            {doc.document_url ? (
+                              <div className="flex-grow text-center w-full">
+                                <div className="mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg w-full h-64 flex items-center justify-center mb-2 overflow-auto">
+                                  {doc.document_url.endsWith('.pdf') ? (
+                                    <iframe 
+                                      src={doc.document_url} 
+                                      className="w-full h-full"
+                                      title={`${docTypeDisplay} Document`}
+                                      style={{ minHeight: '250px' }}
+                                    />
+                                  ) : (
+                                    <img 
+                                      src={doc.document_url} 
+                                      alt={docTypeDisplay} 
+                                      className="max-h-60 object-contain"
+                                      onError={(e) => {
+                                        const target = e.target as HTMLImageElement;
+                                        target.onerror = null;
+                                        target.src = "/placeholder-document.png";
+                                      }}
+                                    />
+                                  )}
+                                </div>
+                                <a 
+                                  href={doc.document_url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-primary text-sm mt-2"
+                                >
+                                  <Eye className="h-4 w-4" /> View Full Document
+                                </a>
+                              </div>
+                            ) : (
+                              <div className="flex-grow text-center flex items-center justify-center">
+                                <div className="text-center">
+                                  <div className="mx-auto bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg w-64 h-40 flex items-center justify-center mb-2">
+                                    <span className="text-slate-400 text-sm">No document uploaded</span>
+                                  </div>
+                                  <p className="text-xs text-slate-500">Document not available</p>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Document Action Buttons - Only show for pending documents */}
+                            {doc.status === 'pending' && (
+                              <div className="flex justify-center gap-2 mt-4">
+                                <button
+                                  onClick={() => updateDocumentStatus(doc.id, 'rejected')}
+                                  className="px-3 py-1.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg text-xs font-medium hover:bg-red-200 dark:hover:bg-red-800/50 transition-colors"
+                                >
+                                  Reject
+                                </button>
+                                <button
+                                  onClick={() => updateDocumentStatus(doc.id, 'approved')}
+                                  className="px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-lg text-xs font-medium hover:bg-emerald-200 dark:hover:bg-emerald-800/50 transition-colors"
+                                >
+                                  Approve
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-slate-500">
+                    No documents submitted for verification
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                <button
+                  onClick={() => {
+                    // Check if there are any pending documents
+                    const hasPendingDocs = driverDocuments.some(doc => doc.status === 'pending');
+                    
+                    if (hasPendingDocs) {
+                      if (window.confirm('There are still pending documents. Are you sure you want to reject this driver application?')) {
+                        updateDriverStatus(selectedDriverForDocuments.id, 'suspended');
+                        setShowDocumentModal(false);
+                        setSelectedDriverForDocuments(null);
+                      }
+                    } else {
+                      updateDriverStatus(selectedDriverForDocuments.id, 'suspended');
+                      setShowDocumentModal(false);
+                      setSelectedDriverForDocuments(null);
+                    }
+                  }}
+                  className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-800/50 transition-colors"
+                >
+                  Reject Driver
+                </button>
+                <button
+                  onClick={() => {
+                    // Check if all documents are approved
+                    const allApproved = driverDocuments.every(doc => doc.status === 'approved');
+                    const hasRejected = driverDocuments.some(doc => doc.status === 'rejected');
+                    
+                    if (!allApproved) {
+                      if (hasRejected) {
+                        alert('Cannot approve driver with rejected documents. Please review all documents first.');
+                        return;
+                      } else {
+                        alert('Please review and approve all documents before approving the driver.');
+                        return;
+                      }
+                    }
+                    
+                    updateDriverStatus(selectedDriverForDocuments.id, 'verified');
+                    setShowDocumentModal(false);
+                    setSelectedDriverForDocuments(null);
+                  }}
+                  className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Approve Driver
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

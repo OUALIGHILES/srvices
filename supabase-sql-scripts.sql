@@ -13,7 +13,7 @@ CREATE TABLE users (
   rating DECIMAL(3,2) DEFAULT 5.0,
   total_reviews INTEGER DEFAULT 0,
   wallet_balance DECIMAL(10,2) DEFAULT 0,
-  status TEXT CHECK (status IN ('active', 'suspended', 'pending_approval')),
+  status TEXT CHECK (status IN ('active', 'suspended', 'pending_approval', 'verified')),
   language TEXT CHECK (language IN ('en', 'ar')) DEFAULT 'en',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
