@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin System Settings - RideMaster</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<header class="sticky top-0 z-50 w-full">
+<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-icons text-xl">hail</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">RideMaster</span>
+</div>
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-1.5 w-96 border border-transparent focus-within:border-primary/50 transition-all">
+<span class="material-icons text-slate-400 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-500" placeholder="Search settings, keys, strings..." type="text"/>
+<div class="flex items-center gap-1 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[10px] text-slate-400 font-mono">
+<span>⌘</span><span>K</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden xl:flex items-center gap-6 mr-6 border-r border-slate-200 dark:border-slate-800 pr-6">
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Active Drivers</span>
+<span class="text-sm font-bold text-emerald-500">850 <span class="text-[10px] text-slate-400 font-normal ml-1">Live</span></span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Ongoing Trips</span>
+<span class="text-sm font-bold text-primary">1,240</span>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-icons">notifications_none</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none">Alex Rivera</p>
+<p class="text-xs text-slate-500 mt-1">Super Admin</p>
+</div>
+<img alt="Admin Avatar" class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBanoCqY8zDPfcGlllBUG5GnekdqwdynLdapHGNE2yBMMXPzl1_KE8rzIhYikLKV9d3sqLU3-j5EGqM9dUrjRNTMgIh7BlYgGyvuaQa1boxAVQGeWYMlJDgJKCidaLh0Kzd0SKvKlesC2tOFsVIDqn9hfpb_m8n3-BfPlrjaEqs0cBCn0mRV3T6ZNDqeCNBzfzpw3mVlG-Vggr-GAWR-L78tqdbhGRuXOyEAlgBuebOYYyQeYSUhIOrX26V-RkYdjcSnlTv8GPSr7s"/>
+</div>
+</div>
+</div>
+<nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 overflow-x-auto">
+<div class="flex items-center gap-8">
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">dashboard</span> Dashboard
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">assignment</span> Orders
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">payments</span> Pricing
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">people</span> Users
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">local_taxi</span> Drivers
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">category</span> Services
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">account_balance_wallet</span> Wallet
+            </a>
+<a class="py-4 border-b-2 border-primary text-primary font-semibold text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">settings</span> Settings
+            </a>
+</div>
+</nav>
+</header>
+<main class="max-w-[1600px] mx-auto p-6">
+<div class="mb-8">
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">System Settings</h1>
+<p class="text-slate-500 text-sm">Configure global platform parameters, localizations, and integrations.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+<aside class="lg:col-span-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-primary font-semibold shadow-sm" href="#language">
+<span class="material-icons text-xl text-primary">translate</span>
+                Language Strings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-all" href="#notifications">
+<span class="material-icons text-xl">notifications_active</span>
+                Notification Templates
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-all" href="#api">
+<span class="material-icons text-xl">vpn_key</span>
+                API Keys &amp; Webhooks
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-all" href="#general">
+<span class="material-icons text-xl">admin_panel_settings</span>
+                Security Settings
+            </a>
+</aside>
+<div class="lg:col-span-3 space-y-8">
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm" id="language">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div>
+<h2 class="text-lg font-bold">Language Strings (AR/EN)</h2>
+<p class="text-sm text-slate-500">Manage localized text across the mobile apps and web portal.</p>
+</div>
+<button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm shadow-primary/20">
+                        Save Changes
+                    </button>
+</div>
+<div class="p-6">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+<tr>
+<th class="pb-4 w-1/4">String Key</th>
+<th class="pb-4 w-1/3">English (EN)</th>
+<th class="pb-4 w-1/3 text-right">Arabic (AR)</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr>
+<td class="py-4 text-xs font-mono text-slate-500">app_welcome_title</td>
+<td class="py-4">
+<input class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary" type="text" value="Welcome to RideMaster"/>
+</td>
+<td class="py-4" dir="rtl">
+<input class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary text-right font-sans" type="text" value="مرحباً بك في رايد ماستر"/>
+</td>
+</tr>
+<tr>
+<td class="py-4 text-xs font-mono text-slate-500">order_status_pending</td>
+<td class="py-4">
+<input class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary" type="text" value="Awaiting Driver"/>
+</td>
+<td class="py-4" dir="rtl">
+<input class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary text-right font-sans" type="text" value="بانتظار السائق"/>
+</td>
+</tr>
+<tr>
+<td class="py-4 text-xs font-mono text-slate-500">btn_request_ride</td>
+<td class="py-4">
+<input class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary" type="text" value="Request Now"/>
+</td>
+<td class="py-4" dir="rtl">
+<input class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary text-right font-sans" type="text" value="اطلب الآن"/>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="mt-4 flex items-center gap-2 text-primary text-sm font-semibold hover:underline">
+<span class="material-icons text-sm">add</span> Add New String
+                    </button>
+</div>
+</section>
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm" id="notifications">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h2 class="text-lg font-bold">Notification Templates</h2>
+<p class="text-sm text-slate-500">Configure push and SMS templates for automated alerts.</p>
+</div>
+<div class="p-6 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300">Driver Arrival SMS</label>
+<textarea class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary" rows="3">Your driver {{driver_name}} has arrived in a {{vehicle_model}} ({{plate_number}}).</textarea>
+<p class="text-[10px] text-slate-400">Available variables: {{driver_name}}, {{vehicle_model}}, {{plate_number}}</p>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium text-slate-700 dark:text-slate-300">OTP Verification Push</label>
+<textarea class="w-full text-sm bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary" rows="3">Your verification code for RideMaster is {{otp_code}}. Do not share this with anyone.</textarea>
+<p class="text-[10px] text-slate-400">Available variables: {{otp_code}}</p>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm" id="api">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h2 class="text-lg font-bold">API Keys &amp; Integrations</h2>
+<p class="text-sm text-slate-500">Manage connections to third-party services.</p>
+</div>
+<div class="p-6 space-y-6">
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-white dark:bg-slate-700 rounded-md border border-slate-200 dark:border-slate-600 flex items-center justify-center">
+<span class="material-icons text-blue-500">map</span>
+</div>
+<div>
+<p class="text-sm font-bold">Google Maps Platform</p>
+<p class="text-xs text-slate-500">Used for routing and geolocation</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<code class="px-3 py-1 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400">AIzaSyB...Xy78z</code>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons text-sm">content_copy</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-icons text-sm">refresh</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-white dark:bg-slate-700 rounded-md border border-slate-200 dark:border-slate-600 flex items-center justify-center">
+<span class="material-icons text-purple-500">credit_card</span>
+</div>
+<div>
+<p class="text-sm font-bold">Stripe Connect</p>
+<p class="text-xs text-slate-500">Production Secret Key</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<code class="px-3 py-1 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400">sk_live_51...j9H2q</code>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons text-sm">content_copy</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-icons text-sm">refresh</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-white dark:bg-slate-700 rounded-md border border-slate-200 dark:border-slate-600 flex items-center justify-center">
+<span class="material-icons text-orange-500">message</span>
+</div>
+<div>
+<p class="text-sm font-bold">Twilio SMS API</p>
+<p class="text-xs text-slate-500">Account SID &amp; Auth Token</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<code class="px-3 py-1 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400">AC7b2...e81c</code>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons text-sm">content_copy</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+<span class="material-icons text-sm">refresh</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<footer class="p-6 border-t border-slate-200 dark:border-slate-800 mt-12">
+<div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="text-sm text-slate-500">
+            © 2023 RideMaster Admin Dashboard. All system changes are logged for security audits.
+        </div>
+<div class="flex items-center gap-6">
+<a class="text-xs font-medium text-slate-400 hover:text-primary" href="#">Documentation</a>
+<a class="text-xs font-medium text-slate-400 hover:text-primary" href="#">API Reference</a>
+<a class="text-xs font-medium text-slate-400 hover:text-primary" href="#">System Health</a>
+</div>
+</div>
+</footer>
+
+</body></html>

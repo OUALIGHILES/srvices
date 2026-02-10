@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Service Configuration - Unified Header</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<header class="sticky top-0 z-50 w-full">
+<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-icons text-xl">hail</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">RideMaster</span>
+</div>
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-1.5 w-96 border border-transparent focus-within:border-primary/50 transition-all">
+<span class="material-icons text-slate-400 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-500" placeholder="Search orders, users, drivers..." type="text"/>
+<div class="flex items-center gap-1 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[10px] text-slate-400 font-mono">
+<span>⌘</span><span>K</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden xl:flex items-center gap-6 mr-6 border-r border-slate-200 dark:border-slate-800 pr-6">
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Active Drivers</span>
+<span class="text-sm font-bold text-emerald-500">850 <span class="text-[10px] text-slate-400 font-normal ml-1">Live</span></span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Ongoing Trips</span>
+<span class="text-sm font-bold text-primary">1,240</span>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-icons">notifications_none</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none">Alex Rivera</p>
+<p class="text-xs text-slate-500 mt-1">Super Admin</p>
+</div>
+<img alt="Admin Avatar" class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBanoCqY8zDPfcGlllBUG5GnekdqwdynLdapHGNE2yBMMXPzl1_KE8rzIhYikLKV9d3sqLU3-j5EGqM9dUrjRNTMgIh7BlYgGyvuaQa1boxAVQGeWYMlJDgJKCidaLh0Kzd0SKvKlesC2tOFsVIDqn9hfpb_m8n3-BfPlrjaEqs0cBCn0mRV3T6ZNDqeCNBzfzpw3mVlG-Vggr-GAWR-L78tqdbhGRuXOyEAlgBuebOYYyQeYSUhIOrX26V-RkYdjcSnlTv8GPSr7s"/>
+</div>
+</div>
+</div>
+<nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 overflow-x-auto">
+<div class="flex items-center gap-8">
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">dashboard</span> Dashboard
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">assignment</span> Orders
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">payments</span> Pricing
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">people</span> Users
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">local_taxi</span> Drivers
+            </a>
+<a class="py-4 border-b-2 border-primary text-primary font-semibold text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">category</span> Services
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">account_balance_wallet</span> Wallet
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">settings</span> Settings
+            </a>
+</div>
+</nav>
+</header>
+<main class="max-w-[1600px] mx-auto p-6 space-y-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">Service Categories</h1>
+<p class="text-slate-500 text-sm">Configure available services, icons, and pricing units.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+<span class="material-icons text-sm">add</span> Add New Category
+            </button>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<div class="xl:col-span-2 space-y-4">
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-primary/30 transition-all group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-700">
+<span class="material-icons text-3xl text-slate-600 dark:text-slate-400">agriculture</span>
+</div>
+<div>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Heavy Equipment</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold uppercase rounded">Per Hour</span>
+<span class="text-xs text-slate-400">12 Sub-services active</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-icons">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+<span class="material-icons">delete_outline</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-primary/40 shadow-sm ring-1 ring-primary/20 bg-primary/[0.02]">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center border border-primary/20">
+<span class="material-icons text-3xl text-primary">water_drop</span>
+</div>
+<div>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Water Logistics</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded">Per Load</span>
+<span class="text-xs text-primary font-medium">Currently Editing</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-semibold text-emerald-500 px-2 py-1 bg-emerald-50 dark:bg-emerald-900/30 rounded flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Active
+                        </span>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-primary/30 transition-all group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-700">
+<span class="material-icons text-3xl text-slate-600 dark:text-slate-400">local_shipping</span>
+</div>
+<div>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">Material Transport</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold uppercase rounded">Per Load</span>
+<span class="text-xs text-slate-400">8 Sub-services active</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-icons">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+<span class="material-icons">delete_outline</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-primary/30 transition-all group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-200 dark:border-slate-700">
+<span class="material-icons text-3xl text-slate-600 dark:text-slate-400">construction</span>
+</div>
+<div>
+<h3 class="font-bold text-lg text-slate-800 dark:text-white">On-site Maintenance</h3>
+<div class="flex items-center gap-3 mt-1">
+<span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold uppercase rounded">Per Hour</span>
+<span class="text-xs text-slate-400">5 Sub-services active</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-icons">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+<span class="material-icons">delete_outline</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+<h4 class="font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">edit_square</span>
+                        Edit Category: Water Logistics
+                    </h4>
+</div>
+<div class="p-6 space-y-6">
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Category Icon</label>
+<div class="flex items-center gap-4">
+<div class="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400 hover:border-primary hover:text-primary cursor-pointer transition-all">
+<span class="material-icons">add_a_photo</span>
+<span class="text-[10px] mt-1 font-medium">Upload</span>
+</div>
+<div class="text-xs text-slate-500">
+<p>Recommended: 128x128px</p>
+<p>SVG, PNG or JPG supported</p>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Display Name</label>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:ring-primary focus:border-primary" type="text" value="Water Logistics"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Billing Unit</label>
+<div class="grid grid-cols-2 gap-3">
+<label class="relative flex flex-col p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer hover:border-primary transition-all has-[:checked]:border-primary has-[:checked]:ring-1 has-[:checked]:ring-primary">
+<input class="sr-only" name="billing_unit" type="radio"/>
+<span class="material-icons text-primary mb-1">schedule</span>
+<span class="text-sm font-bold">Per Hour</span>
+<span class="text-[10px] text-slate-500">Duration based</span>
+</label>
+<label class="relative flex flex-col p-4 bg-white dark:bg-slate-900 border border-primary dark:border-primary rounded-xl cursor-pointer ring-1 ring-primary">
+<input checked="" class="sr-only" name="billing_unit" type="radio"/>
+<span class="material-icons text-primary mb-1">inventory_2</span>
+<span class="text-sm font-bold">Per Load</span>
+<span class="text-[10px] text-slate-500">Quantity based</span>
+</label>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Base Price ($)</label>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:ring-primary focus:border-primary" type="number" value="150"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Platform Fee (%)</label>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm focus:ring-primary focus:border-primary" type="number" value="12"/>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+<div>
+<p class="text-sm font-bold">Service Visibility</p>
+<p class="text-[10px] text-slate-500">Currently visible to all customers</p>
+</div>
+<button class="w-10 h-6 bg-primary rounded-full relative transition-colors">
+<span class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></span>
+</button>
+</div>
+<div class="pt-4 flex items-center gap-3">
+<button class="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition-colors">
+                            Save Changes
+                        </button>
+<button class="px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                            Cancel
+                        </button>
+</div>
+</div>
+</div>
+<div class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/30">
+<div class="flex gap-3">
+<span class="material-icons text-indigo-500">lightbulb</span>
+<div>
+<p class="text-xs font-bold text-indigo-900 dark:text-indigo-300">Configuration Tip</p>
+<p class="text-[11px] text-indigo-700 dark:text-indigo-400 mt-1 leading-relaxed">
+                            Changing the billing unit will automatically update the interface for both customers and drivers for all sub-services in this category.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

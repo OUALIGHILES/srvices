@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ServiceHailing - Customer Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-category {
+            border-bottom: 3px solid #135bec;
+            color: #135bec;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-200">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 lg:px-20 py-3">
+<div class="flex items-center justify-between max-w-7xl mx-auto">
+<div class="flex items-center gap-2">
+<div class="bg-primary p-1.5 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl">construction</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ServiceHailing</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">My Bookings</a>
+<a class="flex items-center gap-2 text-sm font-semibold hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+<span>Wallet (2,450 SR)</span>
+</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">language</span>
+<span>AR/EN</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-medium text-slate-500">Welcome,</p>
+<p class="text-sm font-bold group-hover:text-primary transition-colors">Ahmed Al-Saud</p>
+</div>
+<div class="size-10 rounded-full border-2 border-white dark:border-slate-800 shadow-sm overflow-hidden bg-slate-200">
+<img class="w-full h-full object-cover" data-alt="User profile portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC1dx82kt__wr4hsRX28Sv8mIww6CYJ9dsxCexphWjYpIEltOo99yq49jTFWo0w9NMyM574rIQpdwj6CBX-oHC5PO-TqeQKfY9oC_Me7j3KWxYTDfRErr3WASPNJfZtpCbEVHW7t-EIW7izq8YEmB96ABlVT1TCBbnogMUP5wrKsF_Tb77vPYrfOsVbuQcdBzGIyFH9yK9XZ8f6McBFMEskf9wI6Oz451DUOmGgU7iyDy3zn9umnFeix5OkqyXfNO84K1rO1mTxeE"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 max-w-7xl mx-auto w-full px-4 lg:px-10 py-8">
+<!-- Hero Search Section -->
+<section class="mb-10 text-center max-w-3xl mx-auto">
+<h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white mb-6">Find the right service for your project</h1>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="block w-full pl-12 pr-32 py-4 bg-white dark:bg-slate-900 border-none rounded-xl shadow-lg ring-1 ring-slate-200 dark:ring-slate-800 focus:ring-2 focus:ring-primary outline-none text-lg transition-all" placeholder="Search for bulldozers, water tanks, sand types..." type="text"/>
+<button class="absolute right-2 top-2 bottom-2 px-6 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-all shadow-md shadow-primary/20">
+                        Search
+                    </button>
+</div>
+</section>
+<!-- Category Ribbon -->
+<section class="mb-8 overflow-x-auto">
+<div class="flex items-center justify-center gap-4 min-w-max pb-4">
+<button class="flex items-center gap-3 px-6 py-3 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 font-bold transition-all">
+<span class="material-symbols-outlined">movie</span>
+                        Heavy Equipment
+                    </button>
+<button class="flex items-center gap-3 px-6 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/50 text-slate-600 dark:text-slate-400 font-bold transition-all">
+<span class="material-symbols-outlined">water_drop</span>
+                        Water Tanks
+                    </button>
+<button class="flex items-center gap-3 px-6 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/50 text-slate-600 dark:text-slate-400 font-bold transition-all">
+<span class="material-symbols-outlined">landscape</span>
+                        Sand &amp; Materials
+                    </button>
+<button class="flex items-center gap-3 px-6 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/50 text-slate-600 dark:text-slate-400 font-bold transition-all">
+<span class="material-symbols-outlined">engineering</span>
+                        Labor Hire
+                    </button>
+</div>
+</section>
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Sidebar Filters -->
+<aside class="w-full lg:w-64 space-y-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<h3 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">tune</span> Filters
+                        </h3>
+<!-- Location Filter -->
+<div class="mb-6">
+<label class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-2 block">Project Location</label>
+<div class="relative">
+<select class="w-full pl-3 pr-10 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary appearance-none">
+<option>Riyadh, Saudi Arabia</option>
+<option>Jeddah, KSA</option>
+<option>Dammam, KSA</option>
+<option>NEOM District</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2 text-slate-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Price Range -->
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<label class="text-xs font-bold uppercase text-slate-400 tracking-wider">Price Range (SR)</label>
+<span class="text-xs font-bold text-primary">500 - 5000+</span>
+</div>
+<div class="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full mt-4">
+<div class="absolute left-1/4 right-1/4 h-full bg-primary rounded-full"></div>
+<div class="absolute left-1/4 top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-sm cursor-pointer"></div>
+<div class="absolute right-1/4 top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-sm cursor-pointer"></div>
+</div>
+</div>
+<!-- Availability -->
+<div>
+<label class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3 block">Availability</label>
+<div class="space-y-2">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input checked="" class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-700 bg-transparent" type="checkbox"/>
+<span class="text-sm group-hover:text-primary transition-colors">Instant Booking</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="rounded text-primary focus:ring-primary border-slate-300 dark:border-slate-700 bg-transparent" type="checkbox"/>
+<span class="text-sm group-hover:text-primary transition-colors">Available Today</span>
+</label>
+</div>
+</div>
+<button class="w-full mt-8 py-2 text-xs font-bold text-slate-400 hover:text-primary transition-colors uppercase border-t border-slate-100 dark:border-slate-800 pt-4">
+                            Clear All Filters
+                        </button>
+</div>
+<!-- Map Preview Card -->
+<div class="bg-slate-200 dark:bg-slate-800 h-40 rounded-xl relative overflow-hidden group shadow-sm">
+<img class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500" data-alt="Map view of Riyadh" data-location="Riyadh" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJDqPg52nvbry_lHaaGbwaBiDVNtK_qNhOLYzGzdb_bsBBw481eOYBQZNL6J_ufSvZCoZGBrRIwhwXmEEmryPzDdZKjDlQM8TeE5qLlXZ78dBF_kSThGCZ7j_3otSG0myU-OVuIMV-nOz96t1WtUJXqNkAUZjXtN_aruMLkuDT_Fu60-4TbeGjYgaU8rcm-k5eejh_eC6sA-uGKRkBh84LGt7zU4Gvj1-WFgdSJkQz4QWAWwUevpbM-kI_vJwdxwAh1sKEdjBCkPM"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
+<button class="bg-white text-slate-900 px-4 py-2 rounded-lg text-xs font-bold shadow-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">map</span>
+                                Show Map View
+                            </button>
+</div>
+</div>
+</aside>
+<!-- Service Grid -->
+<div class="flex-1">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Heavy Equipment <span class="text-slate-400 text-sm font-normal ml-2">(248 results)</span></h2>
+<div class="flex items-center gap-2">
+<span class="text-sm text-slate-500">Sort by:</span>
+<button class="text-sm font-bold flex items-center gap-1">
+                                Popularity <span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 dark:border-slate-800">
+<div class="h-48 relative overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center p-4">
+<img class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-110 transition-transform duration-500" data-alt="Yellow 3D excavator equipment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-K1glJw3_R0vyjv1VnqKfu0MKQzYK0orfRTqjaTEAaUrw_2_FNZRFFIpozBR_jipELkDHPMxZaGlBh0NjPqwEDJN8svRQzYk4vztZRern-cu2pKoNF9BnVkUcIa0eivQsE9cKdz2gl_uUeU-tdaYIYK_TT9ad_mkXsB6WYlX61-MX6dZURV5dkD0dt3RvyDyKIW738fDxeEvunrCUZgugf_wBs_xL_fdnPnN4GsfnQfYqx93mETnaiTVUsTg8TpYmY4kyC8r0_fA"/>
+<div class="absolute top-3 left-3 px-2 py-1 bg-green-500 text-white text-[10px] font-bold rounded uppercase">Instant</div>
+<div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-full shadow-sm text-slate-400 hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-sm leading-none">favorite</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-slate-900 dark:text-white">CAT 320 GC Excavator</h3>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm font-fill">star</span>
+<span class="text-xs font-bold">4.9</span>
+</div>
+</div>
+<p class="text-xs text-slate-500 mb-4">Middle East Construction Co.</p>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="text-xs text-slate-600 dark:text-slate-400">Within 15km of Riyadh</span>
+</div>
+<div class="flex items-end justify-between border-t border-slate-50 dark:border-slate-800 pt-4">
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Starting from</p>
+<p class="text-xl font-black text-slate-900 dark:text-white">1,250 <span class="text-sm font-bold">SR/Day</span></p>
+</div>
+<button class="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-all">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 dark:border-slate-800">
+<div class="h-48 relative overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center p-4">
+<img class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-110 transition-transform duration-500" data-alt="Blue 3D crane crane equipment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA66ZamaCUgQrr_FCp0-_Ob1zC90TYu2tbZ4RdUq6U4aYChInxybPaN2N7_tXkg27H_82u71lDPcQd1Ja0M_yrfb2iALPCYmOYyEALQjMQgSbeLnICLRTCctwbZwgthlAzNF4HDfjzoS904hYVs1k__Tgo8A2zL1b8EIuDFhxrD07znjdCFk7y9VzC_dfmpSZvTT6R4j2MplaFFDeeEvgkMaKO1kpR1OXHPIhhi7glf9gt2m239QB-HaifqLeIfLpGJbkxNF_jCAcU"/>
+<div class="absolute top-3 left-3 px-2 py-1 bg-slate-500 text-white text-[10px] font-bold rounded uppercase">Scheduled</div>
+<div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-full shadow-sm text-slate-400 hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-sm leading-none">favorite</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-slate-900 dark:text-white">Tadano GR-700EX Crane</h3>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm font-fill">star</span>
+<span class="text-xs font-bold">4.7</span>
+</div>
+</div>
+<p class="text-xs text-slate-500 mb-4">Elite Lifting Services</p>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="text-xs text-slate-600 dark:text-slate-400">Within 22km of Riyadh</span>
+</div>
+<div class="flex items-end justify-between border-t border-slate-50 dark:border-slate-800 pt-4">
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Starting from</p>
+<p class="text-xl font-black text-slate-900 dark:text-white">3,800 <span class="text-sm font-bold">SR/Day</span></p>
+</div>
+<button class="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-all">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 dark:border-slate-800">
+<div class="h-48 relative overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center p-4">
+<img class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-110 transition-transform duration-500" data-alt="Yellow 3D bulldozer equipment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0AIRUFm_ZcpuTkgU_IYbJsCcerRbSGWVLqsvuwRRwSqUuLrGimCNjjJvQ-j7yHeOOkE5oFwQA9rWusZ6NdUUfxSo_CbIeS6YaIL-5DJs2zESItSZOrnfA3rszgqfTaOiQIvJIEfcsujx7vCUe1QRYfwsZcvUZlGs-jw7KV70KnUWi-dZUSyluw1v9Y-8nU48TMHIGww6CWDCMxmKYx8MMAO1NI_SNVZZjPibBDKX4AmDgmLuGHYn-I_DA-9DqnD_u9VM1nIMbYds"/>
+<div class="absolute top-3 left-3 px-2 py-1 bg-green-500 text-white text-[10px] font-bold rounded uppercase">Instant</div>
+<div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-full shadow-sm text-slate-400 hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-sm leading-none">favorite</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-slate-900 dark:text-white">Komatsu D155AX Dozer</h3>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm font-fill">star</span>
+<span class="text-xs font-bold">4.8</span>
+</div>
+</div>
+<p class="text-xs text-slate-500 mb-4">Desert Grading Group</p>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="text-xs text-slate-600 dark:text-slate-400">Within 35km of Riyadh</span>
+</div>
+<div class="flex items-end justify-between border-t border-slate-50 dark:border-slate-800 pt-4">
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Starting from</p>
+<p class="text-xl font-black text-slate-900 dark:text-white">2,100 <span class="text-sm font-bold">SR/Day</span></p>
+</div>
+<button class="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-all">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 4 (Water Category Example) -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100 dark:border-slate-800">
+<div class="h-48 relative overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center p-4">
+<img class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transform group-hover:scale-110 transition-transform duration-500" data-alt="White 3D water tanker truck" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrgR0Y5Qd9xUn60-5JBTtTh5L-kviLpgR6THk9i8ED3_B98aJW29Y1uIQ2xMfEHDBZGYI2xmuUZyemxEjTU9rb0003iXPCFA_tMOpRX0Tb918uDLOn4jZ7fFAy6aNzeaNajDjtqtDfNTG-LGT4H5XkOtCEqbAUhCHg-aO3vSBUL_r9ZyzftSAnlZ6Ia85hORHFzb2kZE5flJryUDo0evUy_JNsCi9d87mM8-RoDuD1dNclaKYan7-7RTNio_deFyT7RqM-dabuWRg"/>
+<div class="absolute top-3 left-3 px-2 py-1 bg-blue-500 text-white text-[10px] font-bold rounded uppercase">Water Special</div>
+<div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-full shadow-sm text-slate-400 hover:text-red-500 cursor-pointer">
+<span class="material-symbols-outlined text-sm leading-none">favorite</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-slate-900 dark:text-white">Potable Water (30k Liters)</h3>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-symbols-outlined text-sm font-fill">star</span>
+<span class="text-xs font-bold">5.0</span>
+</div>
+</div>
+<p class="text-xs text-slate-500 mb-4">Aqaba Water Logistics</p>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="text-xs text-slate-600 dark:text-slate-400">Within 10km of Riyadh</span>
+</div>
+<div class="flex items-end justify-between border-t border-slate-50 dark:border-slate-800 pt-4">
+<div>
+<p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Fixed Price</p>
+<p class="text-xl font-black text-slate-900 dark:text-white">450 <span class="text-sm font-bold">SR/Trip</span></p>
+</div>
+<button class="px-5 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-all">Book Now</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More Button -->
+<div class="mt-12 flex justify-center">
+<button class="px-8 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                            Load 24 More Items
+                        </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 py-10 mt-10">
+<div class="max-w-7xl mx-auto px-4 lg:px-10 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+<span class="material-symbols-outlined text-slate-500">construction</span>
+</div>
+<p class="text-sm font-bold text-slate-400">© 2024 ServiceHailing KSA. All rights reserved.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

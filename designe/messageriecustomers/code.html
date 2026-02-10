@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Chat Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#135bec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-screen overflow-hidden">
+<div class="flex h-full w-full">
+<!-- Sidebar: Conversation List -->
+<aside class="w-80 md:w-96 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col">
+<!-- Sidebar Header -->
+<div class="p-4 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-4">
+<h1 class="text-xl font-bold text-slate-800 dark:text-white">Messages</h1>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-icons text-slate-500">more_vert</span>
+</button>
+</div>
+<!-- Search -->
+<div class="relative">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/50 transition-all" placeholder="Search drivers or equipment..." type="text"/>
+</div>
+</div>
+<!-- Conversations List -->
+<div class="flex-1 overflow-y-auto">
+<!-- Active Chat -->
+<div class="flex items-center gap-3 p-4 bg-primary/5 dark:bg-primary/10 border-l-4 border-primary cursor-pointer transition-colors">
+<div class="relative">
+<img class="w-12 h-12 rounded-lg object-cover bg-slate-200" data-alt="Portrait of Mohamed the driver" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVxi7M88j9qS50ca7okF5D_-fvxNr_ZBRnoxxSixzRFJ2OvhgdsGzzn1WzkKnWigppmoFvwnF8lFrs5YXk5agmcfvDfExRJrFSGMMHYwqcHrV6uhPEgrNtTgOnjDC0bhw7HX4oT9PlenWZ5oCO7f5sAUh6gUd5944HmG1Adt45TVbtD7YfUC9uoCGmJadAWHLH9NiSXja-8Hwc8644rI8-ZL6RqMgZhWUheal_ePEWm2mu3sosN1ya0RHxeNNKmzInKTemmC2GUZ8"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h3 class="text-sm font-semibold truncate text-slate-900 dark:text-white">Mohamed - Caterpillar 966</h3>
+<span class="text-[10px] text-slate-500">2:45 PM</span>
+</div>
+<p class="text-xs text-slate-600 dark:text-slate-400 truncate">I'm arriving at the site in 5 minutes.</p>
+</div>
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+<!-- Chat Item -->
+<div class="flex items-center gap-3 p-4 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<div class="relative">
+<img class="w-12 h-12 rounded-lg object-cover bg-slate-200" data-alt="Portrait of Alex the truck driver" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7PqjN0MtQZ82DXeF_XImSWkETR3w0EIGPwtnGGp71haB9u-PYx11aRV_O0UGJIsv6BXLebJWabV4o66OOb0vOndzFvpKe1TvgXVmIC03tlVopGGqqOMm4ePK76vRmLBSNPSf4emzd82JvZPlLMzl4nLGhr_X4c2nKw3ywxKg4GYuwKrx70_ozyoz5UgSMky1btUbXW1HyDo8YrjRrCgNZgFGuO7nzK15ADfJ2tLxFczANAArjPdvtJMH8F6Oshrnxc7GdtsKqVfU"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h3 class="text-sm font-semibold truncate text-slate-800 dark:text-slate-200">Alex - Tow Truck</h3>
+<span class="text-[10px] text-slate-500">Yesterday</span>
+</div>
+<p class="text-xs text-slate-500 truncate">The vehicle is securely loaded now.</p>
+</div>
+</div>
+<!-- Chat Item -->
+<div class="flex items-center gap-3 p-4 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<div class="relative">
+<img class="w-12 h-12 rounded-lg object-cover bg-slate-200" data-alt="Portrait of David the crane operator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAeCUlYLJ1pThyPZpWMROE7P5iYfognoTeWeaqKuYQFs1Ow0KRA74rJv6DRMyk6kEAvoYYHFmTlLchqfw7CaOOzWPknH08orAumFsklaQShbvKDDjOfk4Wd8Pyyy-JF9P20tVCgg5FEZ9tQve3uduultdW0Gou0qm4TGkkf0Xs2J7BbcQ4wrUBNWZJMS8psPruRktk5MJG59OH5ELS7QWrLY7OAq3zTKpP6mrEqOMecJ7EDirZwUR0UezbOdtR6ty5QZOafJ6Qews"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h3 class="text-sm font-semibold truncate text-slate-800 dark:text-slate-200">David - Mobile Crane</h3>
+<span class="text-[10px] text-slate-500">Oct 24</span>
+</div>
+<p class="text-xs text-slate-500 truncate">Please confirm the lift weight.</p>
+</div>
+</div>
+<!-- Chat Item -->
+<div class="flex items-center gap-3 p-4 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<div class="relative">
+<img class="w-12 h-12 rounded-lg object-cover bg-slate-200" data-alt="Portrait of Sarah the logistics coordinator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNDMw2m8SK3W1Ht_70z9v1TEvwB6M0BpqS897lRz-1-IyZO5RP5ZmXBbwptILu6LEbMMXhlJLKPftJ9SIgAD1VHb-HLAzFrE9kFJLMtWlMH1rlYts9wQwfbov8QGFqvRcdUJQ-cx9LOwiVLrRJ12xaRW9f_gTEe73etgqC_pfrK55HvehFZ-Jbi-VL9pxzKb9FR2IdCTtZYNTthlutj4qKcxN03i1QAcrOnWlAPWiVjO_Jlvn5qjT8y7QJsG925q6FX45sTjuHqpY"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h3 class="text-sm font-semibold truncate text-slate-800 dark:text-slate-200">Sarah - Support</h3>
+<span class="text-[10px] text-slate-500">Oct 22</span>
+</div>
+<p class="text-xs text-slate-500 truncate">Your request has been processed.</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Chat Area -->
+<main class="flex-1 flex flex-col bg-slate-50 dark:bg-background-dark relative">
+<!-- Chat Header -->
+<header class="h-20 flex items-center justify-between px-6 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 z-10">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-lg object-cover bg-slate-200" data-alt="Portrait of Mohamed the driver" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtVT_Jo0nGATWhLeDKNDLTZt9fJOHOsrgsZl_hXz8XvAxQJXqDd89bGu9Fqz0Uuwn6wa1AMPxgja8OZrVf4E2p33lCD9zp2p5z5gssVQnWVKFxXlv6lE_FTdOH3NDRxe39rwChQt75hKo2wrgI0edzjOYuItLN9j2RT6FByCe0gEOXSvrNrY7HiFo_M3q85beGPZxgS1_XqzynnZuES2j00XCMhEtaZZQgXexGoYeldd0tMfNSjS4yqqooptkw8_OfvqbuWrFPOJI"/>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-bold text-slate-900 dark:text-white">Mohamed - Caterpillar 966</h2>
+<div class="flex items-center bg-yellow-400/10 px-1.5 py-0.5 rounded text-yellow-600 dark:text-yellow-400 text-[10px] font-bold">
+<span class="material-icons text-[12px] mr-1">star</span>
+                                4.9
+                            </div>
+</div>
+<p class="text-xs text-green-600 dark:text-green-400 font-medium">Online</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<!-- Call Button (Disabled by Admin Example) -->
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed transition-all" title="Calls disabled by administrator">
+<span class="material-icons text-xl">phone_disabled</span>
+<span class="text-xs font-semibold hidden sm:inline">Call</span>
+</button>
+<!-- WhatsApp Button (Enabled) -->
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white transition-all shadow-sm">
+<span class="material-icons text-xl text-[20px]">chat</span>
+<span class="text-xs font-semibold hidden sm:inline">WhatsApp</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+<span class="material-icons">info_outline</span>
+</button>
+</div>
+</header>
+<!-- Chat Messages -->
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+<!-- Date Separator -->
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-slate-200/50 dark:bg-slate-800/50 rounded-full text-[10px] uppercase font-bold text-slate-500 tracking-wider">Today</span>
+</div>
+<!-- System Message -->
+<div class="flex justify-center">
+<div class="bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 flex items-center gap-3">
+<span class="material-icons text-primary text-sm">local_shipping</span>
+<p class="text-xs text-slate-600 dark:text-slate-400">Driver started the trip to <span class="font-semibold">Main Construction Site A</span></p>
+</div>
+</div>
+<!-- Driver Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img class="w-8 h-8 rounded-lg object-cover flex-shrink-0" data-alt="Portrait of Mohamed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjYiLsH1Ov5x3jDn1dxla4UTpivFIP05aUZUVtgw-8H-FSjdJ5eeWQxXuM10-reRdEUf5zwaVkYX3KNPRW_Q8NRF9ogu0SPU59A1adDMjRhVSi1TfadH_QrlruhavJ8CNDdrEoiNoE7pW31ofdyRehc8rHA5JvoX3Rb5h8B3_4vs8_ierJbl-dR6YsGkkINYGQavo4jsEkMjf09bAH3hA5rCtG076VD_uDmOKK-iFudykJMGoLQBvJGlEtDhZL5OtKqdzZ81GJ4s4"/>
+<div>
+<div class="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 p-3 rounded-xl rounded-bl-none shadow-sm">
+<p class="text-sm">Hello! I have picked up the Caterpillar 966. On my way to your location now.</p>
+</div>
+<span class="text-[10px] text-slate-400 mt-1 ml-1">11:30 AM</span>
+</div>
+</div>
+<!-- Customer Message -->
+<div class="flex items-end gap-3 flex-row-reverse max-w-[80%] ml-auto">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+<span class="text-white text-[10px] font-bold">ME</span>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-primary text-white p-3 rounded-xl rounded-br-none shadow-sm">
+<p class="text-sm">Great. Here's a photo of the gate where you need to enter. It's the North Entrance.</p>
+</div>
+<!-- Image Attachment in Chat -->
+<div class="mt-2 w-48 h-32 rounded-lg overflow-hidden border-2 border-primary shadow-md relative group">
+<img class="w-full h-full object-cover" data-alt="Construction site gate photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9Cz_tuVgvui02kNf9JVPivwrjXP1sp-EFHGQKzBwMxoRTWgPCWx6IAj9S-3b7ZIva9h5TeaPAXaF_P5sU-7Kw2A6kY6WVFJ_Lk0R8BD0dPRsaIauJxfx9sZRrjwUkogQTHJtugjRjEGm5l6Tk32l3SJ6JYQEw6JUH7HPSvSztje6f11JPYSnvfmXjUEICkIfuxLm3CqgHYblv_h2oWCHkbehjQlZogpcaHeciH7jqkxVVCtgJgpQxMP6bz0f2X2woRQdiMKkZiZQ"/>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
+<span class="material-icons text-white">visibility</span>
+</div>
+</div>
+<div class="flex items-center gap-1 mt-1 mr-1">
+<span class="text-[10px] text-slate-400">11:35 AM</span>
+<span class="material-icons text-[12px] text-primary">done_all</span>
+</div>
+</div>
+</div>
+<!-- Driver Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img class="w-8 h-8 rounded-lg object-cover flex-shrink-0" data-alt="Portrait of Mohamed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClF4cWl38zNBbXaVZ9GGFLrutXzU_eldzC6WNmbDbCYoB256SWzSj30am14ean0S_drZUpThs-2T0nzA_zf3TCDPPoQ-bS8IE5PgXJskz6Ek87PodDWeNDu2wOMXovYsx3ueMu1c_aT_giRbnTygUxO-OnduTNLyEx5TuO7ezp0Nchlff3va0VRfmkFtQ01zMouMQNQc0nLE1HwfMcZGQxMXUQr9SbhrunaEr_NgMBFaQ1ZOGuxbfFK2rDnD7h_JQXtiPUWuWBGvU"/>
+<div>
+<div class="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 p-3 rounded-xl rounded-bl-none shadow-sm">
+<p class="text-sm">Got it, thank you. I'm arriving at the site in 5 minutes.</p>
+</div>
+<span class="text-[10px] text-slate-400 mt-1 ml-1">2:45 PM</span>
+</div>
+</div>
+</div>
+<!-- Message Input -->
+<div class="p-6 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-end gap-3">
+<!-- Attachment Buttons -->
+<div class="flex gap-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Attach Photos">
+<span class="material-icons">add_a_photo</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-all" title="Share Location">
+<span class="material-icons">location_on</span>
+</button>
+</div>
+<!-- Input Area -->
+<div class="flex-1 relative">
+<textarea class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl py-3 px-4 pr-12 text-sm focus:ring-2 focus:ring-primary/50 resize-none min-h-[44px] max-h-32" placeholder="Type a message..." rows="1"></textarea>
+<button class="absolute right-3 bottom-2.5 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+<span class="material-icons">sentiment_satisfied_alt</span>
+</button>
+</div>
+<!-- Send Button -->
+<button class="w-11 h-11 flex-shrink-0 bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center transition-all active:scale-95">
+<span class="material-icons">send</span>
+</button>
+</div>
+<!-- Quick Suggestion chips -->
+<div class="flex gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
+<button class="whitespace-nowrap px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-[11px] font-medium text-slate-600 dark:text-slate-400 transition-colors border border-slate-200 dark:border-slate-700">Thank you!</button>
+<button class="whitespace-nowrap px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-[11px] font-medium text-slate-600 dark:text-slate-400 transition-colors border border-slate-200 dark:border-slate-700">Where are you?</button>
+<button class="whitespace-nowrap px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-[11px] font-medium text-slate-600 dark:text-slate-400 transition-colors border border-slate-200 dark:border-slate-700">Call me please</button>
+<button class="whitespace-nowrap px-3 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-[11px] font-medium text-slate-600 dark:text-slate-400 transition-colors border border-slate-200 dark:border-slate-700">Site is ready</button>
+</div>
+</div>
+</main>
+<!-- Right Details Pane (Visible on Large Desktops) -->
+<aside class="hidden xl:flex w-72 flex-shrink-0 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex-col">
+<div class="p-6 flex flex-col items-center text-center border-b border-slate-200 dark:border-slate-800">
+<img class="w-24 h-24 rounded-2xl object-cover bg-slate-200 shadow-md mb-4" data-alt="Portrait of Mohamed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQN8ax0J4yb3Uk4OQ5xamAjP_4AymP4cf6UPR-GPeA7ggPs_DILY4DwG436xIgi2d5A78hl_MxmvCPd_scKG1AjaQkY1gsw_nPnb_6RN1JBngr1DG6BYCZop_wMpojOPhWeqe2FvJF4PZXpyBcRda_kg8u9mJG3LigXeBXx6eU-ikcadJdzYvNLO_Ai1y3CH7WSHszMljfsk8NsxXZvxymPiZRytuF5JI-P0AmYZVpFsdi7BfNYzc8Q55MROTTJSYIjytK6DaDkFE"/>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white leading-tight">Mohamed Al-Fayed</h3>
+<p class="text-sm text-slate-500 mb-2">Heavy Equipment Operator</p>
+<div class="flex items-center gap-1 text-yellow-500">
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star</span>
+<span class="material-icons text-sm">star_half</span>
+<span class="text-xs text-slate-500 ml-1 font-semibold">(128)</span>
+</div>
+</div>
+<div class="p-6 flex-1 overflow-y-auto">
+<div class="mb-6">
+<h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Active Job</h4>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+<p class="text-xs font-bold text-slate-700 dark:text-slate-300">Excavation Phase 2</p>
+<p class="text-[10px] text-slate-500 mt-1">Order #88392-XC</p>
+</div>
+</div>
+<div class="mb-6">
+<h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Equipment</h4>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+<span class="material-icons text-slate-500">engineering</span>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-800 dark:text-slate-200">Caterpillar 966</p>
+<p class="text-[10px] text-slate-500">Wheel Loader</p>
+</div>
+</div>
+</div>
+<div>
+<h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Media Shared</h4>
+<div class="grid grid-cols-2 gap-2">
+<div class="aspect-square bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+<img class="w-full h-full object-cover opacity-75 hover:opacity-100 cursor-pointer transition-opacity" data-alt="Previous shared photo 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaBDY6hR3HDUnc6rfOdZQ-J3-zxZuLcdPMyryXM2hwFy9d5LE28uuAXotHkvDEin_jVXIQpK_dAzLopSbNkgYso6CYkzvR93MmipChwM5-bElIbjd8u_zDOwbqvqDdmz38_Nf4S2cq_LRIyWGKjQ67iIaKAw45gvehJIahO0BB9IbMVg8OVSuaMK_9bzlfCpE0tdECI87DtfFBoRLmJQqtnZtVDMXzEHVDQIMm2uqmTcWKIDSiIgthwya7svjF92uYP0_Oi5xy93M"/>
+</div>
+<div class="aspect-square bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+<img class="w-full h-full object-cover opacity-75 hover:opacity-100 cursor-pointer transition-opacity" data-alt="Previous shared photo 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv8m8vo-mrq9EnkO1slyBbM4fs88NbfWsjmdH5XpiqkOqYTyqA9pQG7D3LLCtGtI-83rrjDSzKy_YfdQFI4FM6lmivsU9gu-3AqaH5FHM1tYbc1t2nIAXqNrW4590bqzQnMMwkRsMl2uYQkqAclJo7xhpn9d1phaeREYN4oE2w4FwlmIMkuUez5w1QO0vI4thMwWIowTfRBTWcSRr5QVcf2imti9Aipiou3xs-29_rh-iFQb9MVDO80cwNd0nw6B-3RsbF_Sfhhmk"/>
+</div>
+<div class="aspect-square bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400">
+                            +12 more
+                        </div>
+</div>
+</div>
+</div>
+<div class="p-6 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full py-2.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/10 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-icons text-sm">report_problem</span>
+                    Report Issue
+                </button>
+</div>
+</aside>
+</div>
+<!-- Map Context Tooltip (Optional visual flair) -->
+<div class="fixed bottom-32 right-12 hidden 2xl:block w-64 h-48 rounded-xl border-4 border-white dark:border-slate-800 shadow-2xl overflow-hidden pointer-events-none opacity-90">
+<div class="bg-primary/10 w-full h-full relative">
+<!-- Simulated Map -->
+<div class="absolute inset-0 bg-slate-200 dark:bg-slate-700">
+<img class="w-full h-full object-cover opacity-60" data-alt="Map view showing driver location" data-location="Cairo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgm_zg7yv84287PECLGja4UpeU_djUhjqDEpsX0duVLF18RnyuTsrVxFspO1JGgFhUxb8aswZZaNmTQ8uPPvDR2qNji-Yqb31jsnTnTnoJejytRgcqOWDEgNaOF4p5PQMucKMHVxpVSktAR1EncsTY2-fJiXWM9YzzhIQiPjadFvlWmka6hhLu4SKU9vwT7n24xgCCe8A3LxSJ-MwCD6rHd1BYDWHzFCBgih9LzAQo66OsbMY5EZwtPlnyq3scbIJDGDU96uz4ogU"/>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="w-8 h-8 bg-primary rounded-full border-2 border-white flex items-center justify-center shadow-lg">
+<span class="material-icons text-white text-sm">local_shipping</span>
+</div>
+<div class="bg-white dark:bg-slate-900 px-2 py-0.5 rounded text-[8px] font-bold shadow-sm mt-1">5 mins away</div>
+</div>
+</div>
+</div>
+</div>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.4);
+        }
+    </style>
+</body></html>

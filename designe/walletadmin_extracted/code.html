@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Financial Wallet - Unified Header</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<header class="sticky top-0 z-50 w-full">
+<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-icons text-xl">hail</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white text-nowrap">RideMaster</span>
+</div>
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-1.5 w-96 border border-transparent focus-within:border-primary/50 transition-all">
+<span class="material-icons text-slate-400 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-500" placeholder="Search transactions, ledgers..." type="text"/>
+<div class="flex items-center gap-1 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[10px] text-slate-400 font-mono">
+<span>⌘</span><span>K</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden xl:flex items-center gap-6 mr-6 border-r border-slate-200 dark:border-slate-800 pr-6">
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Active Drivers</span>
+<span class="text-sm font-bold text-emerald-500">850 <span class="text-[10px] text-slate-400 font-normal ml-1">Live</span></span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Ongoing Trips</span>
+<span class="text-sm font-bold text-primary">1,240</span>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-icons">notifications_none</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none text-nowrap">Alex Rivera</p>
+<p class="text-xs text-slate-500 mt-1">Super Admin</p>
+</div>
+<img alt="Admin Avatar" class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBanoCqY8zDPfcGlllBUG5GnekdqwdynLdapHGNE2yBMMXPzl1_KE8rzIhYikLKV9d3sqLU3-j5EGqM9dUrjRNTMgIh7BlYgGyvuaQa1boxAVQGeWYMlJDgJKCidaLh0Kzd0SKvKlesC2tOFsVIDqn9hfpb_m8n3-BfPlrjaEqs0cBCn0mRV3T6ZNDqeCNBzfzpw3mVlG-Vggr-GAWR-L78tqdbhGRuXOyEAlgBuebOYYyQeYSUhIOrX26V-RkYdjcSnlTv8GPSr7s"/>
+</div>
+</div>
+</div>
+<nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 overflow-x-auto">
+<div class="flex items-center gap-8">
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">dashboard</span> Dashboard
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">assignment</span> Orders
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">payments</span> Pricing
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">people</span> Users
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">local_taxi</span> Drivers
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">category</span> Services
+            </a>
+<a class="py-4 border-b-2 border-primary text-primary font-semibold text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">account_balance_wallet</span> Wallet
+            </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">settings</span> Settings
+            </a>
+</div>
+</nav>
+</header>
+<main class="max-w-[1600px] mx-auto p-6 space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 bg-gradient-to-br from-primary to-blue-700 rounded-2xl p-8 text-white shadow-xl shadow-primary/20 flex flex-col justify-between overflow-hidden relative">
+<div class="absolute -right-10 -bottom-10 opacity-10">
+<span class="material-icons text-[200px]">account_balance_wallet</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-8">
+<div>
+<p class="text-blue-100 text-sm font-medium uppercase tracking-widest">Platform Operations Account</p>
+<h1 class="text-4xl font-bold mt-1 tracking-tight">$2,450,182.50</h1>
+</div>
+<div class="bg-white/10 p-3 rounded-xl backdrop-blur-sm border border-white/20">
+<span class="material-symbols-outlined text-3xl">account_balance</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+<div>
+<p class="text-blue-200 text-xs font-medium uppercase mb-1">Available for Settle</p>
+<p class="text-xl font-bold">$124,500.00</p>
+</div>
+<div>
+<p class="text-blue-200 text-xs font-medium uppercase mb-1">Pending Clearance</p>
+<p class="text-xl font-bold text-blue-100">$32,140.80</p>
+</div>
+<div class="hidden md:block">
+<p class="text-blue-200 text-xs font-medium uppercase mb-1">Tax Provision</p>
+<p class="text-xl font-bold">$18,400.00</p>
+</div>
+</div>
+</div>
+<div class="mt-12 flex flex-wrap gap-4 relative z-10">
+<button class="bg-white text-primary px-6 py-3 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors flex items-center gap-2 shadow-lg">
+<span class="material-icons text-lg">payments</span> Settle All Drivers
+                </button>
+<button class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors flex items-center gap-2 backdrop-blur-sm">
+<span class="material-icons text-lg">add_circle_outline</span> Deposit Funds
+                </button>
+<button class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors flex items-center gap-2 backdrop-blur-sm">
+<span class="material-icons text-lg">file_download</span> Monthly Report
+                </button>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold">Next Payout Cycle</h4>
+<span class="px-2 py-1 bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 text-[10px] font-bold rounded uppercase">In 2 Days</span>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<p class="text-slate-500 text-sm">Target Amount</p>
+<h3 class="text-2xl font-bold">$42,850.00</h3>
+</div>
+<div class="text-right">
+<p class="text-emerald-500 text-sm font-bold">85% Funded</p>
+<div class="w-24 h-2 bg-slate-100 dark:bg-slate-800 rounded-full mt-2">
+<div class="bg-emerald-500 h-full rounded-full w-[85%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-slate-800 dark:text-white">Escrow Holdings</h4>
+<span class="material-symbols-outlined text-slate-400">lock</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500">Customer Pre-paid</span>
+<span class="font-bold">$218,400.00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500">Disputed Funds</span>
+<span class="font-bold text-red-500">$2,105.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h4 class="font-bold text-lg">Financial Movement History</h4>
+<p class="text-xs text-slate-500">Tracking all platform-level transactions and driver settlements</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+<button class="px-3 py-1.5 bg-white dark:bg-slate-700 rounded-md text-xs font-bold shadow-sm">All</button>
+<button class="px-3 py-1.5 text-xs font-medium text-slate-500">Inbound</button>
+<button class="px-3 py-1.5 text-xs font-medium text-slate-500">Outbound</button>
+</div>
+<button class="p-2 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-icons text-sm">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Transaction ID</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Category</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Account / Entity</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date &amp; Time</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<span class="text-sm font-mono font-medium text-slate-900 dark:text-white uppercase">TX-892410-DS</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+<span class="text-sm">Driver Settlement</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-primary">
+<span class="material-icons text-sm">person</span>
+</div>
+<div>
+<p class="text-sm font-medium">David Miller</p>
+<p class="text-[10px] text-slate-400">#DRV-7729</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">
+                            Oct 24, 2023 <span class="mx-1">•</span> 02:45 PM
+                        </td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wide">Success</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right text-red-500">
+                            -$1,240.00
+                        </td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<span class="text-sm font-mono font-medium text-slate-900 dark:text-white uppercase">TX-892409-RR</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-sm">Ride Revenue</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500">
+<span class="material-icons text-sm">receipt_long</span>
+</div>
+<div>
+<p class="text-sm font-medium">Order #R-10824</p>
+<p class="text-[10px] text-slate-400">Commission Hub</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">
+                            Oct 24, 2023 <span class="mx-1">•</span> 02:12 PM
+                        </td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wide">Success</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right text-emerald-600">
+                            +$45.50
+                        </td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<span class="text-sm font-mono font-medium text-slate-900 dark:text-white uppercase">TX-892408-DS</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-red-500"></span>
+<span class="text-sm">Driver Settlement</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-primary">
+<span class="material-icons text-sm">person</span>
+</div>
+<div>
+<p class="text-sm font-medium">Sarah Jenkins</p>
+<p class="text-[10px] text-slate-400">#DRV-1120</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">
+                            Oct 24, 2023 <span class="mx-1">•</span> 01:55 PM
+                        </td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wide">Processing</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right text-red-500">
+                            -$842.20
+                        </td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<span class="text-sm font-mono font-medium text-slate-900 dark:text-white uppercase">TX-892407-AD</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+<span class="text-sm">Ad Revenue</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500">
+<span class="material-icons text-sm">campaign</span>
+</div>
+<div>
+<p class="text-sm font-medium">Local Services Partner</p>
+<p class="text-[10px] text-slate-400">Corporate Account</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">
+                            Oct 24, 2023 <span class="mx-1">•</span> 11:30 AM
+                        </td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wide">Success</span>
+</td>
+<td class="px-6 py-4 text-sm font-bold text-right text-emerald-600">
+                            +$12,500.00
+                        </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<span class="text-sm text-slate-500">Showing 10 of 2,450 transactions</span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 border border-slate-200 dark:border-slate-700 rounded text-sm hover:bg-slate-50 dark:hover:bg-slate-800">Previous</button>
+<button class="px-3 py-1 bg-primary text-white rounded text-sm">1</button>
+<button class="px-3 py-1 border border-slate-200 dark:border-slate-700 rounded text-sm hover:bg-slate-50 dark:hover:bg-slate-800">2</button>
+<button class="px-3 py-1 border border-slate-200 dark:border-slate-700 rounded text-sm hover:bg-slate-50 dark:hover:bg-slate-800">Next</button>
+</div>
+</div>
+</div>
+</main>
+<footer class="p-6 border-t border-slate-200 dark:border-slate-800 mt-12">
+<div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-500">
+<span class="material-icons">verified_user</span>
+</div>
+<div>
+<p class="text-sm font-bold">Secure Financial Gateway</p>
+<p class="text-xs text-slate-500">All transactions are encrypted and audited via PCI-DSS standards.</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<a class="text-xs font-semibold text-slate-400 hover:text-primary uppercase tracking-wider" href="#">Audit Logs</a>
+<a class="text-xs font-semibold text-slate-400 hover:text-primary uppercase tracking-wider" href="#">Payout Settings</a>
+<a class="text-xs font-semibold text-slate-400 hover:text-primary uppercase tracking-wider" href="#">Help Desk</a>
+</div>
+</div>
+</footer>
+
+</body></html>

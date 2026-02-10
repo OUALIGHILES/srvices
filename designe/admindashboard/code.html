@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard - Unified Navigation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Sticky Header Wrapper -->
+<header class="sticky top-0 z-50 w-full">
+<!-- Primary Top Bar -->
+<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<!-- Logo -->
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-icons text-xl">hail</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-slate-800 dark:text-white">RideMaster</span>
+</div>
+<!-- Global Search -->
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg px-3 py-1.5 w-96 border border-transparent focus-within:border-primary/50 transition-all">
+<span class="material-icons text-slate-400 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-500" placeholder="Search orders, users, drivers..." type="text"/>
+<div class="flex items-center gap-1 bg-white dark:bg-slate-700 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[10px] text-slate-400 font-mono">
+<span>⌘</span><span>K</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<!-- Global Stats Summary (Inline) -->
+<div class="hidden xl:flex items-center gap-6 mr-6 border-r border-slate-200 dark:border-slate-800 pr-6">
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Active Drivers</span>
+<span class="text-sm font-bold text-emerald-500">850 <span class="text-[10px] text-slate-400 font-normal ml-1">Live</span></span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Ongoing Trips</span>
+<span class="text-sm font-bold text-primary">1,240</span>
+</div>
+</div>
+<!-- Utility Icons -->
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-icons">notifications_none</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<!-- Profile Dropdown -->
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none">Alex Rivera</p>
+<p class="text-xs text-slate-500 mt-1">Super Admin</p>
+</div>
+<img alt="Admin Avatar" class="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700" data-alt="Professional headshot of a male admin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBanoCqY8zDPfcGlllBUG5GnekdqwdynLdapHGNE2yBMMXPzl1_KE8rzIhYikLKV9d3sqLU3-j5EGqM9dUrjRNTMgIh7BlYgGyvuaQa1boxAVQGeWYMlJDgJKCidaLh0Kzd0SKvKlesC2tOFsVIDqn9hfpb_m8n3-BfPlrjaEqs0cBCn0mRV3T6ZNDqeCNBzfzpw3mVlG-Vggr-GAWR-L78tqdbhGRuXOyEAlgBuebOYYyQeYSUhIOrX26V-RkYdjcSnlTv8GPSr7s"/>
+</div>
+</div>
+</div>
+<!-- Secondary Navigation (Module Bar) -->
+<nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 overflow-x-auto">
+<div class="flex items-center gap-8">
+<a class="py-4 border-b-2 border-primary text-primary font-semibold text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">dashboard</span> Dashboard
+                </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">assignment</span> Orders
+                </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">payments</span> Pricing
+                </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">people</span> Users
+                </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">local_taxi</span> Drivers
+                </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">category</span> Services
+                </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">account_balance_wallet</span> Wallet
+                </a>
+<a class="py-4 border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 font-medium text-sm flex items-center gap-2 whitespace-nowrap" href="#">
+<span class="material-icons text-lg">settings</span> Settings
+                </a>
+</div>
+</nav>
+</header>
+<!-- Main Content Area -->
+<main class="max-w-[1600px] mx-auto p-6 space-y-6">
+<!-- Welcome & Action Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">Dashboard Overview</h1>
+<p class="text-slate-500 text-sm">Real-time metrics for your service platform as of Oct 24, 2023.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2">
+<span class="material-icons text-sm">filter_alt</span> Filter
+                </button>
+<button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm shadow-primary/20">
+<span class="material-icons text-sm">file_download</span> Export Data
+                </button>
+</div>
+</div>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary/10 rounded-lg text-primary">
+<span class="material-icons">monetization_on</span>
+</div>
+<span class="text-emerald-500 text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-icons text-[10px]">trending_up</span> 12.5%
+                    </span>
+</div>
+<div class="mt-4">
+<p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Total Revenue</p>
+<h3 class="text-2xl font-bold mt-1">$128,430.00</h3>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-orange-100 dark:bg-orange-900/20 rounded-lg text-orange-600">
+<span class="material-icons">directions_car</span>
+</div>
+<span class="text-emerald-500 text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-icons text-[10px]">trending_up</span> 8.2%
+                    </span>
+</div>
+<div class="mt-4">
+<p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Total Bookings</p>
+<h3 class="text-2xl font-bold mt-1">45,210</h3>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-indigo-100 dark:bg-indigo-900/20 rounded-lg text-indigo-600">
+<span class="material-icons">group_add</span>
+</div>
+<span class="text-emerald-500 text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-icons text-[10px]">trending_up</span> 14.2%
+                    </span>
+</div>
+<div class="mt-4">
+<p class="text-slate-500 text-sm font-medium uppercase tracking-wider">New Users</p>
+<h3 class="text-2xl font-bold mt-1">2,840</h3>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg text-red-600">
+<span class="material-icons">star_outline</span>
+</div>
+<span class="text-slate-500 text-xs font-bold bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full flex items-center gap-1">
+<span class="material-icons text-[10px]">remove</span> 0.0%
+                    </span>
+</div>
+<div class="mt-4">
+<p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Avg. Rating</p>
+<h3 class="text-2xl font-bold mt-1">4.8 / 5.0</h3>
+</div>
+</div>
+</div>
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Revenue Main Chart -->
+<div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<div>
+<h4 class="font-bold">Revenue Performance</h4>
+<p class="text-xs text-slate-500">Comparison between last 30 days vs previous</p>
+</div>
+<select class="text-xs bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary">
+<option>Last 30 Days</option>
+<option>Last Quarter</option>
+<option>Year to Date</option>
+</select>
+</div>
+<div class="p-6 h-[400px] flex items-end justify-between gap-4 relative">
+<!-- Faux Line Chart Visualization -->
+<div class="absolute inset-x-6 top-10 bottom-24 border-b border-slate-100 dark:border-slate-800 flex flex-col justify-between">
+<div class="w-full border-t border-slate-50 dark:border-slate-800/50"></div>
+<div class="w-full border-t border-slate-50 dark:border-slate-800/50"></div>
+<div class="w-full border-t border-slate-50 dark:border-slate-800/50"></div>
+</div>
+<div class="w-full h-full relative z-10 flex items-end justify-between pt-10">
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/10 h-[40%] rounded-t-sm relative group-hover:bg-primary/20 transition-colors">
+<div class="absolute -top-1 w-full border-t-2 border-primary"></div>
+</div>
+<span class="text-[10px] text-slate-400 mt-2">Mon</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/10 h-[65%] rounded-t-sm relative group-hover:bg-primary/20 transition-colors">
+<div class="absolute -top-1 w-full border-t-2 border-primary"></div>
+</div>
+<span class="text-[10px] text-slate-400 mt-2">Tue</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/10 h-[50%] rounded-t-sm relative group-hover:bg-primary/20 transition-colors">
+<div class="absolute -top-1 w-full border-t-2 border-primary"></div>
+</div>
+<span class="text-[10px] text-slate-400 mt-2">Wed</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/10 h-[80%] rounded-t-sm relative group-hover:bg-primary/20 transition-colors">
+<div class="absolute -top-1 w-full border-t-2 border-primary"></div>
+</div>
+<span class="text-[10px] text-slate-400 mt-2">Thu</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/10 h-[75%] rounded-t-sm relative group-hover:bg-primary/20 transition-colors">
+<div class="absolute -top-1 w-full border-t-2 border-primary"></div>
+</div>
+<span class="text-[10px] text-slate-400 mt-2">Fri</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/10 h-[95%] rounded-t-sm relative group-hover:bg-primary/20 transition-colors">
+<div class="absolute -top-1 w-full border-t-2 border-primary"></div>
+</div>
+<span class="text-[10px] text-slate-400 mt-2">Sat</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/10 h-[60%] rounded-t-sm relative group-hover:bg-primary/20 transition-colors">
+<div class="absolute -top-1 w-full border-t-2 border-primary"></div>
+</div>
+<span class="text-[10px] text-slate-400 mt-2">Sun</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity / Side Panels -->
+<div class="space-y-6">
+<!-- Activity Feed -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+<h4 class="font-bold mb-4">Live Activity</h4>
+<div class="space-y-5">
+<div class="flex gap-4">
+<div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-icons text-sm">shopping_cart</span>
+</div>
+<div>
+<p class="text-sm font-medium">New Order <span class="text-primary">#ORD-5542</span></p>
+<p class="text-xs text-slate-500 mt-0.5">2 minutes ago • Downtown, NY</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center text-emerald-600 flex-shrink-0">
+<span class="material-icons text-sm">person_add</span>
+</div>
+<div>
+<p class="text-sm font-medium">New Driver Registered</p>
+<p class="text-xs text-slate-500 mt-0.5">15 minutes ago • Pending review</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center text-orange-600 flex-shrink-0">
+<span class="material-icons text-sm">report_problem</span>
+</div>
+<div>
+<p class="text-sm font-medium">Payment Failed</p>
+<p class="text-xs text-slate-500 mt-0.5">42 minutes ago • ID: user_982</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center text-purple-600 flex-shrink-0">
+<span class="material-icons text-sm">support_agent</span>
+</div>
+<div>
+<p class="text-sm font-medium">New Support Ticket</p>
+<p class="text-xs text-slate-500 mt-0.5">1 hour ago • Urgent priority</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        View All Activity
+                    </button>
+</div>
+<!-- System Health -->
+<div class="bg-primary text-white rounded-xl shadow-lg shadow-primary/20 p-6">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold">System Status</h4>
+<span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm">
+<span class="text-white/70">API Latency</span>
+<span class="font-mono">42ms</span>
+</div>
+<div class="w-full bg-white/20 h-1.5 rounded-full">
+<div class="bg-white w-[92%] h-full rounded-full"></div>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-white/70">Server Load</span>
+<span class="font-mono">24%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Transactions Table Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h4 class="font-bold">Recent Service Transactions</h4>
+<a class="text-primary text-sm font-semibold hover:underline" href="#">View All Orders</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Customer</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Driver</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Service</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+<th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">#R-10824</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-[10px] font-bold">JD</div>
+<span class="text-sm">John Doe</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="text-sm">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Express Delivery</td>
+<td class="px-6 py-4 text-sm font-bold">$24.50</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wide">Completed</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">#R-10823</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-[10px] font-bold">MK</div>
+<span class="text-sm">Marcus King</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="text-sm">David Chen</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Ride Share</td>
+<td class="px-6 py-4 text-sm font-bold">$18.20</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wide">Ongoing</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-slate-900 dark:text-white">#R-10822</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-[10px] font-bold">AL</div>
+<span class="text-sm">Anna Lee</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="text-sm">Michael Scott</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm">Grocery Haul</td>
+<td class="px-6 py-4 text-sm font-bold">$42.00</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-[10px] font-bold uppercase tracking-wide">Pending</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+<!-- Map Context Footer (Subtle) -->
+<footer class="p-6">
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 h-64 relative overflow-hidden group shadow-sm">
+<div class="absolute inset-0 bg-slate-200 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+<img alt="Service map background" class="w-full h-full object-cover opacity-30 grayscale filter blur-sm" data-alt="Blurred grayscale city map of New York" data-location="New York" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByQNeVfSvePhQV9MK9XzaDoeJJDFgXTty7Jeh1owPEptRcANxz3GXDt_ZdqH1ZmOmfF5gV7oVLCGmiBy7hxRBLlQj0SjdsoP7aYSn0G5EHACkcp9yPU_eaOqFaMxUVCoaa3KJ-q371Tigaf8PV0HVAVrVxro-HqRvfXdDKuewRyASOhWq9WykRqWJ0zfyn4YJw9vZkqyZDw1Ue_LPbLmvNaithkkPhOnAFTDyMH0QeH2eaixoiu2m1rm1P6EU8MTkebi5KXLOV4tA"/>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="material-icons text-primary text-4xl mb-2">map</span>
+<h5 class="text-lg font-bold">Interactive Service Map</h5>
+<p class="text-sm text-slate-500 max-w-md mx-auto px-4">Open the live map to track active drivers and service densities across operational zones.</p>
+<button class="mt-4 px-6 py-2 bg-slate-900 dark:bg-white dark:text-slate-900 text-white rounded-lg text-sm font-semibold hover:scale-105 transition-transform">
+                        Launch Map Viewer
+                    </button>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

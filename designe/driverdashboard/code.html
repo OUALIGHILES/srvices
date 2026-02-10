@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Driver Available Requests - ServiceStream</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 lg:px-10 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary rounded-lg text-white">
+<span class="material-symbols-outlined">navigation</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">ServiceStream</h2>
+</div>
+<label class="hidden md:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 dark:bg-slate-800 border border-transparent focus-within:border-primary">
+<div class="text-slate-500 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg border-none bg-transparent focus:ring-0 placeholder:text-slate-500 text-sm font-normal" placeholder="Search requests..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="hidden lg:flex items-center gap-6">
+<a class="text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">History</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Earnings</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Settings</a>
+</div>
+<div class="flex gap-2">
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+<div class="h-10 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-end">
+<span class="text-xs font-bold text-green-600 dark:text-green-400">ONLINE</span>
+<span class="text-sm font-medium">Alex Driver</span>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary" data-alt="Portrait of a smiling professional male driver" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC39cP2H9EdHXOrqCrlCGDHS26PIkX5xUdF1wZANeWfxnQAhRheQtMQhJ0Mt9kUdXZAHNQI1jmmqcznqH-bTuGANExwApgvGbDX7TcPI1s9VpNMeyuAGHvdK-ERGrV2WikG9oCpsiAFFC3XhoriQ2csXjOTmq9-uc5v-ZHXvmMHDncn0uVf-ZmjLVaKIY9tHI5Y9iWoNpZFln9lRYpQv2V6Xpb0LaFAUETmserky-Nxu2v3_a4jnsBtiJooT_oxXoQTJInSlIhJ3Xw");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 flex max-w-[1440px] mx-auto w-full px-6 lg:px-10 py-8 gap-8">
+<!-- Sidebar -->
+<aside class="hidden xl:flex flex-col gap-6 w-72 shrink-0">
+<!-- Driver Status Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center gap-4 mb-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" data-alt="Close up portrait of driver Alex" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDUhrRryB2jyVblg9VbX4nx-aSQgFq-n-SNAgEN9RUihe3a7Ruy_6O_CoVTD53IMcl8S2CFiNuMekJfbr0FIhwnLZzuCxljaTbvGTD8s4P7WAgR4-Wk87X-HJUkj1Mx__JdD0fk2KTxEdEpB25HFSFTbImqN9yUVjlA_Un9D6AAQivgJnP5LRv3yK3I9X5tTtmaGtSw0LxZR_qQndpYNRzSqimPVTf7GMHyJg4tjPjXZfDoIi7xFfg8lh5GgRlUHyRInfypJF1uPUk");'></div>
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white">Alex Driver</h3>
+<div class="flex items-center text-xs text-slate-500">
+<span class="material-symbols-outlined text-xs text-amber-500 material-symbols-fill">star</span>
+<span class="ml-1 font-semibold text-slate-700 dark:text-slate-300">4.9</span>
+<span class="mx-1">•</span>
+<span>Gold Tier</span>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+<span class="text-xs text-slate-500 uppercase font-bold tracking-wider">Today's Earnings</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">$145.50</span>
+<span class="text-xs text-green-500 font-medium">+12%</span>
+</div>
+</div>
+<div class="flex flex-col p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+<span class="text-xs text-slate-500 uppercase font-bold tracking-wider">Jobs Completed</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">12</span>
+<span class="text-xs text-slate-400 font-medium">/ 15 goal</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 rounded-lg text-sm font-bold transition-colors tracking-wide">
+                    GO OFFLINE
+                </button>
+</div>
+<!-- Map Mini View -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="h-40 bg-slate-200 relative overflow-hidden">
+<img class="w-full h-full object-cover grayscale opacity-50" data-alt="Abstract urban city map layout" data-location="San Francisco" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCphX_ESPB9TeoR0M_Nu0cMEYDrBMnaTCZBJcHdtYBw3ChXMzHT3QxajJGbQipYrFbuEVaD5A7gvEVtmb1mFc5j1dzu6o8aByWjMPmy5ZQ2f0PU1FtgyjG_xBrJ5K9XEOiMDbepfUNwchfmreEnYfZEPHubxwg_SqvphZg64VM5as5jFsbi_O1cZGbXI_1hIWsjYa4q-Id-WOOh45W-ttcvXtJhA8Y5KEW4QMXqeirj1eP4CJw7KRIhOCV-r-kHji44bA4X9-Zwafs"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative">
+<div class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></div>
+<div class="relative inline-flex rounded-full h-4 w-4 bg-primary border-2 border-white"></div>
+</div>
+</div>
+</div>
+<div class="p-4">
+<p class="text-xs text-slate-500 font-medium">Location: Downtown Hub</p>
+<p class="text-xs text-slate-400 mt-1 italic">3 high-demand areas nearby</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col gap-6">
+<!-- Filters and View Toggle -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Available Requests</h1>
+<p class="text-slate-500 text-sm">Real-time orders within 10km of your current location</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-[18px]">distance</span>
+                        &lt; 5km
+                        <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+                        All Services
+                        <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Active Requests Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+<!-- Card 1: Auto-Accept Order -->
+<div class="bg-white dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary text-white">
+<span class="material-symbols-outlined text-[12px] material-symbols-fill">bolt</span>
+                            Auto-Accept
+                        </span>
+</div>
+<div class="flex items-start gap-4">
+<div class="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">local_taxi</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start pr-20">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Sarah Jenkins</h3>
+<p class="text-slate-500 text-xs mt-0.5">Premium Ride Service</p>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">near_me</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">0.8 km <span class="text-slate-400 font-normal">away</span></span>
+</div>
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="text-sm font-bold">$24.00 est.</span>
+</div>
+</div>
+<div class="mt-6">
+<button class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-md active:scale-[0.98]">
+                                    ACCEPT ORDER
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Regular Offer -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm relative group">
+<div class="absolute top-0 right-0 p-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                            Offer
+                        </span>
+</div>
+<div class="flex items-start gap-4">
+<div class="size-12 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined text-[28px]">package_2</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start pr-16">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Mark Walton</h3>
+<p class="text-slate-500 text-xs mt-0.5">Package Delivery (Small)</p>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">near_me</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">2.4 km <span class="text-slate-400 font-normal">away</span></span>
+</div>
+<div class="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="text-sm font-bold">$12.50 est.</span>
+</div>
+</div>
+<div class="mt-6 flex gap-3">
+<button class="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-sm active:scale-[0.98]">
+                                    ACCEPT
+                                </button>
+<button class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 font-bold py-3 rounded-lg transition-all">
+                                    DECLINE
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Auto-Accept Order -->
+<div class="bg-white dark:bg-slate-900 border-2 border-primary/20 dark:border-primary/40 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary text-white">
+<span class="material-symbols-outlined text-[12px] material-symbols-fill">bolt</span>
+                            Auto-Accept
+                        </span>
+</div>
+<div class="flex items-start gap-4">
+<div class="size-12 rounded-lg bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined text-[28px]">local_shipping</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start pr-20">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Central Grocery</h3>
+<p class="text-slate-500 text-xs mt-0.5">Bulk Delivery Service</p>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">near_me</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">1.1 km <span class="text-slate-400 font-normal">away</span></span>
+</div>
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="text-sm font-bold">$18.20 est.</span>
+</div>
+</div>
+<div class="mt-6">
+<button class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-md active:scale-[0.98]">
+                                    ACCEPT ORDER
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Regular Offer -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm relative group">
+<div class="absolute top-0 right-0 p-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                            Offer
+                        </span>
+</div>
+<div class="flex items-start gap-4">
+<div class="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">local_taxi</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start pr-16">
+<div>
+<h3 class="font-bold text-slate-900 dark:text-white text-lg">Emily Davis</h3>
+<p class="text-slate-500 text-xs mt-0.5">Standard Economy Ride</p>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">near_me</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">4.7 km <span class="text-slate-400 font-normal">away</span></span>
+</div>
+<div class="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="text-sm font-bold">$15.90 est.</span>
+</div>
+</div>
+<div class="mt-6 flex gap-3">
+<button class="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-sm active:scale-[0.98]">
+                                    ACCEPT
+                                </button>
+<button class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 font-bold py-3 rounded-lg transition-all">
+                                    DECLINE
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More or Status info -->
+<div class="flex flex-col items-center justify-center py-10 border-t border-slate-200 dark:border-slate-800">
+<div class="animate-pulse flex items-center gap-2 text-slate-400 text-sm font-medium">
+<div class="h-2 w-2 rounded-full bg-slate-400"></div>
+                    Scanning for more requests...
+                </div>
+</div>
+</div>
+<!-- Secondary Sidebar: Only visible on extra wide screens or desktop -->
+<aside class="hidden 2xl:flex flex-col gap-6 w-64 shrink-0">
+<div class="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm">
+<h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4">Area Hotspots</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-600 dark:text-slate-400">Airport Terminal</span>
+<span class="px-2 py-0.5 bg-red-100 dark:bg-red-900/40 text-red-600 text-[10px] font-bold rounded">VERY HIGH</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-600 dark:text-slate-400">Shopping District</span>
+<span class="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/40 text-amber-600 text-[10px] font-bold rounded">HIGH</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-slate-600 dark:text-slate-400">Business Park</span>
+<span class="px-2 py-0.5 bg-green-100 dark:bg-green-900/40 text-green-600 text-[10px] font-bold rounded">NORMAL</span>
+</div>
+</div>
+</div>
+<div class="bg-primary/10 rounded-xl p-5 border border-primary/20">
+<h4 class="text-sm font-bold text-primary mb-2">Weekend Bonus</h4>
+<p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Complete 5 more rides by 10 PM to earn an extra <strong>$25.00</strong>!</p>
+<div class="mt-4 h-1.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[80%] rounded-full"></div>
+</div>
+<div class="flex justify-between mt-2">
+<span class="text-[10px] font-bold text-slate-400">10/15 rides</span>
+</div>
+</div>
+</aside>
+</main>
+<!-- Mobile Navigation (Sticky Bottom) -->
+<nav class="md:hidden sticky bottom-0 z-50 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex justify-around items-center py-3">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined material-symbols-fill">grid_view</span>
+<span class="text-[10px] font-bold uppercase">Requests</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-bold uppercase">History</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-bold uppercase">Earnings</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-bold uppercase">Profile</span>
+</button>
+</nav>
+</div>
+</body></html>
