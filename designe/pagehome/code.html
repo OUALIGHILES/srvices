@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EquipFlow | Heavy Equipment &amp; Supplies</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-overlay {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<!-- Global Header -->
+<header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-16">
+<!-- Logo -->
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-primary rounded flex items-center justify-center">
+<span class="material-icons text-white">construction</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-primary">EquipFlow</span>
+</div>
+<!-- Navigation -->
+<nav class="hidden md:flex space-x-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Categories</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Pricing</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center space-x-4">
+<button class="text-sm font-semibold text-primary px-4 py-2 hover:bg-primary/5 rounded-lg transition-all">
+                        Login
+                    </button>
+<button class="text-sm font-semibold bg-primary text-white px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all">
+                        Sign Up
+                    </button>
+</div>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative h-[700px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0">
+<img alt="Heavy Machinery Hero" class="w-full h-full object-cover" data-alt="Massive yellow excavator at a construction site" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAadPQdqB6hQ4-k1xLiW_5-cBhU5aRDZxTfNBALS45Tv0Yx16FIqkBzfUlgG0q_MNOkdWIw98ruJHJJKeBtO1nglMkrXl9yKVKBIvE91CgduzkJFfgMntUt2ttXzRzK1LoxJeVfuDu88GVM53x6HrmtSXaxcnM76iwuCz1SnK3UgM5Lx3x_xBsT454RfIjKF6GylJrBQG7dsq3Oxarfmb8JVCdOLQGa3hGUySxKi4t8PZHZBGRDcWZXuWcWsYc0gBstiMhHKVZzVUo"/>
+<div class="hero-overlay absolute inset-0"></div>
+</div>
+<div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+<h1 class="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                    Book Heavy Equipment &amp; Supplies Instantly.
+                </h1>
+<p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+                    Reliable. Transparent. Efficient. The all-in-one platform for contractors and logistics managers to power their projects.
+                </p>
+<!-- Search Bar -->
+<div class="bg-white p-2 rounded-xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
+<div class="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-slate-200">
+<span class="material-icons text-slate-400 mr-2">search</span>
+<input class="w-full border-none focus:ring-0 text-slate-900 bg-transparent py-3" placeholder="What equipment do you need?" type="text"/>
+</div>
+<div class="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-slate-200">
+<span class="material-icons text-slate-400 mr-2">location_on</span>
+<input class="w-full border-none focus:ring-0 text-slate-900 bg-transparent py-3" data-location="Chicago, IL" placeholder="Location" type="text"/>
+</div>
+<button class="bg-primary text-white font-bold px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors">
+                        Find Fleet
+                    </button>
+</div>
+</div>
+</section>
+<!-- Trust Banner -->
+<div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-6">
+<div class="max-w-7xl mx-auto px-4 flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2"><span class="material-icons">handyman</span> <span class="font-bold">CONSTRUCT-CO</span></div>
+<div class="flex items-center gap-2"><span class="material-icons">apartment</span> <span class="font-bold">URBAN-BUILD</span></div>
+<div class="flex items-center gap-2"><span class="material-icons">landscape</span> <span class="font-bold">TERRA-FORM</span></div>
+<div class="flex items-center gap-2"><span class="material-icons">foundation</span> <span class="font-bold">BASE-WORKS</span></div>
+<div class="flex items-center gap-2"><span class="material-icons">architecture</span> <span class="font-bold">ARCH-VISTA</span></div>
+</div>
+</div>
+<!-- How It Works Section -->
+<section class="py-24 bg-white dark:bg-background-dark">
+<div class="max-w-7xl mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">How it Works</h2>
+<p class="text-slate-500 dark:text-slate-400">Getting the right gear to your site has never been easier.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-12">
+<div class="text-center group">
+<div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+<span class="material-icons text-3xl">fact_check</span>
+</div>
+<h3 class="text-xl font-bold mb-3">1. Choose</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">Browse our verified catalog of machinery, water supply, and fuel services across your region.</p>
+</div>
+<div class="text-center group">
+<div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+<span class="material-icons text-3xl">event_available</span>
+</div>
+<h3 class="text-xl font-bold mb-3">2. Book</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">Select your dates and secure your equipment with our transparent upfront pricing.</p>
+</div>
+<div class="text-center group">
+<div class="w-16 h-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+<span class="material-icons text-3xl">local_shipping</span>
+</div>
+<h3 class="text-xl font-bold mb-3">3. Track</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed">Monitor delivery in real-time and manage site arrivals through our professional dashboard.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Service Categories Grid -->
+<section class="py-24 bg-background-light dark:bg-slate-950">
+<div class="max-w-7xl mx-auto px-4">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Explore Categories</h2>
+<p class="text-slate-500 dark:text-slate-400">Everything you need for a successful construction site.</p>
+</div>
+<button class="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+                        View All Categories <span class="material-icons">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Heavy Equipment -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer border border-slate-100 dark:border-slate-800">
+<div class="w-12 h-12 bg-primary text-white rounded-lg flex items-center justify-center mb-6">
+<span class="material-icons">precision_manufacturing</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Heavy Equipment</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Excavators, bulldozers, and cranes from top brands.</p>
+<div class="text-primary font-semibold text-sm">Starting at $450/day</div>
+</div>
+<!-- Water Supply -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer border border-slate-100 dark:border-slate-800">
+<div class="w-12 h-12 bg-blue-400 text-white rounded-lg flex items-center justify-center mb-6">
+<span class="material-icons">water_drop</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Water &amp; Fluid</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Bulk water delivery for site suppression and storage.</p>
+<div class="text-primary font-semibold text-sm">Starting at $120/delivery</div>
+</div>
+<!-- Fuel Services -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer border border-slate-100 dark:border-slate-800">
+<div class="w-12 h-12 bg-amber-500 text-white rounded-lg flex items-center justify-center mb-6">
+<span class="material-icons">local_gas_station</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Fuel Delivery</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4">On-site diesel and gas refueling for your entire fleet.</p>
+<div class="text-primary font-semibold text-sm">Market rates applied</div>
+</div>
+<!-- Specialized Tools -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer border border-slate-100 dark:border-slate-800">
+<div class="w-12 h-12 bg-slate-700 text-white rounded-lg flex items-center justify-center mb-6">
+<span class="material-icons">home_repair_service</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Specialized Tools</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Compactors, generators, and handheld power tools.</p>
+<div class="text-primary font-semibold text-sm">Starting at $85/day</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Listings -->
+<section class="py-24 bg-white dark:bg-background-dark">
+<div class="max-w-7xl mx-auto px-4">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-12">Popular Listings Near You</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-2xl transition-all">
+<div class="relative h-56 overflow-hidden">
+<img alt="Excavator" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Modern yellow excavator parked on dirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqQlXvAK-J4zM1xlXFijzfv4MNF6HlKPGMkOaLPovGwk6VfAH_rx5uChJZy1PmW8r0kw2hyiCKLQRreqc3gi0fVgIqxpGp87dKPrGpeXBmz5eOJyhAtcSSsCTZtgE-QrpfxVJ87SaIm38apt2uVqGqCz3YRgVbhGeOhT1LxXLVCh20AdeS9MUcb6LWVRQT4T3rrX-eNcT3iU7SpxOizEVeGYaHYRm5DxvChewLZh0YxOVZUoCYSnw9Ue3ESgAmoy9eae0sRBKWB_Y"/>
+<div class="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Available Now</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-xl font-bold">Caterpillar 320 GC</h3>
+<p class="text-slate-500 text-sm flex items-center gap-1"><span class="material-icons text-sm">location_on</span> San Jose, CA</p>
+</div>
+<div class="text-right">
+<div class="text-2xl font-bold text-primary">$650</div>
+<div class="text-slate-400 text-xs font-medium">per day</div>
+</div>
+</div>
+<div class="flex gap-4 mb-6">
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">20 Tons</span>
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Diesel</span>
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Tier 4 Final</span>
+</div>
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">Book Now</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-2xl transition-all">
+<div class="relative h-56 overflow-hidden">
+<img alt="Bulldozer" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Heavy bulldozer clearing a construction path" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoBOdrY80zOx9mC6azAcLs4Ni88BSp58ENNbrgERA3BJwEMjVjzaI6f03zztzCoOGNqHYAVQ__PA8JpXlSKTu0cOpx6fn9v5hhnjjFyhpibbGAh7F7Tc7NJxRKGeWxL9-oo4NlkEXIx5DQuoiZ95YxOPrOq1Zq1k-HrRhxsODzG0bXnB-CwOlVqtRQIkTAUrOPnp94U_rWKlF9GN86dKEvMOh6pc5Arjh2k8z0MciOz8YN8vTEElgsoVTr8PtP94priG9E9-EyQD4"/>
+<div class="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Verified Vendor</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-xl font-bold">Komatsu D61PXi-24</h3>
+<p class="text-slate-500 text-sm flex items-center gap-1"><span class="material-icons text-sm">location_on</span> Oakland, CA</p>
+</div>
+<div class="text-right">
+<div class="text-2xl font-bold text-primary">$820</div>
+<div class="text-slate-400 text-xs font-medium">per day</div>
+</div>
+</div>
+<div class="flex gap-4 mb-6">
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">168 HP</span>
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">iMC 2.0</span>
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Hydrostatic</span>
+</div>
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">Book Now</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-2xl transition-all">
+<div class="relative h-56 overflow-hidden">
+<img alt="Water Truck" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Industrial water tank truck for site dust suppression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5FVs5fwBUf9R60Y3PgmV3SjF0lyUq8TXOsmWqalhS1hiCVXtfrjt_qDhDar5JaLDLjcavStkZj8JJmgKnBJ_E7siv-gVpYkyHMd-ax16taTeb7mpf_xReFW5aFsonEAhgXjJHCf0EPtM1Uwfh9V5PneaGqiJnQFqRrqAOz-JNoXuFedRE_MELNt-45mzL1n3TkJmuFAwOYtI068-TWhQJz_30jg3_k5W53VsGAbiPJVrE7aVsXzlSn0qH2z16YrPyR7pDHVJzqXU"/>
+<div class="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-xs font-bold shadow-sm">Fast Delivery</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="text-xl font-bold">4000 Gallon Water Truck</h3>
+<p class="text-slate-500 text-sm flex items-center gap-1"><span class="material-icons text-sm">location_on</span> Fremont, CA</p>
+</div>
+<div class="text-right">
+<div class="text-2xl font-bold text-primary">$450</div>
+<div class="text-slate-400 text-xs font-medium">per day</div>
+</div>
+</div>
+<div class="flex gap-4 mb-6">
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Potable Available</span>
+<span class="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Rear Sprayers</span>
+</div>
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">Book Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24">
+<div class="max-w-7xl mx-auto px-4">
+<div class="bg-primary rounded-3xl p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+<!-- Background Decor -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20"></div>
+<div class="absolute bottom-0 left-0 w-40 h-40 bg-white/10 rounded-full -ml-10 -mb-10"></div>
+<div class="relative z-10 max-w-xl text-center md:text-left">
+<h2 class="text-4xl font-extrabold text-white mb-6">Ready to start your next project?</h2>
+<p class="text-white/80 text-lg mb-8">Join over 500+ contracting companies who trust EquipFlow for their daily site operations.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+<button class="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-slate-50 transition-colors">Create Account</button>
+<button class="border border-white/30 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors">Talk to Sales</button>
+</div>
+</div>
+<div class="relative z-10 mt-12 md:mt-0 hidden lg:block">
+<div class="bg-white/10 p-4 rounded-2xl backdrop-blur-sm border border-white/20">
+<img alt="Dashboard Preview" class="w-80 h-48 object-cover rounded-lg shadow-xl" data-alt="Clean software dashboard showing analytics and maps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbN4qazDAt_myncXhRyCc0g_qnv-vQ5m1aF4OYihuRMF5zNne_DSzcnTzQNTs5gPY77m0xB2ivuQ7rKnuusbG6RLL-1KlPda-iLThb6rMFmsHA7jns4MgfpRU09HrQcQkDHo8HJAufIfs_F5aNnQ8slkmCujDuwfoj7hX2nsRBxtRTGmqe5JGQU-JTwh25nw5Kj34kekRj0q5ao855ebL1HpIg56MQB7PIIEUG0T25teJvPy0wyMFVMeHXCInhxzBK_2GXoI9Ee1s"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-16 pb-8">
+<div class="max-w-7xl mx-auto px-4">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-12">
+<div class="col-span-2 lg:col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-icons text-white text-sm">construction</span>
+</div>
+<span class="text-lg font-bold tracking-tight text-primary">EquipFlow</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 max-w-sm mb-6">
+                        The world's most trusted marketplace for heavy equipment and construction logistics. Managed fleet, guaranteed uptime.
+                    </p>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons">facebook</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons">alternate_email</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons">public</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6">Company</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Careers</a></li>
+<li><a class="hover:text-primary" href="#">Contact</a></li>
+<li><a class="hover:text-primary" href="#">Press</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Resources</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Help Center</a></li>
+<li><a class="hover:text-primary" href="#">Fleet Partners</a></li>
+<li><a class="hover:text-primary" href="#">Blog</a></li>
+<li><a class="hover:text-primary" href="#">Guidelines</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Legal</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary" href="#">Rental Agreement</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-slate-100 dark:border-slate-800 text-center text-slate-400 text-sm">
+<p>© 2024 EquipFlow Inc. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</body></html>

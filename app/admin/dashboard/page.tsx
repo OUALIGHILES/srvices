@@ -34,18 +34,50 @@ interface Transaction {
   created_at: string
 }
 
+interface ActivityItem {
+  id: string
+  type: 'order' | 'driver' | 'payment' | 'support'
+  title: string
+  description: string
+  timestamp: string
+  icon: string
+  color: string
+}
+
+// Helper function to format time ago
+const formatTimeAgo = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) {
+    return `${diffInSeconds} seconds ago`;
+  } else if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  } else if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  } else {
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  }
+};
+
 export default function AdminDashboard() {
   const { user, profile } = useAuth()
   const router = useRouter()
   const [bookings, setBookings] = useState<Booking[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [activities, setActivities] = useState<ActivityItem[]>([])
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeDrivers: 0,
     totalRevenue: 0,
     completedOrders: 0,
+    avgRating: 0,
   })
 
   useEffect(() => {
@@ -97,6 +129,18 @@ export default function AdminDashboard() {
           setStats((prev) => ({ ...prev, totalRevenue }))
         }
 
+        // Fetch average rating from services
+        const { data: servicesData, error: servicesError } = await supabase
+          .from('services')
+          .select('rating')
+          .gt('rating', 0) // Only count services with actual ratings
+
+        let avgRating = 0;
+        if (servicesData && servicesData.length > 0) {
+          const totalRating = servicesData.reduce((sum, service) => sum + (service.rating || 0), 0);
+          avgRating = totalRating / servicesData.length;
+        }
+
         // Calculate stats
         if (usersData && bookingsData) {
           const totalUsers = usersData.length
@@ -112,8 +156,105 @@ export default function AdminDashboard() {
             totalUsers,
             activeDrivers,
             completedOrders,
+            avgRating,
           }))
         }
+
+        // Fetch recent activities
+        const recentActivities = [];
+        
+        // Get recent bookings
+        const { data: recentBookings, error: recentBookingsError } = await supabase
+          .from('bookings')
+          .select('id, created_at, status')
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (recentBookings) {
+          recentBookings.forEach(booking => {
+            recentActivities.push({
+              id: `booking-${booking.id}`,
+              type: 'order',
+              title: `New Order #${booking.id.substring(0, 8)}`,
+              description: `${formatTimeAgo(booking.created_at)} • ${booking.status}`,
+              timestamp: booking.created_at,
+              icon: '🛒',
+              color: 'blue'
+            });
+          });
+        }
+
+        // Get recent users (drivers)
+        const { data: recentUsers, error: recentUsersError } = await supabase
+          .from('users')
+          .select('id, full_name, user_type, status, created_at')
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (recentUsers) {
+          recentUsers.forEach(user => {
+            if (user.user_type === 'driver') {
+              recentActivities.push({
+                id: `user-${user.id}`,
+                type: 'driver',
+                title: `New ${user.user_type.charAt(0).toUpperCase() + user.user_type.slice(1)} Registered`,
+                description: `${formatTimeAgo(user.created_at)} • ${user.status}`,
+                timestamp: user.created_at,
+                icon: '👤',
+                color: user.status === 'pending_approval' ? 'emerald' : 'blue'
+              });
+            }
+          });
+        }
+
+        // Get recent transactions
+        const { data: recentTransactions, error: recentTransactionsError } = await supabase
+          .from('transactions')
+          .select('id, booking_id, status, created_at')
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (recentTransactions) {
+          recentTransactions.forEach(transaction => {
+            recentActivities.push({
+              id: `transaction-${transaction.id}`,
+              type: 'payment',
+              title: transaction.status === 'completed' ? 'Payment Completed' : 'Payment Failed',
+              description: `${formatTimeAgo(transaction.created_at)} • ID: ${transaction.booking_id.substring(0, 8)}`,
+              timestamp: transaction.created_at,
+              icon: transaction.status === 'completed' ? '✅' : '⚠️',
+              color: transaction.status === 'completed' ? 'emerald' : 'red'
+            });
+          });
+        }
+
+        // Get recent support tickets
+        const { data: recentTickets, error: recentTicketsError } = await supabase
+          .from('support_tickets')
+          .select('id, subject, status, created_at')
+          .order('created_at', { ascending: false })
+          .limit(5);
+
+        if (recentTickets) {
+          recentTickets.forEach(ticket => {
+            recentActivities.push({
+              id: `ticket-${ticket.id}`,
+              type: 'support',
+              title: `New Support Ticket`,
+              description: `${formatTimeAgo(ticket.created_at)} • ${ticket.status}`,
+              timestamp: ticket.created_at,
+              icon: '💬',
+              color: 'purple'
+            });
+          });
+        }
+
+        // Sort activities by timestamp (most recent first) and take top 4
+        const sortedActivities = recentActivities
+          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+          .slice(0, 4);
+
+        setActivities(sortedActivities);
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
@@ -215,7 +356,7 @@ export default function AdminDashboard() {
             </div>
             <div className="mt-4">
               <p className="text-gray-500 text-sm font-medium uppercase tracking-wider">Avg. Rating</p>
-              <h3 className="text-2xl font-bold mt-1">4.8 / 5.0</h3>
+              <h3 className="text-2xl font-bold mt-1">{stats.avgRating.toFixed(1)} / 5.0</h3>
             </div>
           </div>
         </div>
@@ -295,44 +436,54 @@ export default function AdminDashboard() {
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
               <h4 className="font-bold mb-4">Live Activity</h4>
               <div className="space-y-5">
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 flex-shrink-0">
-                    <span className="text-sm">🛒</span>
+                {activities.map((activity) => {
+                  let bgColorClass = '';
+                  let textColorClass = '';
+                  
+                  switch(activity.color) {
+                    case 'blue':
+                      bgColorClass = 'bg-blue-100';
+                      textColorClass = 'text-blue-600';
+                      break;
+                    case 'emerald':
+                      bgColorClass = 'bg-emerald-100';
+                      textColorClass = 'text-emerald-600';
+                      break;
+                    case 'red':
+                      bgColorClass = 'bg-red-100';
+                      textColorClass = 'text-red-600';
+                      break;
+                    case 'purple':
+                      bgColorClass = 'bg-purple-100';
+                      textColorClass = 'text-purple-600';
+                      break;
+                    default:
+                      bgColorClass = 'bg-gray-100';
+                      textColorClass = 'text-gray-600';
+                  }
+                  
+                  return (
+                    <div key={activity.id} className="flex gap-4">
+                      <div className={`w-8 h-8 ${bgColorClass} rounded-full flex items-center justify-center ${textColorClass} flex-shrink-0`}>
+                        <span className="text-sm">{activity.icon}</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">{activity.title}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{activity.description}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+                {activities.length === 0 && (
+                  <div className="text-center py-4 text-gray-500">
+                    No recent activity
                   </div>
-                  <div>
-                    <p className="text-sm font-medium">New Order <span className="text-blue-600">#ORD-5542</span></p>
-                    <p className="text-xs text-gray-500 mt-0.5">2 minutes ago • Downtown, NY</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 flex-shrink-0">
-                    <span className="text-sm">👤</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">New Driver Registered</p>
-                    <p className="text-xs text-gray-500 mt-0.5">15 minutes ago • Pending review</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 flex-shrink-0">
-                    <span className="text-sm">⚠️</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Payment Failed</p>
-                    <p className="text-xs text-gray-500 mt-0.5">42 minutes ago • ID: user_982</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 flex-shrink-0">
-                    <span className="text-sm">💬</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">New Support Ticket</p>
-                    <p className="text-xs text-gray-500 mt-0.5">1 hour ago • Urgent priority</p>
-                  </div>
-                </div>
+                )}
               </div>
-              <button className="w-full mt-6 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
+              <button 
+                className="w-full mt-6 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                onClick={() => router.push('/admin/bookings')}
+              >
                 View All Activity
               </button>
             </div>

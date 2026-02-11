@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Heavy Equipment | EquipFlow Category Grid</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .filter-section-title {
+            @apply text-xs font-bold text-slate-400 uppercase tracking-wider mb-4;
+        }
+        .filter-checkbox-label {
+            @apply flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400 cursor-pointer hover:text-primary transition-colors;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-16">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-primary rounded flex items-center justify-center">
+<span class="material-icons text-white">construction</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-primary">EquipFlow</span>
+</div>
+<nav class="hidden md:flex space-x-8">
+<a class="text-sm font-medium text-primary border-b-2 border-primary h-16 flex items-center" href="#">Categories</a>
+<a class="text-sm font-medium hover:text-primary transition-colors h-16 flex items-center" href="#">Pricing</a>
+<a class="text-sm font-medium hover:text-primary transition-colors h-16 flex items-center" href="#">Solutions</a>
+<a class="text-sm font-medium hover:text-primary transition-colors h-16 flex items-center" href="#">Support</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="text-sm font-semibold text-primary px-4 py-2 hover:bg-primary/5 rounded-lg transition-all">
+                    Login
+                </button>
+<button class="text-sm font-semibold bg-primary text-white px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all">
+                    Sign Up
+                </button>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<nav class="flex text-sm text-slate-500 mb-2 gap-2">
+<a class="hover:text-primary" href="#">Home</a>
+<span>/</span>
+<span class="text-slate-900 dark:text-white font-medium">Heavy Equipment</span>
+</nav>
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white">Heavy Equipment Rental</h1>
+<p class="text-slate-500 mt-1">Found 128 machines available for your current location.</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm text-slate-500 whitespace-nowrap">Sort by:</span>
+<select class="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-lg text-sm focus:ring-primary focus:border-primary">
+<option>Most Popular</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Newest Arrivals</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row gap-8">
+<aside class="w-full lg:w-64 flex-shrink-0">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 sticky top-24">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-bold text-slate-900 dark:text-white">Filters</h2>
+<button class="text-primary text-xs font-semibold hover:underline">Reset All</button>
+</div>
+<div class="mb-8">
+<h3 class="filter-section-title">Price Range (Daily)</h3>
+<div class="space-y-4">
+<input class="w-full accent-primary h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer" max="2000" min="0" type="range"/>
+<div class="flex items-center justify-between gap-2">
+<div class="relative flex-1">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
+<input class="w-full pl-7 pr-3 py-2 text-xs border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-md" type="text" value="0"/>
+</div>
+<span class="text-slate-400 text-sm">-</span>
+<div class="relative flex-1">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">$</span>
+<input class="w-full pl-7 pr-3 py-2 text-xs border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-md" type="text" value="2000"/>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="filter-section-title">Brand</h3>
+<div class="space-y-3">
+<label class="filter-checkbox-label">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>Caterpillar</span>
+</label>
+<label class="filter-checkbox-label">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>Komatsu</span>
+</label>
+<label class="filter-checkbox-label">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>John Deere</span>
+</label>
+<label class="filter-checkbox-label">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>Volvo</span>
+</label>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="filter-section-title">Tonnage</h3>
+<div class="grid grid-cols-2 gap-2">
+<button class="px-3 py-2 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-lg hover:border-primary hover:text-primary transition-all">0 - 5 Tons</button>
+<button class="px-3 py-2 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-lg hover:border-primary hover:text-primary transition-all">5 - 15 Tons</button>
+<button class="px-3 py-2 text-xs font-medium bg-primary/10 border border-primary text-primary rounded-lg">15 - 25 Tons</button>
+<button class="px-3 py-2 text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-lg hover:border-primary hover:text-primary transition-all">25+ Tons</button>
+</div>
+</div>
+<div class="mb-6">
+<h3 class="filter-section-title">Engine Type</h3>
+<div class="space-y-3">
+<label class="filter-checkbox-label">
+<input checked="" class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>Diesel</span>
+</label>
+<label class="filter-checkbox-label">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>Electric / Hybrid</span>
+</label>
+<label class="filter-checkbox-label">
+<input class="rounded border-slate-300 text-primary focus:ring-primary" type="checkbox"/>
+<span>Propane</span>
+</label>
+</div>
+</div>
+<button class="w-full bg-slate-100 dark:bg-slate-800 py-3 rounded-xl font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Apply Filters</button>
+</div>
+</aside>
+<div class="flex-1">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<div class="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img alt="Caterpillar Excavator" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqQlXvAK-J4zM1xlXFijzfv4MNF6HlKPGMkOaLPovGwk6VfAH_rx5uChJZy1PmW8r0kw2hyiCKLQRreqc3gi0fVgIqxpGp87dKPrGpeXBmz5eOJyhAtcSSsCTZtgE-QrpfxVJ87SaIm38apt2uVqGqCz3YRgVbhGeOhT1LxXLVCh20AdeS9MUcb6LWVRQT4T3rrX-eNcT3iU7SpxOizEVeGYaHYRm5DxvChewLZh0YxOVZUoCYSnw9Ue3ESgAmoy9eae0sRBKWB_Y"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-white/95 dark:bg-slate-900/95 px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-tight">Available Now</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-icons text-sm">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="mb-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Caterpillar 320 GC</h3>
+<div class="text-right">
+<span class="text-xl font-extrabold text-primary">$650</span>
+<span class="text-slate-400 text-[10px] block font-medium">PER DAY</span>
+</div>
+</div>
+<p class="text-slate-500 text-xs flex items-center gap-1">
+<span class="material-icons text-sm text-slate-400">location_on</span> San Jose, CA (12 mi)
+                            </p>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-6">
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">weight</span>
+<span class="text-[11px] font-semibold">20 Tons</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">oil_barrel</span>
+<span class="text-[11px] font-semibold">Diesel</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">settings</span>
+<span class="text-[11px] font-semibold">Tier 4 Final</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">construction</span>
+<span class="text-[11px] font-semibold">Bucket included</span>
+</div>
+</div>
+<button class="mt-auto w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all">Book Now</button>
+</div>
+</div>
+<div class="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img alt="Komatsu Bulldozer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoBOdrY80zOx9mC6azAcLs4Ni88BSp58ENNbrgERA3BJwEMjVjzaI6f03zztzCoOGNqHYAVQ__PA8JpXlSKTu0cOpx6fn9v5hhnjjFyhpibbGAh7F7Tc7NJxRKGeWxL9-oo4NlkEXIx5DQuoiZ95YxOPrOq1Zq1k-HrRhxsODzG0bXnB-CwOlVqtRQIkTAUrOPnp94U_rWKlF9GN86dKEvMOh6pc5Arjh2k8z0MciOz8YN8vTEElgsoVTr8PtP94priG9E9-EyQD4"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-amber-500 text-white px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-tight">Verified Vendor</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-icons text-sm">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="mb-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Komatsu D61PXi-24</h3>
+<div class="text-right">
+<span class="text-xl font-extrabold text-primary">$820</span>
+<span class="text-slate-400 text-[10px] block font-medium">PER DAY</span>
+</div>
+</div>
+<p class="text-slate-500 text-xs flex items-center gap-1">
+<span class="material-icons text-sm text-slate-400">location_on</span> Oakland, CA (24 mi)
+                            </p>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-6">
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">bolt</span>
+<span class="text-[11px] font-semibold">168 HP</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">oil_barrel</span>
+<span class="text-[11px] font-semibold">Diesel</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">analytics</span>
+<span class="text-[11px] font-semibold">iMC 2.0 Tech</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">speed</span>
+<span class="text-[11px] font-semibold">Hydrostatic</span>
+</div>
+</div>
+<button class="mt-auto w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all">Book Now</button>
+</div>
+</div>
+<div class="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img alt="John Deere Grader" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAadPQdqB6hQ4-k1xLiW_5-cBhU5aRDZxTfNBALS45Tv0Yx16FIqkBzfUlgG0q_MNOkdWIw98ruJHJJKeBtO1nglMkrXl9yKVKBIvE91CgduzkJFfgMntUt2ttXzRzK1LoxJeVfuDu88GVM53x6HrmtSXaxcnM76iwuCz1SnK3UgM5Lx3x_xBsT454RfIjKF6GylJrBQG7dsq3Oxarfmb8JVCdOLQGa3hGUySxKi4t8PZHZBGRDcWZXuWcWsYc0gBstiMhHKVZzVUo"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-white/95 dark:bg-slate-900/95 px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-tight">Fast Delivery</span>
+</div>
+<button class="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-icons text-sm">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="mb-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Deere 672G Grader</h3>
+<div class="text-right">
+<span class="text-xl font-extrabold text-primary">$550</span>
+<span class="text-slate-400 text-[10px] block font-medium">PER DAY</span>
+</div>
+</div>
+<p class="text-slate-500 text-xs flex items-center gap-1">
+<span class="material-icons text-sm text-slate-400">location_on</span> Fremont, CA (30 mi)
+                            </p>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-6">
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">weight</span>
+<span class="text-[11px] font-semibold">18 Tons</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">oil_barrel</span>
+<span class="text-[11px] font-semibold">Diesel</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">settings</span>
+<span class="text-[11px] font-semibold">6WD System</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">visibility</span>
+<span class="text-[11px] font-semibold">Grade Control</span>
+</div>
+</div>
+<button class="mt-auto w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all">Book Now</button>
+</div>
+</div>
+<div class="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col">
+<div class="relative h-56 overflow-hidden">
+<img alt="Wheel Loader" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5FVs5fwBUf9R60Y3PgmV3SjF0lyUq8TXOsmWqalhS1hiCVXtfrjt_qDhDar5JaLDLjcavStkZj8JJmgKnBJ_E7siv-gVpYkyHMd-ax16taTeb7mpf_xReFW5aFsonEAhgXjJHCf0EPtM1Uwfh9V5PneaGqiJnQFqRrqAOz-JNoXuFedRE_MELNt-45mzL1n3TkJmuFAwOYtI068-TWhQJz_30jg3_k5W53VsGAbiPJVrE7aVsXzlSn0qH2z16YrPyR7pDHVJzqXU"/>
+<button class="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
+<span class="material-icons text-sm">favorite_border</span>
+</button>
+</div>
+<div class="p-5 flex flex-col flex-1">
+<div class="mb-4">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Volvo L120H Loader</h3>
+<div class="text-right">
+<span class="text-xl font-extrabold text-primary">$490</span>
+<span class="text-slate-400 text-[10px] block font-medium">PER DAY</span>
+</div>
+</div>
+<p class="text-slate-500 text-xs flex items-center gap-1">
+<span class="material-icons text-sm text-slate-400">location_on</span> Palo Alto, CA (18 mi)
+                            </p>
+</div>
+<div class="grid grid-cols-2 gap-2 mb-6">
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">weight</span>
+<span class="text-[11px] font-semibold">22 Tons</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">oil_barrel</span>
+<span class="text-[11px] font-semibold">Diesel</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">settings</span>
+<span class="text-[11px] font-semibold">Stage V</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400">monitoring</span>
+<span class="text-[11px] font-semibold">Telematics</span>
+</div>
+</div>
+<button class="mt-auto w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all">Book Now</button>
+</div>
+</div>
+<div class="flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-12 col-span-full">
+<div class="text-center">
+<p class="text-slate-500 mb-4">View more listings based on your location</p>
+<button class="px-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors">Load More Results</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-16 pb-8 mt-24">
+<div class="max-w-7xl mx-auto px-4">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-12">
+<div class="col-span-2 lg:col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-icons text-white text-sm">construction</span>
+</div>
+<span class="text-lg font-bold tracking-tight text-primary">EquipFlow</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 max-w-sm mb-6">
+                    The world's most trusted marketplace for heavy equipment and construction logistics. Managed fleet, guaranteed uptime.
+                </p>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons text-xl">facebook</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons text-xl">alternate_email</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-icons text-xl">public</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-bold mb-6">Company</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Careers</a></li>
+<li><a class="hover:text-primary" href="#">Contact</a></li>
+<li><a class="hover:text-primary" href="#">Press</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Resources</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Help Center</a></li>
+<li><a class="hover:text-primary" href="#">Fleet Partners</a></li>
+<li><a class="hover:text-primary" href="#">Blog</a></li>
+<li><a class="hover:text-primary" href="#">Guidelines</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6">Legal</h4>
+<ul class="space-y-4 text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary" href="#">Rental Agreement</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-slate-100 dark:border-slate-800 text-center text-slate-400 text-sm">
+<p>© 2024 EquipFlow Inc. All rights reserved.</p>
+</div>
+</div>
+</footer>
+
+</body></html>

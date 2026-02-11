@@ -57,14 +57,14 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { user, profile } = useAuth()
+  const { user, profile, loading: authLoading } = useAuth()
   const router = useRouter()
   const [bookings, setBookings] = useState<Booking[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [services, setServices] = useState<Service[]>([])
   const [pricingRules, setPricingRules] = useState<PricingRule[]>([])
-  const [loading, setLoading] = useState(true)
+  const [dataLoading, setDataLoading] = useState(true)
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeDrivers: 0,
@@ -73,123 +73,144 @@ export default function AdminLayout({
   })
 
   useEffect(() => {
-    if (!user || profile?.user_type !== 'admin') {
-      router.push('/login')
-      return
-    }
-
-    const fetchData = async () => {
-      const supabase = createClient();
-
-      try {
-        // Fetch bookings
-        const { data: bookingsData, error: bookingsError } = await supabase
-          .from('bookings')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(50)
-
-        if (!bookingsError) {
-          setBookings(bookingsData || [])
-        }
-
-        // Fetch users
-        const { data: usersData, error: usersError } = await supabase
-          .from('users')
-          .select('*')
-          .order('created_at', { ascending: false })
-
-        if (!usersError) {
-          setUsers(usersData || [])
-        }
-
-        // Fetch transactions
-        const { data: transactionsData, error: transactionsError } = await supabase
-          .from('transactions')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(50)
-
-        if (!transactionsError) {
-          setTransactions(transactionsData || [])
-
-          // Calculate revenue
-          const totalRevenue = (transactionsData || []).reduce(
-            (sum, t) => sum + (t.company_fee || 0),
-            0
-          )
-          setStats((prev) => ({ ...prev, totalRevenue }))
-        }
-
-        // Calculate stats
-        if (usersData && bookingsData) {
-          const totalUsers = usersData.length
-          const activeDrivers = usersData.filter(
-            (u) => u.user_type === 'driver' && u.status === 'active'
-          ).length
-          const completedOrders = bookingsData.filter(
-            (b) => b.status === 'completed'
-          ).length
-
-          setStats((prev) => ({
-            ...prev,
-            totalUsers,
-            activeDrivers,
-            completedOrders,
-          }))
-        }
-
-        // Fetch services
-        const { data: servicesData, error: servicesError } = await supabase
-          .from('services')
-          .select('*')
-          .eq('is_active', true)
-
-        if (!servicesError) {
-          setServices(servicesData || [])
-        }
-
-        // Fetch pricing rules
-        const { data: rulesData, error: rulesError } = await supabase
-          .from('pricing_rules')
-          .select('*')
-          .order('created_at', { ascending: true })
-
-        if (!rulesError && rulesData) {
-          // Enrich with service details
-          const rulesWithServices = await Promise.all(
-            rulesData.map(async (rule) => {
-              const mapSupabase = createClient(); // Create a new client for each async operation
-              // Validate UUID format before making the request
-              const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-              if (!uuidRegex.test(rule.service_id)) {
-                console.error(`Invalid UUID format for service_id: ${rule.service_id}`);
-                return { ...rule, service: null };
-              }
-
-              const { data: serviceData } = await mapSupabase
-                .from('services')
-                .select('id, name, base_price, is_active')
-                .eq('id', rule.service_id)
-                .single()
-
-              return { ...rule, service: serviceData }
-            })
-          )
-
-          setPricingRules(rulesWithServices)
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
+    const checkAuthAndFetchData = async () => {
+      // Wait for auth to finish loading
+      if (!user && !authLoading) {
+        // If not authenticated and loading is complete, redirect to login
+        router.push('/login');
+        return;
       }
-    }
 
-    fetchData()
-  }, [user, profile, router])
+      if (user && profile) {
+        // If user is authenticated but not an admin, redirect appropriately
+        if (profile.user_type !== 'admin') {
+          if (profile.user_type === 'driver') {
+            router.push('/driver/dashboard');
+          } else if (profile.user_type === 'customer') {
+            router.push('/customer/dashboard');
+          } else {
+            router.push('/');
+          }
+          return;
+        }
 
-  if (loading) {
+        // If user is admin, fetch data
+        const supabase = createClient();
+
+        try {
+          // Fetch bookings
+          const { data: bookingsData, error: bookingsError } = await supabase
+            .from('bookings')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(50)
+
+          if (!bookingsError) {
+            setBookings(bookingsData || [])
+          }
+
+          // Fetch users
+          const { data: usersData, error: usersError } = await supabase
+            .from('users')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+          if (!usersError) {
+            setUsers(usersData || [])
+          }
+
+          // Fetch transactions
+          const { data: transactionsData, error: transactionsError } = await supabase
+            .from('transactions')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(50)
+
+          if (!transactionsError) {
+            setTransactions(transactionsData || [])
+
+            // Calculate revenue
+            const totalRevenue = (transactionsData || []).reduce(
+              (sum, t) => sum + (t.company_fee || 0),
+              0
+            )
+            setStats((prev) => ({ ...prev, totalRevenue }))
+          }
+
+          // Calculate stats
+          if (usersData && bookingsData) {
+            const totalUsers = usersData.length
+            const activeDrivers = usersData.filter(
+              (u) => u.user_type === 'driver' && u.status === 'active'
+            ).length
+            const completedOrders = bookingsData.filter(
+              (b) => b.status === 'completed'
+            ).length
+
+            setStats((prev) => ({
+              ...prev,
+              totalUsers,
+              activeDrivers,
+              completedOrders,
+            }))
+          }
+
+          // Fetch services
+          const { data: servicesData, error: servicesError } = await supabase
+            .from('services')
+            .select('*')
+            .eq('is_active', true)
+
+          if (!servicesError) {
+            setServices(servicesData || [])
+          }
+
+          // Fetch pricing rules
+          const { data: rulesData, error: rulesError } = await supabase
+            .from('pricing_rules')
+            .select('*')
+            .order('created_at', { ascending: true })
+
+          if (!rulesError && rulesData) {
+            // Enrich with service details
+            const rulesWithServices = await Promise.all(
+              rulesData.map(async (rule) => {
+                const mapSupabase = createClient(); // Create a new client for each async operation
+                // Validate UUID format before making the request
+                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+                if (!uuidRegex.test(rule.service_id)) {
+                  console.error(`Invalid UUID format for service_id: ${rule.service_id}`);
+                  return { ...rule, service: null };
+                }
+
+                const { data: serviceData } = await mapSupabase
+                  .from('services')
+                  .select('id, name, base_price, is_active')
+                  .eq('id', rule.service_id)
+                  .single()
+
+                return { ...rule, service: serviceData }
+              })
+            )
+
+            setPricingRules(rulesWithServices)
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        } finally {
+          setDataLoading(false)
+        }
+      } else if (user && !profile && !authLoading) {
+        // If user is authenticated but profile is not loaded (and auth is done loading),
+        // it means there's an issue with the profile, redirect to login
+        router.push('/login');
+      }
+    };
+
+    checkAuthAndFetchData();
+  }, [user, profile, authLoading, router]);
+
+  if (authLoading || dataLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
