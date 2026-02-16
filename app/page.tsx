@@ -34,7 +34,7 @@ export default function HomePageMain() {
   const { user, profile } = useAuth();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
   // Fetch services using the custom hook
   const { services, loading, error } = useServices();
 
@@ -249,9 +249,9 @@ export default function HomePageMain() {
         {/* Hero Section */}
         <section className="relative h-[700px] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0">
-            <img 
-              alt="Heavy Machinery Hero" 
-              className="w-full h-full object-cover" 
+            <img
+              alt="Heavy Machinery Hero"
+              className="w-full h-full object-cover"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAadPQdqB6hQ4-k1xLiW_5-cBhU5aRDZxTfNBALS45Tv0Yx16FIqkBzfUlgG0q_MNOkdWIw98ruJHJJKeBtO1nglMkrXl9yKVKBIvE91CgduzkJFfgMntUt2ttXzRzK1LoxJeVfuDu88GVM53x6HrmtSXaxcnM76iwuCz1SnK3UgM5Lx3x_xBsT454RfIjKF6GylJrBQG7dsq3Oxarfmb8JVCdOLQGa3hGUySxKi4t8PZHZBGRDcWZXuWcWsYc0gBstiMhHKVZzVUo"
             />
             <div className="absolute inset-0 bg-black/60"></div>
@@ -356,7 +356,7 @@ export default function HomePageMain() {
                 <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Explore Categories</h2>
                 <p className="text-slate-500 dark:text-slate-400">Everything you need for a successful construction site.</p>
               </div>
-              <button 
+              <button
                 className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all"
                 onClick={() => router.push('/categories')}
               >
@@ -386,20 +386,20 @@ export default function HomePageMain() {
         <section className="py-24 bg-white dark:bg-background-dark">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-12">Popular Listings Near You</h2>
-            
+
             {loading && (
               <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
               </div>
             )}
-            
+
             {error && (
               <div className="text-center py-8">
                 <p className="text-red-500">Error loading services: {error}</p>
                 <p className="text-slate-500 mt-2">Showing sample listings...</p>
               </div>
             )}
-            
+
             {!loading && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {featuredListings.map((listing) => (
@@ -440,7 +440,7 @@ export default function HomePageMain() {
                           </span>
                         ))}
                       </div>
-                      <button 
+                      <button
                         className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-primary/20 transition-all"
                         onClick={() => router.push(`/details/${listing.id}`)}
                       >
@@ -467,13 +467,13 @@ export default function HomePageMain() {
                   Join over 500+ contracting companies who trust EquipFlow for their daily site operations.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <button 
+                  <button
                     className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-slate-50 transition-colors"
                     onClick={() => router.push('/signup')}
                   >
                     Create Account
                   </button>
-                  <button 
+                  <button
                     className="border border-white/30 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors"
                     onClick={() => router.push('/support')}
                   >
@@ -483,9 +483,9 @@ export default function HomePageMain() {
               </div>
               <div className="relative z-10 mt-12 md:mt-0 hidden lg:block">
                 <div className="bg-white/10 p-4 rounded-2xl backdrop-blur-sm border border-white/20">
-                  <img 
-                    alt="Dashboard Preview" 
-                    className="w-80 h-48 object-cover rounded-lg shadow-xl" 
+                  <img
+                    alt="Dashboard Preview"
+                    className="w-80 h-48 object-cover rounded-lg shadow-xl"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbN4qazDAt_myncXhRyCc0g_qnv-vQ5m1aF4OYihuRMF5zNne_DSzcnTzQNTs5gPY77m0xB2ivuQ7rKnuusbG6RLL-1KlPda-iLThb6rMFmsHA7jns4MgfpRU09HrQcQkDHo8HJAufIfs_F5aNnQ8slkmCujDuwfoj7hX2nsRBxtRTGmqe5JGQU-JTwh25nw5Kj34kekRj0q5ao855ebL1HpIg56MQB7PIIEUG0T25teJvPy0wyMFVMeHXCInhxzBK_2GXoI9Ee1s"
                   />
                 </div>

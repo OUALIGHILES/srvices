@@ -81,10 +81,7 @@ export default function DriverDashboard() {
             service_date,
             quantity,
             customer_id,
-            status,
-            estimated_fare,
-            distance,
-            service_type
+            status
           `)
           .neq('status', 'completed')
           .neq('status', 'cancelled')
@@ -95,14 +92,17 @@ export default function DriverDashboard() {
           throw bookingsError;
         }
 
-        // Format the bookings data and fetch customer names separately
+        // Format the bookings data and fetch additional information
         const formattedBookings = await Promise.all(bookingsData?.map(async (booking) => {
           let customerName = 'Customer';
-          
+          let distance = undefined;
+          let estimatedFare = undefined;
+          let serviceType = undefined;
+
           // Fetch customer name separately if customer_id exists
           if (booking.customer_id) {
             const { data: customerData, error: customerError } = await supabase
-              .from('customers')
+              .from('users')
               .select('full_name')
               .eq('id', booking.customer_id)
               .single();
@@ -114,9 +114,43 @@ export default function DriverDashboard() {
             }
           }
 
+          // Fetch service type from services table
+          if (booking.service_id) {
+            const { data: serviceData, error: serviceError } = await supabase
+              .from('services')
+              .select('category')
+              .eq('id', booking.service_id)
+              .maybeSingle(); // Use maybeSingle to handle cases where no record is found
+
+            if (serviceError) {
+              console.warn(`Error fetching service data for booking ${booking.id}:`, serviceError);
+            } else {
+              serviceType = serviceData?.category;
+            }
+          }
+
+          // Fetch the latest offer for this booking to get distance and estimated fare
+          const { data: offerData, error: offerError } = await supabase
+            .from('offers')
+            .select('distance_km, offered_price')
+            .eq('booking_id', booking.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle(); // Use maybeSingle to handle cases where no offer exists
+
+          if (offerError) {
+            console.warn(`Error fetching offer data for booking ${booking.id}:`, offerError);
+          } else {
+            distance = offerData?.distance_km;
+            estimatedFare = offerData?.offered_price;
+          }
+
           return {
             ...booking,
             customer_name: customerName,
+            distance: distance,
+            estimated_fare: estimatedFare,
+            service_type: serviceType
           };
         }) || []);
 
@@ -141,21 +175,39 @@ export default function DriverDashboard() {
         const todayEarnings = transactionsData?.reduce((sum, t) => sum + (t.driver_amount || 0), 0) || 0;
 
         // Get completed jobs count for today
-        const { count: completedCount, error: completedError } = await supabase
-          .from('bookings')
-          .select('*', { count: 'exact', head: true })
+        // First, we need to find bookings that have an accepted offer from this driver
+        const { data: driverOffers, error: offersError } = await supabase
+          .from('offers')
+          .select('booking_id')
           .eq('driver_id', user?.id || '')
-          .eq('status', 'completed')
-          .gte('updated_at', today.toISOString());
+          .eq('status', 'accepted');
 
-        if (completedError) {
-          console.error('Error fetching completed jobs:', completedError);
-          throw completedError;
+        let completedJobsCount = 0;
+
+        if (offersError) {
+          console.error('Error fetching driver offers:', offersError);
+        } else {
+          const bookingIds = driverOffers?.map(offer => offer.booking_id) || [];
+
+          if (bookingIds.length > 0) {
+            const { count: completedCount, error: completedError } = await supabase
+              .from('bookings')
+              .select('*', { count: 'exact', head: true })
+              .in('id', bookingIds)
+              .eq('status', 'completed')
+              .gte('updated_at', today.toISOString());
+
+            if (completedError) {
+              console.error('Error fetching completed jobs:', completedError);
+            } else {
+              completedJobsCount = completedCount || 0;
+            }
+          }
         }
 
         setDriverStats({
           todayEarnings,
-          jobsCompleted: completedCount || 0,
+          jobsCompleted: completedJobsCount,
           rating: profile?.rating || 0,
           name: profile?.full_name || 'Driver',
           avatar: profile?.avatar_url || '',
@@ -352,7 +404,7 @@ export default function DriverDashboard() {
                           </div>
                           <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                             <CreditCard className="h-4 w-4" />
-                            <span className="text-sm font-bold">${booking.estimated_fare || '12.50'} est.</span>
+                            <span className="text-sm font-bold">${booking.estimated_fare ? `$${booking.estimated_fare.toFixed(2)}` : '$--.--'} est.</span>
                           </div>
                         </div>
                         <div className="mt-6 flex gap-3">

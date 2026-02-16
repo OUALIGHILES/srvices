@@ -236,7 +236,6 @@ export default function DriverMessagerie({ params }: { params: { bookingId?: str
   if (loading) {
     return (
       <div className="relative flex h-screen w-full flex-col overflow-hidden bg-gray-50">
-        <DriverHeader />
 
         <div className="flex flex-1 overflow-hidden">
           <div className="flex-1 flex items-center justify-center">
@@ -252,7 +251,6 @@ export default function DriverMessagerie({ params }: { params: { bookingId?: str
 
   return (
     <div className="relative flex h-screen w-full flex-col overflow-hidden bg-gray-50">
-      <DriverHeader />
 
       {/* Main Content Area: Split Pane */}
       <main className="flex flex-1 overflow-hidden">
