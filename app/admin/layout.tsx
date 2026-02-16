@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
 import { createClient } from '@/lib/supabase'
-import { Settings, DollarSign, Car, UserPlus, Star, Bell, LayoutDashboard, Clipboard, Users, Car as LocalTaxi, Square, CreditCard, Settings as SettingsIcon } from 'lucide-react'
+import ProfileDropdown from '@/components/profile-dropdown'
+import { Settings, DollarSign, Car, UserPlus, Star, Bell, LayoutDashboard, Clipboard, Users, Car as LocalTaxi, Square, CreditCard, Settings as SettingsIcon, MessageSquare } from 'lucide-react'
 
 // Define interfaces
 interface Booking {
@@ -227,11 +228,13 @@ export default function AdminLayout({
             </button>
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold leading-none">Admin User</p>
-                <p className="text-xs text-gray-500 mt-1">Super Admin</p>
+                <p className="text-sm font-semibold leading-none">{profile?.full_name || 'Admin User'}</p>
+                <p className="text-xs text-gray-500 mt-1 capitalize">{profile?.user_type || 'Admin'}</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center">
-                <span className="text-sm font-medium text-gray-700">AU</span>
+                <span className="text-sm font-medium text-gray-700">
+                  {profile?.full_name ? profile.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'AU'}
+                </span>
               </div>
             </div>
           </div>
@@ -287,15 +290,7 @@ export default function AdminLayout({
               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
             {/* Profile Dropdown */}
-            <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold leading-none">Admin User</p>
-                <p className="text-xs text-gray-500 mt-1">Super Admin</p>
-              </div>
-              <div className="w-10 h-10 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center">
-                <span className="text-sm font-medium text-gray-700">AU</span>
-              </div>
-            </div>
+            <ProfileDropdown />
           </div>
         </div>
         {/* Secondary Navigation (Module Bar) */}
@@ -324,6 +319,9 @@ export default function AdminLayout({
             </Link>
             <Link className={`py-4 border-b-2 ${router.pathname === '/admin/settings' ? 'border-blue-600 text-blue-600 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-900 font-medium'} text-sm flex items-center gap-2 whitespace-nowrap`} href="/admin/settings">
               <Settings className="h-4 w-4" /> Settings
+            </Link>
+            <Link className={`py-4 border-b-2 ${router.pathname === '/admin/support' ? 'border-blue-600 text-blue-600 font-semibold' : 'border-transparent text-gray-500 hover:text-gray-900 font-medium'} text-sm flex items-center gap-2 whitespace-nowrap`} href="/admin/support">
+              <MessageSquare className="h-4 w-4" /> Support
             </Link>
           </div>
         </nav>

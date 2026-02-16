@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,6 +12,7 @@ export default function SolutionsPage() {
   const { user, profile } = useAuth();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   // Trust partners data
   const trustPartners = [
@@ -20,6 +21,71 @@ export default function SolutionsPage() {
     { name: 'TERRA-FORM', icon: 'landscape' },
     { name: 'BASE-WORKS', icon: 'foundation' }
   ];
+
+  // Handle scroll to update active section
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['contractors', 'logistics', 'individuals'];
+      const scrollPosition = window.scrollY + 200;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const height = element.offsetHeight;
+          
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + height) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Smooth scroll to section
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 80, // Account for header height
+        behavior: 'smooth'
+      });
+      setMobileMenuOpen(false); // Close mobile menu after clicking
+    }
+  };
+
+  // Handle button clicks
+  const handleGetStarted = () => {
+    if (user) {
+      router.push('/services');
+    } else {
+      router.push('/signup');
+    }
+  };
+
+  const handleTalkToSales = () => {
+    router.push('/contact');
+  };
+
+  const handleRequestDemo = () => {
+    router.push('/demo-request');
+  };
+
+  const handleLearnMore = () => {
+    router.push('/pricing');
+  };
+
+  const handleExploreLogistics = () => {
+    router.push('/services?category=logistics');
+  };
+
+  const handleBrowseCatalog = () => {
+    router.push('/services?category=consumer');
+  };
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
@@ -56,14 +122,14 @@ export default function SolutionsPage() {
               </Link>
             </div>
             {/* Mobile menu button */}
-            <button 
+            <button
               className="md:hidden p-2 rounded-md text-slate-700 dark:text-slate-300"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <CloseIcon className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
-          
+
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
             <div className="md:hidden py-4 border-t border-slate-200 dark:border-slate-800">
@@ -71,9 +137,26 @@ export default function SolutionsPage() {
                 <Link href="/" className="font-medium text-primary py-2">Home</Link>
                 <Link href="/categories" className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2">Categories</Link>
                 <Link href="/pricing" className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2">Pricing</Link>
-                <Link href="/solutions" className="font-medium text-primary py-2">Solutions</Link>
+                <button 
+                  onClick={() => scrollToSection('contractors')}
+                  className={`font-medium ${activeSection === 'contractors' ? 'text-primary' : 'text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary'} py-2`}
+                >
+                  Contractors
+                </button>
+                <button 
+                  onClick={() => scrollToSection('logistics')}
+                  className={`font-medium ${activeSection === 'logistics' ? 'text-primary' : 'text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary'} py-2`}
+                >
+                  Logistics
+                </button>
+                <button 
+                  onClick={() => scrollToSection('individuals')}
+                  className={`font-medium ${activeSection === 'individuals' ? 'text-primary' : 'text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary'} py-2`}
+                >
+                  Individuals
+                </button>
                 <Link href="/support" className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2">Support</Link>
-                
+
                 <div className="pt-4 flex flex-col gap-3">
                   <Link href="/login">
                     <button className="w-full text-left text-sm font-semibold text-primary px-4 py-2 hover:bg-primary/5 rounded-lg transition-all">
@@ -95,9 +178,9 @@ export default function SolutionsPage() {
       <main>
         <section className="relative h-[500px] flex items-center overflow-hidden bg-slate-900">
           <div className="absolute inset-0">
-            <img 
-              alt="Industry Solutions Overview" 
-              className="w-full h-full object-cover" 
+            <img
+              alt="Industry Solutions Overview"
+              className="w-full h-full object-cover"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAadPQdqB6hQ4-k1xLiW_5-cBhU5aRDZxTfNBALS45Tv0Yx16FIqkBzfUlgG0q_MNOkdWIw98ruJHJJKeBtO1nglMkrXl9yKVKBIvE91CgduzkJFfgMntUt2ttXzRzK1LoxJeVfuDu88GVM53x6HrmtSXaxcnM76iwuCz1SnK3UgM5Lx3x_xBsT454RfIjKF6GylJrBQG7dsq3Oxarfmb8JVCdOLQGa3hGUySxKi4t8PZHZBGRDcWZXuWcWsYc0gBstiMhHKVZzVUo"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/40 to-slate-900/0"></div>
@@ -112,8 +195,18 @@ export default function SolutionsPage() {
                 From individual homeowners to global logistics networks, we provide the specialized tools and services required to build the future.
               </p>
               <div className="flex flex-wrap gap-4">
-                <button className="bg-primary text-white font-bold px-8 py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">Get Started</button>
-                <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all">Talk to Sales</button>
+                <button 
+                  onClick={handleGetStarted}
+                  className="bg-primary text-white font-bold px-8 py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+                >
+                  Get Started
+                </button>
+                <button 
+                  onClick={handleTalkToSales}
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all"
+                >
+                  Talk to Sales
+                </button>
               </div>
             </div>
           </div>
@@ -151,15 +244,18 @@ export default function SolutionsPage() {
                     </div>
                   </li>
                 </ul>
-                <button className="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all">
+                <button 
+                  onClick={handleLearnMore}
+                  className="flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all"
+                >
                   Learn about Contractor Benefits <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
               <div className="flex-1 order-1 lg:order-2">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                  <img 
-                    alt="Contractor Site" 
-                    className="w-full h-[450px] object-cover" 
+                  <img
+                    alt="Contractor Site"
+                    className="w-full h-[450px] object-cover"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqQlXvAK-J4zM1xlXFijzfv4MNF6HlKPGMkOaLPovGwk6VfAH_rx5uChJZy1PmW8r0kw2hyiCKLQRreqc3gi0fVgIqxpGp87dKPrGpeXBmz5eOJyhAtcSSsCTZtgE-QrpfxVJ87SaIm38apt2uVqGqCz3YRgVbhGeOhT1LxXLVCh20AdeS9MUcb6LWVRQT4T3rrX-eNcT3iU7SpxOizEVeGYaHYRm5DxvChewLZh0YxOVZUoCYSnw9Ue3ESgAmoy9eae0sRBKWB_Y"
                   />
                   <div className="absolute bottom-6 left-6 right-6 bg-white/95 dark:bg-slate-800/95 backdrop-blur p-6 rounded-2xl border border-white/20">
@@ -184,9 +280,9 @@ export default function SolutionsPage() {
             <div className="flex flex-col lg:flex-row items-center gap-16">
               <div className="flex-1">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                  <img 
-                    alt="Logistics Support" 
-                    className="w-full h-[450px] object-cover" 
+                  <img
+                    alt="Logistics Support"
+                    className="w-full h-[450px] object-cover"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5FVs5fwBUf9R60Y3PgmV3SjF0lyUq8TXOsmWqalhS1hiCVXtfrjt_qDhDar5JaLDLjcavStkZj8JJmgKnBJ_E7siv-gVpYkyHMd-ax16taTeb7mpf_xReFW5aFsonEAhgXjJHCf0EPtM1Uwfh9V5PneaGqiJnQFqRrqAOz-JNoXuFedRE_MELNt-45mzL1n3TkJmuFAwOYtI068-TWhQJz_30jg3_k5W53VsGAbiPJVrE7aVsXzlSn0qH2z16YrPyR7pDHVJzqXU"
                   />
                   <div className="absolute top-6 right-6">
@@ -224,7 +320,12 @@ export default function SolutionsPage() {
                     <p className="text-xs text-slate-500">One monthly invoice for all services and rentals.</p>
                   </div>
                 </div>
-                <button className="bg-slate-900 dark:bg-white dark:text-slate-900 text-white font-bold px-8 py-4 rounded-xl hover:opacity-90 transition-all">Explore Logistics Portal</button>
+                <button 
+                  onClick={handleExploreLogistics}
+                  className="bg-slate-900 dark:bg-white dark:text-slate-900 text-white font-bold px-8 py-4 rounded-xl hover:opacity-90 transition-all"
+                >
+                  Explore Logistics Portal
+                </button>
               </div>
             </div>
           </div>
@@ -259,13 +360,18 @@ export default function SolutionsPage() {
                     </div>
                   </div>
                 </div>
-                <button className="bg-amber-500 text-white font-bold px-8 py-4 rounded-xl hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20">Browse Consumer Catalog</button>
+                <button 
+                  onClick={handleBrowseCatalog}
+                  className="bg-amber-500 text-white font-bold px-8 py-4 rounded-xl hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20"
+                >
+                  Browse Consumer Catalog
+                </button>
               </div>
               <div className="flex-1 order-1 lg:order-2">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                  <img 
-                    alt="Individual Renter" 
-                    className="w-full h-[450px] object-cover" 
+                  <img
+                    alt="Individual Renter"
+                    className="w-full h-[450px] object-cover"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoBOdrY80zOx9mC6azAcLs4Ni88BSp58ENNbrgERA3BJwEMjVjzaI6f03zztzCoOGNqHYAVQ__PA8JpXlSKTu0cOpx6fn9v5hhnjjFyhpibbGAh7F7Tc7NJxRKGeWxL9-oo4NlkEXIx5DQuoiZ95YxOPrOq1Zq1k-HrRhxsODzG0bXnB-CwOlVqtRQIkTAUrOPnp94U_rWKlF9GN86dKEvMOh6pc5Arjh2k8z0MciOz8YN8vTEElgsoVTr8PtP94priG9E9-EyQD4"
                   />
                   <div className="absolute bottom-6 left-6 right-6">
@@ -294,13 +400,23 @@ export default function SolutionsPage() {
                   Custom pricing, dedicated account managers, and regional fleet priority for enterprise-level partners. Let's discuss your next milestone.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-6 justify-center w-full max-w-md">
-                  <button className="bg-white text-primary font-bold px-10 py-5 rounded-2xl hover:bg-slate-50 transition-all text-lg shadow-xl">Talk to Sales</button>
-                  <button className="border-2 border-white/30 text-white font-bold px-10 py-5 rounded-2xl hover:bg-white/10 transition-all text-lg">Request Demo</button>
+                  <button 
+                    onClick={handleTalkToSales}
+                    className="bg-white text-primary font-bold px-10 py-5 rounded-2xl hover:bg-slate-50 transition-all text-lg shadow-xl"
+                  >
+                    Talk to Sales
+                  </button>
+                  <button 
+                    onClick={handleRequestDemo}
+                    className="border-2 border-white/30 text-white font-bold px-10 py-5 rounded-2xl hover:bg-white/10 transition-all text-lg"
+                  >
+                    Request Demo
+                  </button>
                 </div>
                 <div className="mt-16 flex flex-wrap justify-center items-center gap-10 opacity-40 grayscale brightness-200">
                   {trustPartners.map((partner, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <span className="material-icons">{partner.icon}</span> 
+                      <span className="material-icons">{partner.icon}</span>
                       <span className="font-bold">{partner.name}</span>
                     </div>
                   ))}

@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/auth-context';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
 import {
   Bell,
   Navigation,
@@ -33,12 +34,12 @@ export function DriverHeader() {
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 lg:px-10 py-3">
       <div className="flex items-center gap-8">
-        <div className="flex items-center gap-3 text-primary">
+        <Link href="/" className="flex items-center gap-3 text-primary">
           <div className="size-8 flex items-center justify-center bg-primary rounded-lg text-white">
             <Navigation className="h-5 w-5" />
           </div>
           <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">ServiceStream</h2>
-        </div>
+        </Link>
         <label className="hidden md:flex flex-col min-w-40 h-10 max-w-64">
           <div className="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 dark:bg-slate-800 border border-transparent focus-within:border-primary">
             <div className="text-slate-500 flex items-center justify-center pl-4">

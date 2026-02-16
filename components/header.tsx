@@ -104,12 +104,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <Link
-            href={user ?
-              (profile?.user_type === 'driver' ? '/driver/dashboard' :
-               profile?.user_type === 'admin' ? '/admin/dashboard' :
-               '/customer/dashboard') :
-              '/'
-            }
+            href="/"
             className="flex items-center space-x-2"
           >
             <span className="text-xl font-bold">ServiceHailing</span>

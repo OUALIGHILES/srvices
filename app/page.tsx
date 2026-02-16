@@ -1,19 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, Search, MapPin, Wrench, Droplets, Hammer, Construction, Facebook, Mail, Globe, Menu, X, Factory, LandPlot, Home, Building2, ClipboardCheck, Calendar, Truck, ArrowRight, Fuel } from 'lucide-react';
+import { Search, MapPin, Wrench, Droplets, Hammer, Construction, Facebook, Mail, Globe, Menu, X, Factory, LandPlot, Home, Building2, ClipboardCheck, Calendar, Truck, ArrowRight, Fuel } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useServices } from '@/hooks/useServices';
+
+export interface Service {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  image_url: string;
+  base_price: number;
+  price_type: 'fixed' | 'hourly' | 'per_unit';
+  rating: number;
+  review_count: number;
+  provider_name: string;
+  distance: string;
+  is_instant_booking: boolean;
+  is_available_today: boolean;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function HomePageMain() {
   const { user, profile } = useAuth();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Fetch services using the custom hook
+  const { services, loading, error } = useServices();
 
   // Service categories data
   const serviceCategories = [
@@ -51,36 +74,46 @@ export default function HomePageMain() {
     }
   ];
 
-  // Featured listings data
-  const featuredListings = [
-    {
-      id: '1',
-      name: 'Caterpillar 320 GC',
-      location: 'San Jose, CA',
-      price: 650,
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqQlXvAK-J4zM1xlXFijzfv4MNF6HlKPGMkOaLPovGwk6VfAH_rx5uChJZy1PmW8r0kw2hyiCKLQRreqc3gi0fVgIqxpGp87dKPrGpeXBmz5eOJyhAtcSSsCTZtgE-QrpfxVJ87SaIm38apt2uVqGqCz3YRgVbhGeOhT1LxXLVCh20AdeS9MUcb6LWVRQT4T3rrX-eNcT3iU7SpxOizEVeGYaHYRm5DxvChewLZh0YxOVZUoCYSnw9Ue3ESgAmoy9eae0sRBKWB_Y',
-      badges: ['20 Tons', 'Diesel', 'Tier 4 Final'],
-      badgeText: 'Available Now'
-    },
-    {
-      id: '2',
-      name: 'Komatsu D61PXi-24',
-      location: 'Oakland, CA',
-      price: 820,
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCoBOdrY80zOx9mC6azAcLs4Ni88BSp58ENNbrgERA3BJwEMjVjzaI6f03zztzCoOGNqHYAVQ__PA8JpXlSKTu0cOpx6fn9v5hhnjjFyhpibbGAh7F7Tc7NJxRKGeWxL9-oo4NlkEXIx5DQuoiZ95YxOPrOq1Zq1k-HrRhxsODzG0bXnB-CwOlVqtRQIkTAUrOPnp94U_rWKlF9GN86dKEvMOh6pc5Arjh2k8z0MciOz8YN8vTEElgsoVTr8PtP94priG9E9-EyQD4',
-      badges: ['168 HP', 'iMC 2.0', 'Hydrostatic'],
-      badgeText: 'Verified Vendor'
-    },
-    {
-      id: '3',
-      name: '4000 Gallon Water Truck',
-      location: 'Fremont, CA',
-      price: 450,
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA5FVs5fwBUf9R60Y3PgmV3SjF0lyUq8TXOsmWqalhS1hiCVXtfrjt_qDhDar5JaLDLjcavStkZj8JJmgKnBJ_E7siv-gVpYkyHMd-ax16taTeb7mpf_xReFW5aFsonEAhgXjJHCf0EPtM1Uwfh9V5PneaGqiJnQFqRrqAOz-JNoXuFedRE_MELNt-45mzL1n3TkJmuFAwOYtI068-TWhQJz_30jg3_k5W53VsGAbiPJVrE7aVsXzlSn0qH2z16YrPyR7pDHVJzqXU',
-      badges: ['Potable Available', 'Rear Sprayers'],
-      badgeText: 'Fast Delivery'
-    }
-  ];
+  // Use fetched services if available, otherwise use mock data
+  const featuredListings = services.length > 0 
+    ? services.map(service => ({
+        id: service.id,
+        name: service.name,
+        location: service.distance || 'San Jose, CA',
+        price: service.base_price,
+        image: service.image_url || 'https://placehold.co/400x300',
+        badges: [service.category, service.price_type],
+        badgeText: service.is_available_today ? 'Available Today' : 'Available Soon'
+      }))
+    : [
+        {
+          id: '1',
+          name: 'Caterpillar 320 GC',
+          location: 'San Jose, CA',
+          price: 650,
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqQlXvAK-J4zM1xlXFijzfv4MNF6HlKPGMkOaLPovGwk6VfAH_rx5uChJZy1PmW8r0kw2hyiCKLQRreqc3gi0fVgIqxpGp87dKPrGpeXBmz5eOJyhAtcSSsCTZtgE-QrpfxVJ87SaIm38apt2uVqGqCz3YRgVbhGeOhT1LxXLVCh20AdeS9MUcb6LWVRQT4T3rrX-eNcT3iU7SpxOizEVeGYaHYRm5DxvChewLZh0YxOVZUoCYSnw9Ue3ESgAmoy9eae0sRBKWB_Y',
+          badges: ['20 Tons', 'Diesel', 'Tier 4 Final'],
+          badgeText: 'Available Now'
+        },
+        {
+          id: '2',
+          name: 'Komatsu D61PXi-24',
+          location: 'Oakland, CA',
+          price: 820,
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCoBOdrY80zOx9mC6azAcLs4Ni88BSp58ENNbrgERA3BJwEMjVjzaI6f03zztzCoOGNqHYAVQ__PA8JpXlSKTu0cOpx6fn9v5hhnjjFyhpibbGAh7F7Tc7NJxRKGeWxL9-oo4NlkEXIx5DQuoiZ95YxOPrOq1Zq1k-HrRhxsODzG0bXnB-CwOlVqtRQIkTAUrOPnp94U_rWKlF9GN86dKEvMOh6pc5Arjh2k8z0MciOz8YN8vTEElgsoVTr8PtP94priG9E9-EyQD4',
+          badges: ['168 HP', 'iMC 2.0', 'Hydrostatic'],
+          badgeText: 'Verified Vendor'
+        },
+        {
+          id: '3',
+          name: '4000 Gallon Water Truck',
+          location: 'Fremont, CA',
+          price: 450,
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA5FVs5fwBUf9R60Y3PgmV3SjF0lyUq8TXOsmWqalhS1hiCVXtfrjt_qDhDar5JaLDLjcavStkZj8JJmgKnBJ_E7siv-gVpYkyHMd-ax16taTeb7mpf_xReFW5aFsonEAhgXjJHCf0EPtM1Uwfh9V5PneaGqiJnQFqRrqAOz-JNoXuFedRE_MELNt-45mzL1n3TkJmuFAwOYtI068-TWhQJz_30jg3_k5W53VsGAbiPJVrE7aVsXzlSn0qH2z16YrPyR7pDHVJzqXU',
+          badges: ['Potable Available', 'Rear Sprayers'],
+          badgeText: 'Fast Delivery'
+        }
+      ];
 
   // Trust partners data
   const trustPartners = [
@@ -98,32 +131,34 @@ export default function HomePageMain() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <div className="w-10 h-10 bg-primary rounded flex items-center justify-center">
                 <Construction className="h-6 w-6 text-white" />
               </div>
               <span className="text-xl font-bold tracking-tight text-primary">EquipFlow</span>
-            </div>
+            </Link>
             {/* Navigation */}
             <nav className="hidden md:flex space-x-8">
               <Link href="/" className="text-sm font-medium text-primary transition-colors h-16 flex items-center border-b-2 border-primary">Home</Link>
-              <Link href="/categories" className="text-sm font-medium hover:text-primary transition-colors">Categories</Link>
-              <Link href="/pricing" className="text-sm font-medium hover:text-primary transition-colors">Pricing</Link>
-              <Link href="/solutions" className="text-sm font-medium hover:text-primary transition-colors">Solutions</Link>
-              <Link href="/support" className="text-sm font-medium hover:text-primary transition-colors">Support</Link>
+              <Link href="/categories" className="text-sm font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); router.push('/categories'); }}>Categories</Link>
+              <Link href="/pricing" className="text-sm font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); router.push('/pricing'); }}>Pricing</Link>
+              <Link href="/solutions" className="text-sm font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); router.push('/solutions'); }}>Solutions</Link>
+              <Link href="/support" className="text-sm font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); router.push('/support'); }}>Support</Link>
             </nav>
             {/* Actions */}
             <div className="hidden md:flex items-center space-x-4">
-              <Link href="/login">
-                <button className="text-sm font-semibold text-primary px-4 py-2 hover:bg-primary/5 rounded-lg transition-all">
-                  Login
-                </button>
-              </Link>
-              <Link href="/signup">
-                <button className="text-sm font-semibold bg-primary text-white px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all">
-                  Sign Up
-                </button>
-              </Link>
+              <button 
+                className="text-sm font-semibold text-primary px-4 py-2 hover:bg-primary/5 rounded-lg transition-all"
+                onClick={() => router.push('/login')}
+              >
+                Login
+              </button>
+              <button 
+                className="text-sm font-semibold bg-primary text-white px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all"
+                onClick={() => router.push('/signup')}
+              >
+                Sign Up
+              </button>
             </div>
             {/* Mobile menu button */}
             <button 
@@ -138,23 +173,71 @@ export default function HomePageMain() {
           {mobileMenuOpen && (
             <div className="md:hidden py-4 border-t border-slate-200 dark:border-slate-800">
               <div className="flex flex-col space-y-3 px-4">
-                <Link href="/" className="font-medium text-primary py-2">Home</Link>
-                <Link href="/categories" className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2">Categories</Link>
-                <Link href="/pricing" className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2">Pricing</Link>
-                <Link href="/solutions" className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2">Solutions</Link>
-                <Link href="/support" className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2">Support</Link>
-                
+                <button 
+                  className="font-medium text-primary py-2 text-left"
+                  onClick={() => {
+                    router.push('/');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Home
+                </button>
+                <button 
+                  className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2 text-left"
+                  onClick={() => {
+                    router.push('/categories');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Categories
+                </button>
+                <button 
+                  className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2 text-left"
+                  onClick={() => {
+                    router.push('/pricing');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Pricing
+                </button>
+                <button 
+                  className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2 text-left"
+                  onClick={() => {
+                    router.push('/solutions');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Solutions
+                </button>
+                <button 
+                  className="font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary py-2 text-left"
+                  onClick={() => {
+                    router.push('/support');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Support
+                </button>
+
                 <div className="pt-4 flex flex-col gap-3">
-                  <Link href="/login">
-                    <button className="w-full text-left text-sm font-semibold text-primary px-4 py-2 hover:bg-primary/5 rounded-lg transition-all">
-                      Login
-                    </button>
-                  </Link>
-                  <Link href="/signup">
-                    <button className="w-full text-left text-sm font-semibold bg-primary text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all">
-                      Sign Up
-                    </button>
-                  </Link>
+                  <button 
+                    className="w-full text-left text-sm font-semibold text-primary px-4 py-2 hover:bg-primary/5 rounded-lg transition-all"
+                    onClick={() => {
+                      router.push('/login');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Login
+                  </button>
+                  <button 
+                    className="w-full text-left text-sm font-semibold bg-primary text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all"
+                    onClick={() => {
+                      router.push('/signup');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Sign Up
+                  </button>
                 </div>
               </div>
             </div>
@@ -174,8 +257,8 @@ export default function HomePageMain() {
             <div className="absolute inset-0 bg-black/60"></div>
           </div>
           <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
-              Book Heavy Equipment &amp; Supplies Instantly.
+            <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight italic drop-shadow-2xl relative">
+              <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[hsl(19,92%,52%)] via-[hsl(30,92%,52%)] to-[hsl(45,92%,52%)] font-bold tracking-wide animate-pulse">Book Heavy Equipment &amp; Supplies Instantly.</span>
             </h1>
             <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
               Reliable. Transparent. Efficient. The all-in-one platform for contractors and logistics managers to power their projects.
@@ -184,21 +267,30 @@ export default function HomePageMain() {
             <div className="bg-white p-2 rounded-xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
               <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-slate-200">
                 <Search className="text-slate-400 mr-2 h-5 w-5" />
-                <input 
-                  className="w-full border-none focus:ring-0 text-slate-900 bg-transparent py-3" 
-                  placeholder="What equipment do you need?" 
+                <input
+                  className="w-full border-none focus:ring-0 text-slate-900 bg-transparent py-3"
+                  placeholder="What equipment do you need?"
                   type="text"
+                  id="equipment-search"
                 />
               </div>
               <div className="flex-1 flex items-center px-4 border-b md:border-b-0 md:border-r border-slate-200">
                 <MapPin className="text-slate-400 mr-2 h-5 w-5" />
-                <input 
-                  className="w-full border-none focus:ring-0 text-slate-900 bg-transparent py-3" 
-                  placeholder="Location" 
+                <input
+                  className="w-full border-none focus:ring-0 text-slate-900 bg-transparent py-3"
+                  placeholder="Location"
                   type="text"
+                  id="location-search"
                 />
               </div>
-              <button className="bg-primary text-white font-bold px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors">
+              <button 
+                className="bg-primary text-white font-bold px-8 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+                onClick={() => {
+                  const equipment = (document.getElementById('equipment-search') as HTMLInputElement)?.value;
+                  const location = (document.getElementById('location-search') as HTMLInputElement)?.value;
+                  router.push(`/services?search=${encodeURIComponent(equipment)}&location=${encodeURIComponent(location)}`);
+                }}
+              >
                 Find Fleet
               </button>
             </div>
@@ -264,15 +356,19 @@ export default function HomePageMain() {
                 <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Explore Categories</h2>
                 <p className="text-slate-500 dark:text-slate-400">Everything you need for a successful construction site.</p>
               </div>
-              <button className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+              <button 
+                className="text-primary font-semibold flex items-center gap-2 hover:gap-3 transition-all"
+                onClick={() => router.push('/categories')}
+              >
                 View All Categories <ArrowRight className="h-4 w-4" />
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {serviceCategories.map((category) => (
-                <Card 
-                  key={category.id} 
+                <Card
+                  key={category.id}
                   className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer border border-slate-100 dark:border-slate-800"
+                  onClick={() => router.push(`/categories/${category.id}`)}
                 >
                   <div className={`${category.color} text-white rounded-lg flex items-center justify-center w-12 h-12 mb-6`}>
                     {category.icon}
@@ -290,52 +386,71 @@ export default function HomePageMain() {
         <section className="py-24 bg-white dark:bg-background-dark">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-12">Popular Listings Near You</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredListings.map((listing) => (
-                <div 
-                  key={listing.id} 
-                  className="group border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-2xl transition-all"
-                >
-                  <div className="relative h-56 overflow-hidden">
-                    <img 
-                      alt={listing.name} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                      src={listing.image}
-                    />
-                    <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
-                      {listing.badgeText}
+            
+            {loading && (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+              </div>
+            )}
+            
+            {error && (
+              <div className="text-center py-8">
+                <p className="text-red-500">Error loading services: {error}</p>
+                <p className="text-slate-500 mt-2">Showing sample listings...</p>
+              </div>
+            )}
+            
+            {!loading && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredListings.map((listing) => (
+                  <div
+                    key={listing.id}
+                    className="group border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden hover:shadow-2xl transition-all"
+                  >
+                    <div className="relative h-56 overflow-hidden">
+                      <img
+                        alt={listing.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        src={listing.image}
+                      />
+                      <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                        {listing.badgeText}
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-xl font-bold">{listing.name}</h3>
+                          <p className="text-slate-500 text-sm flex items-center gap-1">
+                            <MapPin className="h-4 w-4" /> {listing.location}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-primary">${listing.price}</div>
+                          <div className="text-slate-400 text-xs font-medium">per day</div>
+                        </div>
+                      </div>
+                      <div className="flex gap-4 mb-6">
+                        {listing.badges.map((badge, idx) => (
+                          <span
+                            key={idx}
+                            className="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded"
+                          >
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                      <button 
+                        className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-primary/20 transition-all"
+                        onClick={() => router.push(`/details/${listing.id}`)}
+                      >
+                        Book Now
+                      </button>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-xl font-bold">{listing.name}</h3>
-                        <p className="text-slate-500 text-sm flex items-center gap-1">
-                          <MapPin className="h-4 w-4" /> {listing.location}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-primary">${listing.price}</div>
-                        <div className="text-slate-400 text-xs font-medium">per day</div>
-                      </div>
-                    </div>
-                    <div className="flex gap-4 mb-6">
-                      {listing.badges.map((badge, idx) => (
-                        <span 
-                          key={idx} 
-                          className="text-xs bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded"
-                        >
-                          {badge}
-                        </span>
-                      ))}
-                    </div>
-                    <button className="w-full bg-primary text-white py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-primary/20 transition-all">
-                      Book Now
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
@@ -352,10 +467,16 @@ export default function HomePageMain() {
                   Join over 500+ contracting companies who trust EquipFlow for their daily site operations.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <button className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-slate-50 transition-colors">
+                  <button 
+                    className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-slate-50 transition-colors"
+                    onClick={() => router.push('/signup')}
+                  >
                     Create Account
                   </button>
-                  <button className="border border-white/30 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors">
+                  <button 
+                    className="border border-white/30 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors"
+                    onClick={() => router.push('/support')}
+                  >
                     Talk to Sales
                   </button>
                 </div>
@@ -379,23 +500,23 @@ export default function HomePageMain() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-12">
             <div className="col-span-2 lg:col-span-2">
-              <div className="flex items-center gap-2 mb-6">
+              <Link href="/" className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 bg-primary rounded flex items-center justify-center">
                   <Construction className="h-4 w-4 text-white" />
                 </div>
                 <span className="text-lg font-bold tracking-tight text-primary">EquipFlow</span>
-              </div>
+              </Link>
               <p className="text-slate-500 dark:text-slate-400 max-w-sm mb-6">
                 The world's most trusted marketplace for heavy equipment and construction logistics. Managed fleet, guaranteed uptime.
               </p>
               <div className="flex gap-4">
-                <a className="text-slate-400 hover:text-primary" href="#">
+                <a className="text-slate-400 hover:text-primary" href="https://facebook.com/equipflow" target="_blank" rel="noopener noreferrer">
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a className="text-slate-400 hover:text-primary" href="#">
+                <a className="text-slate-400 hover:text-primary" href="mailto:support@equipflow.com">
                   <Mail className="h-5 w-5" />
                 </a>
-                <a className="text-slate-400 hover:text-primary" href="#">
+                <a className="text-slate-400 hover:text-primary" href="https://equipflow.com" target="_blank" rel="noopener noreferrer">
                   <Globe className="h-5 w-5" />
                 </a>
               </div>
@@ -403,27 +524,27 @@ export default function HomePageMain() {
             <div>
               <h4 className="font-bold mb-6">Company</h4>
               <ul className="space-y-4 text-slate-500 dark:text-slate-400">
-                <li><a className="hover:text-primary" href="#">About Us</a></li>
-                <li><a className="hover:text-primary" href="#">Careers</a></li>
-                <li><a className="hover:text-primary" href="#">Contact</a></li>
-                <li><a className="hover:text-primary" href="#">Press</a></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/about')}>About Us</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/careers')}>Careers</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/contact')}>Contact</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/press')}>Press</button></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold mb-6">Resources</h4>
               <ul className="space-y-4 text-slate-500 dark:text-slate-400">
-                <li><a className="hover:text-primary" href="#">Help Center</a></li>
-                <li><a className="hover:text-primary" href="#">Fleet Partners</a></li>
-                <li><a className="hover:text-primary" href="#">Blog</a></li>
-                <li><a className="hover:text-primary" href="#">Guidelines</a></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/help-center')}>Help Center</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/fleet-partners')}>Fleet Partners</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/blog')}>Blog</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/guidelines')}>Guidelines</button></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold mb-6">Legal</h4>
               <ul className="space-y-4 text-slate-500 dark:text-slate-400">
-                <li><a className="hover:text-primary" href="#">Privacy Policy</a></li>
-                <li><a className="hover:text-primary" href="#">Terms of Service</a></li>
-                <li><a className="hover:text-primary" href="#">Rental Agreement</a></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/privacy-policy')}>Privacy Policy</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/terms-of-service')}>Terms of Service</button></li>
+                <li><button className="hover:text-primary text-left" onClick={() => router.push('/rental-agreement')}>Rental Agreement</button></li>
               </ul>
             </div>
           </div>

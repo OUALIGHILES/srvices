@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,12 +11,16 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Construction, Facebook, Mail, Globe, Menu, X as CloseIcon, MapPin, Heart, Weight, Droplets, Settings, ConstructionIcon, Bolt, BarChart3, Eye, BarChart3 as Monitoring } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { getServices, Service } from '@/lib/api';
 
 export default function CategoriesPage() {
   const { user, profile } = useAuth();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+  const [equipmentList, setEquipmentList] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   // Filter states
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
   const [brandFilters, setBrandFilters] = useState({
@@ -32,65 +36,102 @@ export default function CategoriesPage() {
     propane: false
   });
 
-  // Sample equipment data
-  const equipmentList = [
-    {
-      id: '1',
-      name: 'Caterpillar 320 GC',
-      price: 650,
-      location: 'San Jose, CA (12 mi)',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqQlXvAK-J4zM1xlXFijzfv4MNF6HlKPGMkOaLPovGwk6VfAH_rx5uChJZy1PmW8r0kw2hyiCKLQRreqc3gi0fVgIqxpGp87dKPrGpeXBmz5eOJyhAtcSSsCTZtgE-QrpfxVJ87SaIm38apt2uVqGqCz3YRgVbhGeOhT1LxXLVCh20AdeS9MUcb6LWVRQT4T3rrX-eNcT3iU7SpxOizEVeGYaHYRm5DxvChewLZh0YxOVZUoCYSnw9Ue3ESgAmoy9eae0sRBKWB_Y',
-      badges: [{ text: 'Available Now', type: 'available' }],
-      specs: [
-        { icon: Weight, label: '20 Tons' },
-        { icon: Droplets, label: 'Diesel' },
-        { icon: Settings, label: 'Tier 4 Final' },
-        { icon: ConstructionIcon, label: 'Bucket included' }
-      ]
-    },
-    {
-      id: '2',
-      name: 'Komatsu D61PXi-24',
-      price: 820,
-      location: 'Oakland, CA (24 mi)',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCoBOdrY80zOx9mC6azAcLs4Ni88BSp58ENNbrgERA3BJwEMjVjzaI6f03zztzCoOGNqHYAVQ__PA8JpXlSKTu0cOpx6fn9v5hhnjjFyhpibbGAh7F7Tc7NJxRKGeWxL9-oo4NlkEXIx5DQuoiZ95YxOPrOq1Zq1k-HrRhxsODzG0bXnB-CwOlVqtRQIkTAUrOPnp94U_rWKlF9GN86dKEvMOh6pc5Arjh2k8z0MciOz8YN8vTEElgsoVTr8PtP94priG9E9-EyQD4',
-      badges: [{ text: 'Verified Vendor', type: 'verified' }],
-      specs: [
-        { icon: Bolt, label: '168 HP' },
-        { icon: Droplets, label: 'Diesel' },
-        { icon: BarChart3, label: 'iMC 2.0 Tech' },
-        { icon: Settings, label: 'Hydrostatic' }
-      ]
-    },
-    {
-      id: '3',
-      name: 'Deere 672G Grader',
-      price: 550,
-      location: 'Fremont, CA (30 mi)',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAadPQdqB6hQ4-k1xLiW_5-cBhU5aRDZxTfNBALS45Tv0Yx16FIqkBzfUlgG0q_MNOkdWIw98ruJHJJKeBtO1nglMkrXl9yKVKBIvE91CgduzkJFfgMntUt2ttXzRzK1LoxJeVfuDu88GVM53x6HrmtSXaxcnM76iwuCz1SnK3UgM5Lx3x_xBsT454RfIjKF6GylJrBQG7dsq3Oxarfmb8JVCdOLQGa3hGUySxKi4t8PZHZBGRDcWZXuWcWsYc0gBstiMhHKVZzVUo',
-      badges: [{ text: 'Fast Delivery', type: 'fast-delivery' }],
-      specs: [
-        { icon: Weight, label: '18 Tons' },
-        { icon: Droplets, label: 'Diesel' },
-        { icon: Settings, label: '6WD System' },
-        { icon: Eye, label: 'Grade Control' }
-      ]
-    },
-    {
-      id: '4',
-      name: 'Volvo L120H Loader',
-      price: 490,
-      location: 'Palo Alto, CA (18 mi)',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA5FVs5fwBUf9R60Y3PgmV3SjF0lyUq8TXOsmWqalhS1hiCVXtfrjt_qDhDar5JaLDLjcavStkZj8JJmgKnBJ_E7siv-gVpYkyHMd-ax16taTeb7mpf_xReFW5aFsonEAhgXjJHCf0EPtM1Uwfh9V5PneaGqiJnQFqRrqAOz-JNoXuFedRE_MELNt-45mzL1n3TkJmuFAwOYtI068-TWhQJz_30jg3_k5W53VsGAbiPJVrE7aVsXzlSn0qH2z16YrPyR7pDHVJzqXU',
-      badges: [],
-      specs: [
-        { icon: Weight, label: '22 Tons' },
-        { icon: Droplets, label: 'Diesel' },
-        { icon: Settings, label: 'Stage V' },
-        { icon: Monitoring, label: 'Telematics' }
-      ]
+  // Fetch equipment data from API
+  const fetchEquipmentData = async () => {
+    try {
+      setLoading(true);
+      const services = await getServices({
+        category: 'heavy_equipment', // Default to heavy equipment
+        minPrice: priceRange[0],
+        maxPrice: priceRange[1],
+        limit: 20 // Limit to 20 items initially
+      });
+      
+      // Transform the service data to match the expected equipment format
+      const transformedData = services.map(service => ({
+        ...service,
+        id: service.id,
+        name: service.name,
+        price: Number(service.base_price),
+        location: service.distance,
+        image: service.image_url || 'https://placehold.co/400x300',
+        badges: service.is_available_today ? [{ text: 'Available Today', type: 'available' }] : [],
+        specs: [] // Will populate based on filters later
+      }));
+      
+      setEquipmentList(transformedData);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching equipment data:', err);
+      setError('Failed to load equipment data. Please try again later.');
+      // Fallback to sample data if API fails
+      const fallbackData = [
+        {
+          id: '1',
+          name: 'Caterpillar 320 GC',
+          price: 650,
+          location: 'San Jose, CA (12 mi)',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqQlXvAK-J4zM1xlXFijzfv4MNF6HlKPGMkOaLPovGwk6VfAH_rx5uChJZy1PmW8r0kw2hyiCKLQRreqc3gi0fVgIqxpGp87dKPrGpeXBmz5eOJyhAtcSSsCTZtgE-QrpfxVJ87SaIm38apt2uVqGqCz3YRgVbhGeOhT1LxXLVCh20AdeS9MUcb6LWVRQT4T3rrX-eNcT3iU7SpxOizEVeGYaHYRm5DxvChewLZh0YxOVZUoCYSnw9Ue3ESgAmoy9eae0sRBKWB_Y',
+          badges: [{ text: 'Available Now', type: 'available' }],
+          specs: [
+            { icon: Weight, label: '20 Tons' },
+            { icon: Droplets, label: 'Diesel' },
+            { icon: Settings, label: 'Tier 4 Final' },
+            { icon: ConstructionIcon, label: 'Bucket included' }
+          ]
+        },
+        {
+          id: '2',
+          name: 'Komatsu D61PXi-24',
+          price: 820,
+          location: 'Oakland, CA (24 mi)',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCoBOdrY80zOx9mC6azAcLs4Ni88BSp58ENNbrgERA3BJwEMjVjzaI6f03zztzCoOGNqHYAVQ__PA8JpXlSKTu0cOpx6fn9v5hhnjjFyhpibbGAh7F7Tc7NJxRKGeWxL9-oo4NlkEXIx5DQuoiZ95YxOPrOq1Zq1k-HrRhxsODzG0bXnB-CwOlVqtRQIkTAUrOPnp94U_rWKlF9GN86dKEvMOh6pc5Arjh2k8z0MciOz8YN8vTEElgsoVTr8PtP94priG9E9-EyQD4',
+          badges: [{ text: 'Verified Vendor', type: 'verified' }],
+          specs: [
+            { icon: Bolt, label: '168 HP' },
+            { icon: Droplets, label: 'Diesel' },
+            { icon: BarChart3, label: 'iMC 2.0 Tech' },
+            { icon: Settings, label: 'Hydrostatic' }
+          ]
+        },
+        {
+          id: '3',
+          name: 'Deere 672G Grader',
+          price: 550,
+          location: 'Fremont, CA (30 mi)',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAadPQdqB6hQ4-k1xLiW_5-cBhU5aRDZxTfNBALS45Tv0Yx16FIqkBzfUlgG0q_MNOkdWIw98ruJHJJKeBtO1nglMkrXl9yKVKBIvE91CgduzkJFfgMntUt2ttXzRzK1LoxJeVfuDu88GVM53x6HrmtSXaxcnM76iwuCz1SnK3UgM5Lx3x_xBsT454RfIjKF6GylJrBQG7dsq3Oxarfmb8JVCdOLQGa3hGUySxKi4t8PZHZBGRDcWZXuWcWsYc0gBstiMhHKVZzVUo',
+          badges: [{ text: 'Fast Delivery', type: 'fast-delivery' }],
+          specs: [
+            { icon: Weight, label: '18 Tons' },
+            { icon: Droplets, label: 'Diesel' },
+            { icon: Settings, label: '6WD System' },
+            { icon: Eye, label: 'Grade Control' }
+          ]
+        },
+        {
+          id: '4',
+          name: 'Volvo L120H Loader',
+          price: 490,
+          location: 'Palo Alto, CA (18 mi)',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA5FVs5fwBUf9R60Y3PgmV3SjF0lyUq8TXOsmWqalhS1hiCVXtfrjt_qDhDar5JaLDLjcavStkZj8JJmgKnBJ_E7siv-gVpYkyHMd-ax16taTeb7mpf_xReFW5aFsonEAhgXjJHCf0EPtM1Uwfh9V5PneaGqiJnQFqRrqAOz-JNoXuFedRE_MELNt-45mzL1n3TkJmuFAwOYtI068-TWhQJz_30jg3_k5W53VsGAbiPJVrE7aVsXzlSn0qH2z16YrPyR7pDHVJzqXU',
+          badges: [],
+          specs: [
+            { icon: Weight, label: '22 Tons' },
+            { icon: Droplets, label: 'Diesel' },
+            { icon: Settings, label: 'Stage V' },
+            { icon: Monitoring, label: 'Telematics' }
+          ]
+        }
+      ];
+      setEquipmentList(fallbackData);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchEquipmentData();
+  }, []);
 
   // Handle brand filter changes
   const handleBrandChange = (brand: string) => {
@@ -193,11 +234,71 @@ export default function CategoriesPage() {
               <span className="text-slate-900 dark:text-white font-medium">Heavy Equipment</span>
             </nav>
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Heavy Equipment Rental</h1>
-            <p className="text-slate-500 mt-1">Found 128 machines available for your current location.</p>
+            <p className="text-slate-500 mt-1">Found {equipmentList.length} machines available for your current location.</p>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-slate-500 whitespace-nowrap">Sort by:</span>
-            <Select>
+            <Select
+              onValueChange={async (value) => {
+                try {
+                  setLoading(true);
+                  
+                  let orderBy = '';
+                  let orderDirection: 'asc' | 'desc' = 'asc';
+                  
+                  switch(value) {
+                    case 'popular':
+                      orderBy = 'rating';
+                      orderDirection = 'desc';
+                      break;
+                    case 'low-high':
+                      orderBy = 'base_price';
+                      orderDirection = 'asc';
+                      break;
+                    case 'high-low':
+                      orderBy = 'base_price';
+                      orderDirection = 'desc';
+                      break;
+                    case 'newest':
+                      orderBy = 'created_at';
+                      orderDirection = 'desc';
+                      break;
+                    default:
+                      orderBy = 'rating';
+                      orderDirection = 'desc';
+                  }
+                  
+                  const services = await getServices({
+                    category: 'heavy_equipment',
+                    minPrice: priceRange[0],
+                    maxPrice: priceRange[1],
+                    orderBy,
+                    orderDirection,
+                    limit: 20
+                  });
+                  
+                  // Transform the service data to match the expected equipment format
+                  const transformedData = services.map(service => ({
+                    ...service,
+                    id: service.id,
+                    name: service.name,
+                    price: Number(service.base_price),
+                    location: service.distance,
+                    image: service.image_url || 'https://placehold.co/400x300',
+                    badges: service.is_available_today ? [{ text: 'Available Today', type: 'available' }] : [],
+                    specs: []
+                  }));
+                  
+                  setEquipmentList(transformedData);
+                  setError(null);
+                } catch (err) {
+                  console.error('Error sorting results:', err);
+                  setError('Failed to sort results. Please try again.');
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
               <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-lg text-sm focus:ring-primary focus:border-primary">
                 <SelectValue placeholder="Most Popular" />
               </SelectTrigger>
@@ -216,7 +317,60 @@ export default function CategoriesPage() {
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 sticky top-24">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="font-bold text-slate-900 dark:text-white">Filters</h2>
-                <button className="text-primary text-xs font-semibold hover:underline">Reset All</button>
+                <button 
+                  className="text-primary text-xs font-semibold hover:underline"
+                  onClick={() => {
+                    // Reset all filters
+                    setPriceRange([0, 2000]);
+                    setBrandFilters({
+                      caterpillar: false,
+                      komatsu: false,
+                      johnDeere: false,
+                      volvo: false
+                    });
+                    setTonnageFilter(null);
+                    setEngineTypeFilters({
+                      diesel: true,
+                      electric: false,
+                      propane: false
+                    });
+                    
+                    // Fetch all data again
+                    const fetchAllData = async () => {
+                      try {
+                        setLoading(true);
+                        const services = await getServices({
+                          category: 'heavy_equipment',
+                          limit: 20
+                        });
+                        
+                        // Transform the service data to match the expected equipment format
+                        const transformedData = services.map(service => ({
+                          ...service,
+                          id: service.id,
+                          name: service.name,
+                          price: Number(service.base_price),
+                          location: service.distance,
+                          image: service.image_url || 'https://placehold.co/400x300',
+                          badges: service.is_available_today ? [{ text: 'Available Today', type: 'available' }] : [],
+                          specs: []
+                        }));
+                        
+                        setEquipmentList(transformedData);
+                        setError(null);
+                      } catch (err) {
+                        console.error('Error resetting filters:', err);
+                        setError('Failed to reset filters. Please try again.');
+                      } finally {
+                        setLoading(false);
+                      }
+                    };
+                    
+                    fetchAllData();
+                  }}
+                >
+                  Reset All
+                </button>
               </div>
               
               <div className="mb-8">
@@ -360,7 +514,50 @@ export default function CategoriesPage() {
                 </div>
               </div>
               
-              <Button className="w-full bg-slate-100 dark:bg-slate-800 py-3 rounded-xl font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+              <Button 
+                className="w-full bg-slate-100 dark:bg-slate-800 py-3 rounded-xl font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                onClick={async () => {
+                  try {
+                    setLoading(true);
+                    
+                    // Build brand filter array
+                    const selectedBrands = Object.entries(brandFilters)
+                      .filter(([_, isSelected]) => isSelected)
+                      .map(([brand, _]) => brand);
+                    
+                    // Fetch filtered data
+                    const services = await getServices({
+                      category: 'heavy_equipment',
+                      minPrice: priceRange[0],
+                      maxPrice: priceRange[1],
+                      brands: selectedBrands,
+                      // Note: tonnage and engineType filters are not currently supported in the DB schema
+                      // They would require additional columns in the services table
+                      limit: 20
+                    });
+                    
+                    // Transform the service data to match the expected equipment format
+                    const transformedData = services.map(service => ({
+                      ...service,
+                      id: service.id,
+                      name: service.name,
+                      price: Number(service.base_price),
+                      location: service.distance,
+                      image: service.image_url || 'https://placehold.co/400x300',
+                      badges: service.is_available_today ? [{ text: 'Available Today', type: 'available' }] : [],
+                      specs: [] // Will populate based on filters later
+                    }));
+                    
+                    setEquipmentList(transformedData);
+                    setError(null);
+                  } catch (err) {
+                    console.error('Error applying filters:', err);
+                    setError('Failed to apply filters. Please try again.');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              >
                 Apply Filters
               </Button>
             </div>
@@ -368,68 +565,180 @@ export default function CategoriesPage() {
           
           <div className="flex-1">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {equipmentList.map((item) => (
-                <Card key={item.id} className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col">
-                  <div className="relative h-56 overflow-hidden">
-                    <img 
-                      alt={item.name} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      src={item.image}
-                    />
-                    <div className="absolute top-4 left-4 flex gap-2">
-                      {item.badges.map((badge, idx) => (
-                        <span 
-                          key={idx}
-                          className={`px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-tight ${
-                            badge.type === 'available' ? 'bg-white/95 dark:bg-slate-900/95' :
-                            badge.type === 'verified' ? 'bg-amber-500 text-white' :
-                            'bg-white/95 dark:bg-slate-900/95'
-                          }`}
-                        >
-                          {badge.text}
-                        </span>
-                      ))}
-                    </div>
-                    <button className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors">
-                      <Heart className="text-sm" />
-                    </button>
+              {loading ? (
+                <div className="col-span-full flex justify-center items-center py-12">
+                  <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
+                    <p className="text-slate-500">Loading equipment...</p>
                   </div>
-                  <CardContent className="p-5 flex flex-col flex-1">
-                    <div className="mb-4">
-                      <div className="flex justify-between items-start mb-1">
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">{item.name}</h3>
-                        <div className="text-right">
-                          <span className="text-xl font-extrabold text-primary">${item.price}</span>
-                          <span className="text-slate-400 text-[10px] block font-medium">PER DAY</span>
-                        </div>
-                      </div>
-                      <p className="text-slate-500 text-xs flex items-center gap-1">
-                        <MapPin className="text-sm text-slate-400" /> {item.location}
-                      </p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 mb-6">
-                      {item.specs.map((spec, idx) => (
-                        <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
-                          <spec.icon className="text-sm text-slate-400" />
-                          <span className="text-[11px] font-semibold">{spec.label}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <Button className="mt-auto w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all">
-                      Book Now
+                </div>
+              ) : error ? (
+                <div className="col-span-full">
+                  <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                    <p className="text-red-600 font-medium">{error}</p>
+                    <Button 
+                      className="mt-4" 
+                      onClick={() => {
+                        setLoading(true);
+                        fetchEquipmentData(); // Re-fetch the data
+                      }}
+                    >
+                      Retry
                     </Button>
-                  </CardContent>
-                </Card>
-              ))}
-              
-              <div className="flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-12 col-span-full">
-                <div className="text-center">
-                  <p className="text-slate-500 mb-4">View more listings based on your location</p>
-                  <Button variant="outline" className="px-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors">
-                    Load More Results
+                  </div>
+                </div>
+              ) : equipmentList.length === 0 ? (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-slate-500 text-lg">No equipment found matching your criteria.</p>
+                  <Button 
+                    className="mt-4" 
+                    onClick={() => {
+                      // Reset all filters
+                      setPriceRange([0, 2000]);
+                      setBrandFilters({
+                        caterpillar: false,
+                        komatsu: false,
+                        johnDeere: false,
+                        volvo: false
+                      });
+                      setTonnageFilter(null);
+                      setEngineTypeFilters({
+                        diesel: true,
+                        electric: false,
+                        propane: false
+                      });
+                    }}
+                  >
+                    Clear Filters
                   </Button>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {equipmentList.map((item) => (
+                    <Card key={item.id} className="group bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col">
+                      <div className="relative h-56 overflow-hidden">
+                        <img
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          src={item.image_url || 'https://placehold.co/400x300'}
+                        />
+                        <div className="absolute top-4 left-4 flex gap-2">
+                          {item.is_available_today && (
+                            <span className="px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-tight bg-white/95 dark:bg-slate-900/95">
+                              Available Today
+                            </span>
+                          )}
+                          {item.is_instant_booking && (
+                            <span className="px-3 py-1 rounded-full text-[10px] font-bold shadow-sm uppercase tracking-tight bg-green-500 text-white">
+                              Instant Booking
+                            </span>
+                          )}
+                        </div>
+                        <button 
+                          className="absolute top-4 right-4 w-8 h-8 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-colors"
+                          onClick={() => {
+                            // Toggle favorite functionality
+                            console.log(`Toggle favorite for item ${item.id}`);
+                          }}
+                        >
+                          <Heart className="text-sm" />
+                        </button>
+                      </div>
+                      <CardContent className="p-5 flex flex-col flex-1">
+                        <div className="mb-4">
+                          <div className="flex justify-between items-start mb-1">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">{item.name}</h3>
+                            <div className="text-right">
+                              <span className="text-xl font-extrabold text-primary">${Number(item.base_price).toFixed(2)}</span>
+                              <span className="text-slate-400 text-[10px] block font-medium">PER DAY</span>
+                            </div>
+                          </div>
+                          <p className="text-slate-500 text-xs flex items-center gap-1">
+                            <MapPin className="text-sm text-slate-400" /> {item.distance}
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 mb-6">
+                          <div className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+                            <Weight className="text-sm text-slate-400" />
+                            <span className="text-[11px] font-semibold">Heavy Duty</span>
+                          </div>
+                          <div className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+                            <Droplets className="text-sm text-slate-400" />
+                            <span className="text-[11px] font-semibold">{item.price_type.toUpperCase()}</span>
+                          </div>
+                          <div className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+                            <Settings className="text-sm text-slate-400" />
+                            <span className="text-[11px] font-semibold">Tier 4</span>
+                          </div>
+                          <div className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg flex items-center gap-2">
+                            <Eye className="text-sm text-slate-400" />
+                            <span className="text-[11px] font-semibold">{item.rating}/5</span>
+                          </div>
+                        </div>
+                        <Button 
+                          className="mt-auto w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all"
+                          onClick={() => {
+                            // Navigate to booking page
+                            router.push(`/details/${item.id}`);
+                          }}
+                        >
+                          Book Now
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  
+                  <div className="flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-12 col-span-full">
+                    <div className="text-center">
+                      <p className="text-slate-500 mb-4">View more listings based on your location</p>
+                      <Button 
+                        variant="outline" 
+                        className="px-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-sm hover:bg-slate-50 transition-colors"
+                        onClick={async () => {
+                          try {
+                            setLoading(true);
+                            
+                            // Calculate offset for pagination
+                            const offset = equipmentList.length;
+                            
+                            // Fetch more data with the same filters
+                            const services = await getServices({
+                              category: 'heavy_equipment',
+                              minPrice: priceRange[0],
+                              maxPrice: priceRange[1],
+                              limit: 20,
+                              offset: offset
+                            });
+                            
+                            // Transform the service data to match the expected equipment format
+                            const transformedData = services.map(service => ({
+                              ...service,
+                              id: service.id,
+                              name: service.name,
+                              price: Number(service.base_price),
+                              location: service.distance,
+                              image: service.image_url || 'https://placehold.co/400x300',
+                              badges: service.is_available_today ? [{ text: 'Available Today', type: 'available' }] : [],
+                              specs: []
+                            }));
+                            
+                            // Append new data to existing data
+                            setEquipmentList(prev => [...prev, ...transformedData]);
+                            setError(null);
+                          } catch (err) {
+                            console.error('Error loading more results:', err);
+                            setError('Failed to load more results. Please try again.');
+                          } finally {
+                            setLoading(false);
+                          }
+                        }}
+                      >
+                        Load More Results
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

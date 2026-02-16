@@ -29,12 +29,12 @@ export function HomeHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 lg:px-20 py-3">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="bg-primary p-1.5 rounded-lg text-white">
             <Building className="h-6 w-6 text-white" />
           </div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ServiceHailing</h2>
-        </div>
+        </Link>
         <nav className="hidden md:flex items-center gap-8">
           <Link className="text-sm font-semibold hover:text-primary transition-colors" href="/bookings">
             My Bookings

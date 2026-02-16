@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Link from 'next/link';
 import {
   Wallet,
   Languages,
@@ -24,12 +25,12 @@ export function CustomerHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 lg:px-20 py-3">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="bg-primary p-1.5 rounded-lg text-white">
             <Building className="h-6 w-6 text-white" />
           </div>
           <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ServiceHailing</h2>
-        </div>
+        </Link>
         <div className="flex items-center gap-6">
           {/* Pricing Information - Wallet Balance */}
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 font-bold">

@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Construction, Facebook, Mail, Globe, Menu, X as CloseIcon, User, CreditCard, Gavel, Truck, Wrench, Shield, Search, MessageCircle, Upload, Phone, ArrowRight, MessageSquare } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase';
 
 export default function SupportPage() {
   const { user, profile } = useAuth();
@@ -20,10 +21,57 @@ export default function SupportPage() {
   const [subject, setSubject] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log({ fullName, email, subject, description });
+    
+    // Basic validation
+    if (!fullName || !email || !subject || !description) {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    try {
+      const supabase = createClient();
+      
+      // First, check if user exists by email
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', email)
+        .single();
+      
+      let userId = null;
+      if (!userError && userData) {
+        userId = userData.id;
+      }
+      
+      // Create support ticket
+      const { error } = await supabase
+        .from('support_tickets')
+        .insert([
+          {
+            user_id: userId,
+            subject,
+            category: subject, // Using selected subject as category
+            description,
+            status: 'open'
+          }
+        ]);
+      
+      if (error) throw error;
+      
+      // Show success message
+      alert('Your support ticket has been submitted successfully!');
+      
+      // Reset form
+      setFullName('');
+      setEmail('');
+      setSubject('');
+      setDescription('');
+    } catch (error) {
+      console.error('Error submitting support ticket:', error);
+      alert('There was an error submitting your ticket. Please try again.');
+    }
   };
 
   // Support categories data
