@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -9,13 +10,16 @@ import {
   Bell,
   Navigation,
   User,
-  Search
+  Search,
+  LogOut
 } from 'lucide-react';
 
 export function DriverHeader() {
-  const { user, profile } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => {
     if (path === '/driver/dashboard') {
@@ -26,9 +30,27 @@ export function DriverHeader() {
     return pathname.startsWith(path);
   };
 
-  const handleSignOut = () => {
-    // Sign out logic would go here
-    router.push('/login');
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error logging out:', error);
+      alert('Failed to logout. Please try again.');
+    }
   };
 
   return (
@@ -55,25 +77,41 @@ export function DriverHeader() {
       </div>
       <div className="flex flex-1 justify-end gap-6 items-center">
         <div className="hidden lg:flex items-center gap-6">
-          <a 
-            className={`${isActive('/driver/dashboard') 
-              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1' 
+          <a
+            className={`${isActive('/driver/dashboard')
+              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1'
               : 'text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors'}`}
             href="/driver/dashboard"
           >
             Dashboard
           </a>
-          <a 
-            className={`${isActive('/driver/earnings') 
-              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1' 
+          <a
+            className={`${isActive('/driver/earnings')
+              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1'
               : 'text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors'}`}
             href="/driver/earnings"
           >
             Earnings
           </a>
-          <a 
-            className={`${isActive('/driver/messagerie') 
-              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1' 
+          <a
+            className={`${isActive('/driver/profile')
+              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1'
+              : 'text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors'}`}
+            href="/driver/profile"
+          >
+            Profile
+          </a>
+          <a
+            className={`${isActive('/driver/verification')
+              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1'
+              : 'text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors'}`}
+            href="/driver/verification"
+          >
+            Verification
+          </a>
+          <a
+            className={`${isActive('/driver/messagerie')
+              ? 'text-primary text-sm font-semibold leading-normal border-b-2 border-primary pb-1'
               : 'text-slate-600 dark:text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors'}`}
             href="/driver/messagerie"
           >
@@ -86,17 +124,44 @@ export function DriverHeader() {
           </button>
         </div>
         <div className="h-10 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col items-end">
-            <span className="text-xs font-bold text-green-600 dark:text-green-400">ONLINE</span>
-            <span className="text-sm font-medium">{profile?.full_name || 'Driver'}</span>
-          </div>
-          <Avatar className="size-10 border-2 border-primary">
-            <AvatarImage
-              src={profile?.avatar_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuC39cP2H9EdHXOrqCrlCGDHS26PIkX5xUdF1wZANeWfxnQAhRheQtMQhJ0Mt9kUdXZAHNQI1jmmqcznqH-bTuGANExwApgvGbDX7TcPI1s9VpNMeyuAGHvdK-ERGrV2WikG9oCpsiAFFC3XhoriQ2csXjOTmq9-uc5v-ZHXvmMHDncn0uVf-ZmjLVaKIY9tHI5Y9iWoNpZFln9lRYpQv2V6Xpb0LaFAUETmserky-Nxu2v3_a4jnsBtiJooT_oxXoQTJInSlIhJ3Xw"}
-            />
-            <AvatarFallback>{profile?.full_name?.charAt(0).toUpperCase() || 'D'}</AvatarFallback>
-          </Avatar>
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg p-1 pr-3 transition-colors"
+            aria-label="Profile menu"
+          >
+            <div className="flex flex-col items-end">
+              <span className="text-xs font-bold text-green-600 dark:text-green-400">ONLINE</span>
+              <span className="text-sm font-medium">{profile?.full_name || 'Driver'}</span>
+            </div>
+            <Avatar className="size-10 border-2 border-primary cursor-pointer">
+              <AvatarImage
+                src={profile?.avatar_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuC39cP2H9EdHXOrqCrlCGDHS26PIkX5xUdF1wZANeWfxnQAhRheQtMQhJ0Mt9kUdXZAHNQI1jmmqcznqH-bTuGANExwApgvGbDX7TcPI1s9VpNMeyuAGHvdK-ERGrV2WikG9oCpsiAFFC3XhoriQ2csXjOTmq9-uc5v-ZHXvmMHDncn0uVf-ZmjLVaKIY9tHI5Y9iWoNpZFln9lRYpQv2V6Xpb0LaFAUETmserky-Nxu2v3_a4jnsBtiJooT_oxXoQTJInSlIhJ3Xw"}
+              />
+              <AvatarFallback>{profile?.full_name?.charAt(0).toUpperCase() || 'D'}</AvatarFallback>
+            </Avatar>
+          </button>
+
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+              <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                  {profile?.full_name || 'Driver'}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                  {profile?.email || 'driver@example.com'}
+                </p>
+              </div>
+
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

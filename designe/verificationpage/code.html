@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Driver Document Verification Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined">local_taxi</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">Driver Hub</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<nav class="flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Earnings</a>
+<a class="text-primary text-sm font-semibold border-b-2 border-primary py-1" href="#">Verification</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-3 border-l border-slate-200 dark:border-slate-800 pl-8">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-slate-900 dark:text-white">Alex Johnson</p>
+<p class="text-[10px] text-slate-500">ID: 48291</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="Professional headshot of a driver for profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAIorc5skDhTgFUVjTaMe3Gdoopsy1n8klzuORPgvdG5cmKTHld5DPXuMI05nojY7ITVK6tXQMlsTtOqwlNqmhG6Mh3HHuho_UY5sGbdPQDIpFj8UNzAPQXDtd3v4eJVLYiV8BcDgWLgDN5v6vK5J5GxxRWaqdwVn0dn0MbnERk-BoWuYA9Y5ji3yhFtsXfl_tZY8tdVblkVwWzw0ragAwHeh86wE2HSrXmRbe9r0yQh1ZzcYXXU8T0G59VJZTIZIOw5ViodDLCq7Y");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 px-4 md:px-20 lg:px-40 py-8">
+<div class="max-w-[1024px] mx-auto">
+<!-- Page Header & Progress -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">Document Verification Center</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base max-w-xl">To start receiving ride requests, please upload valid legal documents. Your information is encrypted and secure.</p>
+</div>
+<div class="flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1.5 rounded-full text-xs font-bold">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+                            SSL SECURED
+                        </div>
+</div>
+<!-- Progress Bar Component -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 mb-8 shadow-sm">
+<div class="flex gap-6 justify-between items-center mb-3">
+<p class="text-slate-900 dark:text-white text-base font-bold">Overall Compliance Progress</p>
+<span class="text-primary text-sm font-black bg-primary/10 px-3 py-1 rounded-lg">50% Completed</span>
+</div>
+<div class="relative h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-primary transition-all duration-500" style="width: 50%;"></div>
+</div>
+<div class="flex justify-between mt-3 text-xs font-medium text-slate-500">
+<span>2 of 4 documents verified</span>
+<span>Awaiting Vehicle &amp; Insurance</span>
+</div>
+</div>
+<!-- Main Workflow Layout -->
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Left Navigation Stepper -->
+<div class="lg:w-1/3 flex flex-col gap-2">
+<!-- Step 1: Identity -->
+<div class="flex items-center gap-4 p-4 rounded-xl border-2 border-primary bg-primary/5 dark:bg-primary/10">
+<div class="size-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">1</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Identity Card</p>
+<p class="text-xs text-primary font-semibold">In Progress</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-primary">arrow_forward_ios</span>
+</div>
+<!-- Step 2: Vehicle -->
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 opacity-70">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold">2</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Vehicle Registration</p>
+<p class="text-xs text-slate-500">Pending Upload</p>
+</div>
+</div>
+<!-- Step 3: Insurance -->
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 opacity-70">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold">3</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Insurance Policy</p>
+<p class="text-xs text-slate-500">Pending Upload</p>
+</div>
+</div>
+<!-- Step 4: Final Review -->
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 opacity-70">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 flex items-center justify-center font-bold">4</div>
+<div>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Final Review</p>
+<p class="text-xs text-slate-500">Locked</p>
+</div>
+</div>
+<!-- Help Card -->
+<div class="mt-4 p-5 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+<div class="flex items-center gap-2 mb-2 text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-sm">info</span>
+<span class="text-sm font-bold">Help &amp; Guidelines</span>
+</div>
+<ul class="text-xs text-slate-500 dark:text-slate-400 space-y-2">
+<li class="flex gap-2"><span class="text-primary">•</span> Ensure all 4 corners of the ID are visible.</li>
+<li class="flex gap-2"><span class="text-primary">•</span> Use high resolution (min 300dpi).</li>
+<li class="flex gap-2"><span class="text-primary">•</span> File types: JPG, PNG, or PDF.</li>
+</ul>
+</div>
+</div>
+<!-- Right Content Area: Identity Verification -->
+<div class="lg:w-2/3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-8 shadow-sm">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Step 1: Identity Verification</h2>
+<p class="text-slate-500 text-sm mb-8">Please provide a clear scan or photo of your National ID or Driver's License.</p>
+<!-- Alert Box for Rejection Example -->
+<div class="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex gap-3">
+<span class="material-symbols-outlined text-red-600 dark:text-red-400">error</span>
+<div>
+<p class="text-sm font-bold text-red-800 dark:text-red-400">Previous upload rejected</p>
+<p class="text-xs text-red-700 dark:text-red-300">The "Back Side" photo was too blurry to read. Please re-upload a clearer image.</p>
+</div>
+</div>
+<form class="space-y-8">
+<!-- ID Details -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300">Document Type</label>
+<select class="w-full h-11 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:border-primary focus:ring-primary">
+<option>Driver's License</option>
+<option>National Identity Card</option>
+<option>Passport</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300">License Number</label>
+<input class="w-full h-11 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:border-primary focus:ring-primary" placeholder="e.g. D12345678" type="text"/>
+</div>
+</div>
+<!-- Front Upload -->
+<div class="flex flex-col gap-4">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300 flex justify-between">
+<span>Front Side of Document</span>
+<span class="text-green-600 dark:text-green-400 text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Approved
+                                        </span>
+</label>
+<!-- Approved State Item -->
+<div class="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+<div class="size-16 rounded-lg bg-cover bg-center border border-slate-200 dark:border-slate-600" data-alt="Blurred representation of a driver's license front side document" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDX_j1-YXsjiC383b4Qaqr2enwMjuqbJbJAhx8z-KMIgqazAS4iH1ev9H3PxYfKnpZj3KR3HctbvsIb3bRpAmJs0hK38VTXGoJp6RDNByY6B9wPfz0LcgwTw-ZBZEi3Nm1I9cFX9yb3DX-P9jdv5NGyCWVuB9LoS3mnpW4VR3Pbpd4_Ehf-TaweixsjjEFD9Ec1BEKt9QjF7kXEs8xDbclz64YBCbwlH3X8cJy4bRwy4b9KNqw7gjVUR5e18_6PHi01iomNMWY2s9E");'></div>
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-bold text-slate-900 dark:text-white truncate">license_front_v1.jpg</p>
+<p class="text-xs text-slate-500">2.4 MB • Uploaded May 12</p>
+</div>
+<button class="text-primary text-xs font-bold hover:underline" type="button">Change</button>
+</div>
+</div>
+<!-- Back Upload -->
+<div class="flex flex-col gap-4">
+<label class="text-sm font-bold text-slate-700 dark:text-slate-300 flex justify-between">
+<span>Back Side of Document</span>
+<span class="text-amber-600 dark:text-amber-400 text-xs font-bold">Action Required</span>
+</label>
+<!-- Drag & Drop Zone -->
+<div class="relative group border-2 border-dashed border-primary/40 hover:border-primary bg-primary/5 hover:bg-primary/10 rounded-xl transition-all p-10 cursor-pointer text-center">
+<input class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+<span class="material-symbols-outlined text-4xl text-primary mb-3">cloud_upload</span>
+<p class="text-sm font-bold text-slate-900 dark:text-white">Click to upload or drag and drop</p>
+<p class="text-xs text-slate-500 mt-1">PNG, JPG or PDF (MAX. 10MB)</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
+<button class="px-6 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 transition-colors" type="button">Save Draft</button>
+<button class="bg-primary hover:bg-primary/90 text-white px-10 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2" type="button">
+                                        Continue to Step 2
+                                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Footer Help Bar -->
+<footer class="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 py-8 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400">lock</span>
+<span class="text-xs text-slate-500 uppercase tracking-widest font-bold">End-to-End Encryption</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400">support_agent</span>
+<span class="text-xs text-slate-500 uppercase tracking-widest font-bold">24/7 Support</span>
+</div>
+</div>
+<p class="text-xs text-slate-400">© 2024 DriverHub Platform. All verification processes are GDPR compliant.</p>
+</footer>
+</div>
+</main>
+</div>
+</div>
+</body></html>

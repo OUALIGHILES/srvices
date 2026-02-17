@@ -1,40 +1,36 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { DriverHeader } from '@/components/driver-header';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth-context';
 import {
-  ArrowLeft,
-  Send,
+  Search,
   Phone,
+  Eye,
   MoreVertical,
-  Settings,
-  PlusCircle,
-  CheckCircle,
-  AlertTriangle,
-  LocateFixed,
-  ZoomIn,
-  ZoomOut,
-  Truck,
-  MapPin,
-  Package,
-  FileText,
+  Check,
   CheckCheck,
-  LocationOn,
-  Inventory2,
-  Notes,
-  DoneAll,
-  AddCircle,
-  MyLocation,
-  Smile
+  Paperclip,
+  Image as ImageIcon,
+  Send,
+  MessageCircle
 } from 'lucide-react';
+
+interface Conversation {
+  id: string;
+  booking_id: string;
+  customer_name: string;
+  customer_avatar?: string;
+  service_type: string;
+  order_number: string;
+  last_message: string;
+  last_message_time: string;
+  unread_count: number;
+  status: string;
+  rating?: number;
+  customer_id: string;
+}
 
 interface Message {
   id: string;
@@ -43,137 +39,229 @@ interface Message {
   content: string;
   is_read: boolean;
   created_at: string;
+  image_url?: string;
 }
 
-interface Booking {
-  id: string;
-  service_id: string;
-  location: string;
-  service_date: string;
-  quantity: number;
-  customer_id: string;
-  status: string;
-}
-
-interface Customer {
-  id: string;
-  full_name: string;
-  avatar_url?: string;
-  rating: number;
-}
-
-interface ActiveOrder {
-  id: string;
-  customer_name: string;
-  customer_avatar: string;
-  estimated_arrival: string;
-  address: string;
-  city: string;
-  units_required: number;
-  service_category: string;
-  special_notes: string;
-  status: 'in_progress' | 'completed' | 'pending';
-}
-
-export default function DriverMessagerie({ params }: { params: { bookingId?: string } }) {
+export default function DriverMessagerie() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { bookingId } = params || {};
-  const [activeOrder, setActiveOrder] = useState<ActiveOrder | null>(null);
+  const { user, profile } = useAuth();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [quickReply, setQuickReply] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   const supabase = createClient();
 
+  // Fetch conversations
   useEffect(() => {
-    const fetchData = async () => {
-      if (!user || !bookingId) return;
-      
+    const fetchConversations = async () => {
+      if (!user) {
+        console.log('No user authenticated');
+        return;
+      }
+
       try {
-        // Fetch booking details
-        const { data: bookingData, error: bookingError } = await supabase
+        console.log('Fetching conversations for user:', user.id);
+
+        // Get all bookings for this driver with customer and service details
+        const { data: bookings, error: bookingsError } = await supabase
           .from('bookings')
           .select(`
             id,
-            location,
-            service_date,
-            quantity,
-            customer_id,
             status,
-            customers (full_name, avatar_url, rating)
+            service_date,
+            customer_id,
+            customers (
+              id,
+              full_name,
+              avatar_url,
+              rating
+            ),
+            services (
+              category
+            )
           `)
-          .eq('id', bookingId)
           .eq('driver_id', user.id)
-          .single();
+          .order('service_date', { ascending: false });
 
-        if (bookingError) throw bookingError;
-
-        if (bookingData) {
-          const customer = bookingData.customers as Customer;
-          
-          // Format the active order
-          const order: ActiveOrder = {
-            id: bookingData.id,
-            customer_name: customer?.full_name || 'Customer',
-            customer_avatar: customer?.avatar_url || '',
-            estimated_arrival: '12 mins', // This could be calculated based on actual location data
-            address: bookingData.location,
-            city: 'City, State', // This could be extracted from location data
-            units_required: bookingData.quantity,
-            service_category: 'Service', // This could come from service data
-            special_notes: 'Special instructions here', // This could come from booking data
-            status: bookingData.status as 'in_progress' | 'completed' | 'pending',
-          };
-          
-          setActiveOrder(order);
+        if (bookingsError) {
+          console.error('Error fetching bookings:', bookingsError);
+          throw bookingsError;
         }
 
-        // Fetch messages for this booking
-        const { data: messagesData, error: messagesError } = await supabase
-          .from('messages')
-          .select('*')
-          .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
-          .order('created_at', { ascending: true });
+        console.log('Fetched bookings:', bookings);
 
-        if (messagesError) throw messagesError;
+        if (!bookings || bookings.length === 0) {
+          console.log('No bookings found for this driver');
+          setConversations([]);
+          return;
+        }
 
-        setMessages(messagesData || []);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
+        // For each booking, get the last message and unread count
+        const formattedConversations: Conversation[] = await Promise.all(
+          bookings.map(async (booking) => {
+            const customer = booking.customers as any;
+            const service = booking.services as any;
+
+            // Get last message for this booking
+            const { data: lastMessage, error: msgError } = await supabase
+              .from('messages')
+              .select('content, created_at')
+              .or(`sender_id.eq.${user.id},recipient_id.eq.${booking.customer_id}`)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .maybeSingle();
+
+            if (msgError) {
+              console.warn('Error fetching last message:', msgError);
+            }
+
+            // Count unread messages
+            const { count: unreadCount, error: countError } = await supabase
+              .from('messages')
+              .select('*', { count: 'exact', head: true })
+              .eq('recipient_id', user.id)
+              .eq('is_read', false)
+              .eq('sender_id', booking.customer_id);
+
+            if (countError) {
+              console.warn('Error counting unread messages:', countError);
+            }
+
+            return {
+              id: booking.id,
+              booking_id: booking.id,
+              customer_id: booking.customer_id,
+              customer_name: customer?.full_name || 'Customer',
+              customer_avatar: customer?.avatar_url,
+              service_type: service?.category || 'Service',
+              order_number: `ORD-${booking.id.slice(-5).toUpperCase()}`,
+              last_message: lastMessage?.content || 'No messages yet',
+              last_message_time: lastMessage?.created_at || booking.service_date,
+              unread_count: unreadCount || 0,
+              status: booking.status,
+              rating: customer?.rating,
+            };
+          })
+        );
+
+        console.log('Formatted conversations:', formattedConversations);
+        setConversations(formattedConversations);
+
+        // Select first conversation by default
+        if (formattedConversations.length > 0) {
+          setSelectedConversation(formattedConversations[0]);
+        }
+      } catch (error: any) {
+        console.error('Error fetching conversations:', error?.message || error);
       }
     };
 
-    fetchData();
-    
-    // Set up real-time subscription for new messages
-    if (user) {
-      const channel = supabase
-        .channel('realtime-messages')
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'messages',
-            filter: `recipient_id=eq.${user.id}`,
-          },
-          (payload) => {
-            setMessages((prev) => [...prev, payload.new as Message]);
-          }
-        )
-        .subscribe();
+    fetchConversations();
+  }, [user, supabase]);
 
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    }
-  }, [user, bookingId]);
+  // Fetch messages for selected conversation
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (!user || !selectedConversation) return;
+
+      try {
+        // Fetch messages between driver and customer
+        const { data: messagesData, error: messagesError } = await supabase
+          .from('messages')
+          .select('*')
+          .or(`sender_id.eq.${user.id},recipient_id.eq.${selectedConversation.customer_id}`)
+          .order('created_at', { ascending: true });
+
+        if (messagesError) {
+          console.error('Error fetching messages:', messagesError);
+          throw messagesError;
+        }
+
+        setMessages(messagesData || []);
+
+        // Mark messages as read
+        const { error: updateError } = await supabase
+          .from('messages')
+          .update({ is_read: true })
+          .eq('recipient_id', user.id)
+          .eq('sender_id', selectedConversation.customer_id)
+          .eq('is_read', false);
+
+        if (updateError) {
+          console.error('Error marking messages as read:', updateError);
+        }
+
+        // Update conversation unread count
+        setConversations(prev =>
+          prev.map(conv =>
+            conv.id === selectedConversation.id
+              ? { ...conv, unread_count: 0 }
+              : conv
+          )
+        );
+      } catch (error: any) {
+        console.error('Error fetching messages:', error?.message || error);
+      }
+    };
+
+    fetchMessages();
+  }, [selectedConversation, user, supabase]);
+
+  // Set up real-time subscription for new messages
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('realtime-messages')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+        },
+        (payload) => {
+          const newMsg = payload.new as Message;
+          
+          // Check if this message involves the current user
+          if (newMsg.sender_id === user.id || newMsg.recipient_id === user.id) {
+            // Add message to current conversation if it's open
+            if (selectedConversation) {
+              if (newMsg.sender_id === selectedConversation.customer_id || 
+                  newMsg.recipient_id === selectedConversation.customer_id) {
+                setMessages(prev => [...prev, newMsg]);
+              }
+            }
+
+            // Update conversation list
+            setConversations(prev =>
+              prev.map(conv => {
+                if (conv.customer_id === newMsg.sender_id || conv.customer_id === newMsg.recipient_id) {
+                  return {
+                    ...conv,
+                    last_message: newMsg.content,
+                    last_message_time: newMsg.created_at,
+                    unread_count: newMsg.recipient_id === user.id && !newMsg.is_read ? conv.unread_count + 1 : conv.unread_count,
+                  };
+                }
+                return conv;
+              }).sort((a, b) => 
+                new Date(b.last_message_time).getTime() - new Date(a.last_message_time).getTime()
+              )
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, supabase, selectedConversation]);
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
@@ -183,318 +271,357 @@ export default function DriverMessagerie({ params }: { params: { bookingId?: str
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!newMessage.trim() || !user || !activeOrder || !bookingId) return;
+    if (!newMessage.trim() || !user || !selectedConversation) return;
 
     setSending(true);
 
     try {
-      // First, get the customer ID for this booking
-      const { data: bookingData, error: bookingError } = await supabase
-        .from('bookings')
-        .select('customer_id')
-        .eq('id', bookingId)
-        .single();
-
-      if (bookingError) throw bookingError;
-
-      if (!bookingData || !bookingData.customer_id) {
-        throw new Error('Could not find customer for this booking');
-      }
-
-      // Send message to Supabase
-      const { data: messageData, error: messageError } = await supabase
+      // Send message
+      const { data: messageData, error } = await supabase
         .from('messages')
         .insert([
           {
             sender_id: user.id,
-            recipient_id: bookingData.customer_id,
+            recipient_id: selectedConversation.customer_id,
             content: newMessage,
             is_read: false,
+            booking_id: selectedConversation.booking_id,
           }
         ])
         .select()
         .single();
 
-      if (messageError) throw messageError;
+      if (error) {
+        console.error('Error sending message:', error);
+        throw error;
+      }
 
       if (messageData) {
         setMessages(prev => [...prev, messageData]);
         setNewMessage('');
+        
+        // Update conversation last message
+        setConversations(prev =>
+          prev.map(conv =>
+            conv.id === selectedConversation.id
+              ? { 
+                  ...conv, 
+                  last_message: newMessage, 
+                  last_message_time: new Date().toISOString(),
+                  unread_count: 0,
+                }
+              : conv
+          )
+        );
       }
-    } catch (error) {
-      console.error('Error sending message:', error);
+    } catch (error: any) {
+      console.error('Error sending message:', error?.message || error);
+      alert('Failed to send message. Please try again.');
     } finally {
       setSending(false);
     }
   };
 
-  const handleQuickReply = (reply: string) => {
-    setQuickReply(reply);
-    setNewMessage(reply);
+  const handleSelectConversation = (conversation: Conversation) => {
+    setSelectedConversation(conversation);
   };
 
-  if (loading) {
-    return (
-      <div className="relative flex h-screen w-full flex-col overflow-hidden bg-gray-50">
+  const handleViewOrder = () => {
+    if (selectedConversation) {
+      router.push(`/driver/accepted-order/${selectedConversation.booking_id}`);
+    }
+  };
 
-        <div className="flex flex-1 overflow-hidden">
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <div className="h-12 w-12 rounded-full border-4 border-gray-200 border-t-blue-600 animate-spin mx-auto mb-4" />
-              <p className="text-gray-600">Loading order details...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (days === 0) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (days === 1) {
+      return 'Yesterday';
+    } else if (days < 7) {
+      return date.toLocaleDateString([], { weekday: 'short' });
+    } else {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+  };
+
+  const filteredConversations = conversations.filter(conv =>
+    conv.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    conv.order_number.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="relative flex h-screen w-full flex-col overflow-hidden bg-gray-50">
-
-      {/* Main Content Area: Split Pane */}
-      <main className="flex flex-1 overflow-hidden">
-        {/* Left Pane: Map & Order Details */}
-        <section className="relative flex flex-1 flex-col overflow-hidden border-r border-gray-200">
-          {/* Map Background */}
-          <div className="absolute inset-0 z-0 bg-gray-200">
-            <div
-              className="w-full h-full bg-cover bg-center"
-              style={{
-                backgroundImage: 'url(https://images.unsplash.com/photo-1526871417913-205d5f1d1b15?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80)'
-              }}
-              aria-label="Dynamic map showing delivery route"
-            ></div>
-
-            {/* Map Overlay Controls */}
-            <div className="absolute right-4 top-4 flex flex-col gap-2">
-              <button className="flex size-10 items-center justify-center rounded-lg bg-white shadow-lg text-gray-700">
-                <ZoomIn className="h-5 w-5" />
-              </button>
-              <button className="flex size-10 items-center justify-center rounded-lg bg-white shadow-lg text-gray-700">
-                <ZoomOut className="h-5 w-5" />
-              </button>
-              <button className="flex size-10 items-center justify-center rounded-lg bg-blue-500 shadow-lg text-white mt-2">
-                <LocateFixed className="h-5 w-5" />
-              </button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Main Content Area */}
+      <main className="flex h-[calc(100vh-64px)]">
+        {/* Left Pane: Conversation List */}
+        <aside className="w-80 border-r border-gray-200 bg-white flex flex-col">
+          {/* Search Bar */}
+          <div className="p-4 border-b border-gray-100">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search conversations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              />
             </div>
           </div>
 
-          {/* Floating Order Info Card */}
-          <div className="relative z-10 mt-auto p-6">
-            <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
-              <div className="flex flex-col md:flex-row">
-                <div className="p-5 flex-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.1em]">Customer</p>
-                      <h3 className="text-lg font-bold">{activeOrder?.customer_name}</h3>
+          {/* Conversation List */}
+          <div className="flex-1 overflow-y-auto">
+            {filteredConversations.length > 0 ? (
+              filteredConversations.map((conversation) => (
+                <button
+                  key={conversation.id}
+                  onClick={() => handleSelectConversation(conversation)}
+                  className={`w-full p-4 flex items-start gap-3 border-b border-gray-50 transition-colors ${
+                    selectedConversation?.id === conversation.id
+                      ? 'bg-blue-50 border-l-4 border-l-blue-600'
+                      : 'hover:bg-gray-50 border-l-4 border-l-transparent'
+                  }`}
+                >
+                  {/* Avatar */}
+                  <div className="relative shrink-0">
+                    <div className="size-12 rounded-lg bg-gray-200 overflow-hidden">
+                      {conversation.customer_avatar ? (
+                        <img
+                          className="h-full w-full object-cover"
+                          src={conversation.customer_avatar}
+                          alt={conversation.customer_name}
+                        />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center text-gray-400 text-sm font-medium">
+                          {conversation.customer_name.charAt(0)}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right">
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.1em]">Estimated Arrival</p>
-                      <p className="text-lg font-bold text-blue-500">{activeOrder?.estimated_arrival}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium">{activeOrder?.address}</p>
-                        <p className="text-xs text-gray-500">{activeOrder?.city}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Package className="h-5 w-5 text-gray-400 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium">{activeOrder?.units_required} Units Required</p>
-                        <p className="text-xs text-gray-500">Service Category: {activeOrder?.service_category}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <FileText className="h-5 w-5 text-gray-400 mt-0.5" />
-                      <div className="bg-gray-50 p-2.5 rounded-lg border border-gray-100 w-full">
-                        <p className="text-xs text-gray-600 leading-relaxed italic">"{activeOrder?.special_notes}"</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-gray-50 p-5 md:w-64 border-t md:border-t-0 md:border-l border-gray-200 flex flex-col justify-center">
-                  <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2 mb-3">
-                    <CheckCircle className="h-5 w-5" />
-                    <span>Complete Service</span>
-                  </button>
-                  <button className="w-full bg-white border border-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg text-sm">
-                    Report Issue
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Right Pane: Docked Chat Window */}
-        <aside className="w-[400px] flex flex-col bg-white">
-          {/* Chat Header */}
-          <div className="flex h-14 items-center justify-between border-b border-gray-200 px-4">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-full bg-gray-200 overflow-hidden relative">
-                <img
-                  className="h-full w-full object-cover"
-                  src={activeOrder?.customer_avatar}
-                  alt="Customer chat avatar"
-                />
-                <div className="absolute bottom-0 right-0 size-2.5 rounded-full bg-green-500 border-2 border-white"></div>
-              </div>
-              <div>
-                <p className="text-sm font-bold">{activeOrder?.customer_name}</p>
-                <p className="text-xs text-green-500 font-medium">Customer • Online</p>
-              </div>
-            </div>
-            <button className="text-gray-400 hover:text-gray-600">
-              <Settings className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-            <div className="flex flex-col items-center py-2">
-              <span className="px-3 py-1 bg-gray-200 rounded-full text-xs font-bold text-gray-500 uppercase">Today</span>
-            </div>
-
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex items-end gap-2 max-w-[85%] ${
-                  message.sender_id === user?.id ? 'self-end' : ''
-                }`}
-              >
-                {message.sender_id !== user?.id && (
-                  <div className="size-6 rounded-full bg-gray-300 shrink-0">
-                    <img
-                      className="rounded-full"
-                      src={activeOrder?.customer_avatar}
-                      alt="Customer avatar small"
-                    />
-                  </div>
-                )}
-
-                <div className={`flex flex-col gap-1 ${message.sender_id === user?.id ? 'items-end' : ''}`}>
-                  <div
-                    className={`p-3 rounded-xl shadow-sm ${
-                      message.sender_id === user?.id
-                        ? 'bg-blue-500 text-white rounded-br-none'
-                        : 'bg-white text-gray-800 rounded-bl-none border border-gray-200'
-                    }`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs text-gray-400">
-                      {new Date(message.created_at).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
-                    {message.sender_id === user?.id && (
-                      <CheckCheck className="h-3 w-3 text-blue-500 fill-current" />
+                    {conversation.unread_count > 0 && (
+                      <div className="absolute -bottom-0.5 -right-0.5 size-3 rounded-full bg-green-500 border-2 border-white"></div>
                     )}
                   </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-bold text-gray-900 truncate">
+                        {conversation.customer_name}
+                      </span>
+                      <span className={`text-xs ${conversation.unread_count > 0 ? 'text-blue-600 font-bold' : 'text-gray-400'}`}>
+                        {formatTime(conversation.last_message_time)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 truncate mb-1">
+                      {conversation.service_type} • {conversation.order_number}
+                    </p>
+                    <p className={`text-sm truncate ${conversation.unread_count > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+                      {conversation.last_message}
+                    </p>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <MessageCircle className="h-12 w-12 text-gray-300 mb-4" />
+                <p className="text-gray-500 text-sm">
+                  {searchQuery ? 'No conversations match your search' : 'No conversations yet'}
+                </p>
+                {!searchQuery && (
+                  <p className="text-gray-400 text-xs mt-2">Messages will appear here once you have bookings</p>
+                )}
+              </div>
+            )}
+          </div>
+        </aside>
+
+        {/* Right Pane: Chat Area */}
+        {selectedConversation ? (
+          <div className="flex-1 flex flex-col bg-white">
+            {/* Chat Header */}
+            <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-lg bg-gray-200 overflow-hidden">
+                  {selectedConversation.customer_avatar ? (
+                    <img
+                      className="h-full w-full object-cover"
+                      src={selectedConversation.customer_avatar}
+                      alt={selectedConversation.customer_name}
+                    />
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center text-gray-400 text-sm font-medium">
+                      {selectedConversation.customer_name.charAt(0)}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-bold text-gray-900">
+                      {selectedConversation.customer_name}
+                    </h3>
+                    {selectedConversation.rating && (
+                      <div className="flex items-center gap-1">
+                        <svg className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span className="text-sm font-medium text-gray-600">{selectedConversation.rating.toFixed(1)}</span>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {selectedConversation.order_number} • {selectedConversation.status === 'in_progress' ? 'In Transit' : selectedConversation.status}
+                  </p>
                 </div>
               </div>
-            ))}
 
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Chat Input */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex flex-col gap-3">
-              <div className="flex gap-2">
-                {['I\'ve arrived', 'Running late', 'OK'].map((reply) => (
-                  <button
-                    key={reply}
-                    className="px-3 py-1.5 rounded-lg bg-gray-100 text-xs font-medium text-gray-600 border border-gray-200"
-                    onClick={() => handleQuickReply(reply)}
-                  >
-                    {reply}
-                  </button>
-                ))}
-              </div>
-              <div className="relative flex items-center">
-                <button className="absolute left-3 text-gray-400 hover:text-blue-500">
-                  <PlusCircle className="h-5 w-5" />
-                </button>
-                <Input
-                  type="text"
-                  placeholder="Type a message..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  disabled={sending}
-                  className="w-full pl-10 pr-12 py-3 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-200"
-                />
+              <div className="flex items-center gap-2">
                 <button
-                  onClick={handleSendMessage}
-                  disabled={sending || !newMessage.trim()}
-                  className="absolute right-3 text-blue-500 disabled:opacity-50"
+                  onClick={handleViewOrder}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
                 >
-                  <Send className="h-5 w-5 fill-current" />
+                  <Eye className="h-4 w-4" />
+                  View Order
+                </button>
+                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 rounded-lg text-sm font-bold text-white hover:bg-blue-700 transition-colors">
+                  <Phone className="h-4 w-4" />
+                  Call
+                </button>
+                <button className="size-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+                  <MoreVertical className="h-5 w-5" />
                 </button>
               </div>
             </div>
-          </div>
-        </aside>
-      </main>
 
-      {/* Sidebar (Minimal Dashboard Nav) */}
-      <nav className="absolute left-0 top-16 bottom-0 w-16 flex flex-col items-center py-6 bg-white border-r border-gray-200 z-20">
-        <div className="flex flex-col gap-6">
-          <button className="flex size-10 items-center justify-center rounded-xl text-gray-400 hover:text-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-layout-dashboard h-5 w-5">
-              <rect width="7" height="9" x="3" y="3" rx="1"></rect>
-              <rect width="7" height="5" x="14" y="3" rx="1"></rect>
-              <rect width="7" height="9" x="14" y="12" rx="1"></rect>
-              <rect width="7" height="5" x="3" y="16" rx="1"></rect>
-            </svg>
-          </button>
-          <button className="flex size-10 items-center justify-center rounded-xl bg-blue-100 text-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-clipboard-list h-5 w-5 fill-current">
-              <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
-              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-              <path d="M12 11h4"></path>
-              <path d="M12 16h4"></path>
-              <path d="M8 11h.01"></path>
-              <path d="M8 16h.01"></path>
-            </svg>
-          </button>
-          <button className="flex size-10 items-center justify-center rounded-xl text-gray-400 hover:text-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-history h-5 w-5">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-              <path d="M3 3v5h5"></path>
-              <path d="M12 7v5l4 2"></path>
-            </svg>
-          </button>
-          <button className="flex size-10 items-center justify-center rounded-xl text-gray-400 hover:text-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-credit-card h-5 w-5">
-              <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-              <line x1="2" x2="22" y1="10" y2="10"></line>
-            </svg>
-          </button>
-        </div>
-        <div className="mt-auto flex flex-col gap-6">
-          <button className="flex size-10 items-center justify-center rounded-xl text-gray-400 hover:text-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-bell h-5 w-5">
-              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-          </button>
-          <button className="flex size-10 items-center justify-center rounded-xl text-gray-400 hover:text-blue-500 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-settings h-5 w-5">
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-          </button>
-        </div>
-      </nav>
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+              {/* Date Separator */}
+              <div className="flex justify-center mb-6">
+                <span className="px-3 py-1 bg-white rounded-full text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  Today
+                </span>
+              </div>
+
+              {/* Messages */}
+              <div className="space-y-4">
+                {messages.map((message) => {
+                  const isFromMe = message.sender_id === user?.id;
+                  
+                  return (
+                    <div
+                      key={message.id}
+                      className={`flex items-end gap-2 ${isFromMe ? 'flex-row-reverse' : ''}`}
+                    >
+                      {!isFromMe && (
+                        <div className="size-8 rounded-lg bg-gray-200 overflow-hidden shrink-0">
+                          {selectedConversation.customer_avatar ? (
+                            <img
+                              className="h-full w-full object-cover"
+                              src={selectedConversation.customer_avatar}
+                              alt="Customer avatar"
+                            />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center text-gray-400 text-xs font-medium">
+                              {selectedConversation.customer_name.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      <div className={`flex flex-col ${isFromMe ? 'items-end' : 'items-start'}`}>
+                        <div
+                          className={`max-w-md px-4 py-3 rounded-2xl shadow-sm ${
+                            isFromMe
+                              ? 'bg-blue-600 text-white rounded-br-md'
+                              : 'bg-white text-gray-800 rounded-bl-md border border-gray-100'
+                          }`}
+                        >
+                          <p className="text-sm leading-relaxed">{message.content}</p>
+                        </div>
+                        <div className="flex items-center gap-1 mt-1 px-1">
+                          <span className="text-xs text-gray-400">
+                            {new Date(message.created_at).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                          {isFromMe && (
+                            message.is_read ? (
+                              <CheckCheck className="h-3 w-3 text-blue-500" />
+                            ) : (
+                              <Check className="h-3 w-3 text-gray-400" />
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+                {messages.length === 0 && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500 text-sm">No messages yet</p>
+                    <p className="text-gray-400 text-xs mt-1">Start the conversation with your customer</p>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+            </div>
+
+            {/* Message Input */}
+            <div className="p-4 border-t border-gray-200 shrink-0">
+              <form onSubmit={handleSendMessage} className="flex items-center gap-3">
+                <button
+                  type="button"
+                  className="size-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors"
+                  title="Attach file"
+                >
+                  <Paperclip className="h-5 w-5" />
+                </button>
+                <button
+                  type="button"
+                  className="size-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors"
+                  title="Send image"
+                >
+                  <ImageIcon className="h-5 w-5" />
+                </button>
+                <input
+                  type="text"
+                  placeholder="Type your message here..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage(e as any);
+                    }
+                  }}
+                  disabled={sending}
+                  className="flex-1 px-4 py-3 bg-gray-50 border-none rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                />
+                <button
+                  type="submit"
+                  disabled={sending || !newMessage.trim()}
+                  className="size-12 rounded-xl bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-200"
+                >
+                  <Send className="h-5 w-5 ml-0.5" />
+                </button>
+              </form>
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center bg-gray-50">
+            <div className="text-center">
+              <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-900 mb-2">No conversation selected</h3>
+              <p className="text-gray-500 text-sm">Select a conversation from the list to start messaging</p>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

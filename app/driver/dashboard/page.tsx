@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +24,8 @@ import {
   User,
   Grid3x3,
   Map as MapIcon,
-  CreditCard
+  CreditCard,
+  LogOut
 } from 'lucide-react';
 import { Inter } from 'next/font/google';
 import { createClient } from '@/lib/supabase';
@@ -47,6 +49,7 @@ interface Booking {
 }
 
 export default function DriverDashboard() {
+  const router = useRouter();
   const [isOnline, setIsOnline] = useState(true);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,9 +61,111 @@ export default function DriverDashboard() {
     name: '',
     avatar: '',
   });
-  
-  const { user, profile } = useAuth();
+
+  const { user, profile, signOut } = useAuth();
   const supabase = createClient();
+
+  // Function to handle logout
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      alert('Failed to sign out. Please try again.');
+    }
+  };
+
+  // Function to handle accepting a booking
+  const handleAcceptBooking = async (bookingId: string) => {
+    if (!user) return;
+
+    try {
+      // Create an offer for this booking
+      const { error: offerError } = await supabase
+        .from('offers')
+        .insert([{
+          booking_id: bookingId,
+          driver_id: user.id,
+          status: 'accepted',
+          offered_price: 0,
+          distance_km: 0
+        }]);
+
+      if (offerError) throw offerError;
+
+      // Update booking status to offer_accepted
+      const { error: updateError } = await supabase
+        .from('bookings')
+        .update({
+          status: 'offer_accepted',
+          driver_id: user.id,
+          accepted_at: new Date().toISOString()
+        })
+        .eq('id', bookingId);
+
+      if (updateError) throw updateError;
+
+      // Remove from available bookings
+      setBookings(prev => prev.filter(b => b.id !== bookingId));
+
+      // Show success message
+      alert('Booking accepted successfully!');
+
+      // Redirect to accepted order page for this booking
+      router.push(`/driver/accepted-order/${bookingId}`);
+    } catch (error: any) {
+      console.error('Error accepting booking:', error);
+      alert('Failed to accept booking. Please try again.');
+    }
+  };
+
+  // Function to handle declining a booking
+  const handleDeclineBooking = async (bookingId: string) => {
+    if (!user) return;
+
+    try {
+      // Update booking status to declined in the database
+      const { error } = await supabase
+        .from('bookings')
+        .update({ 
+          status: 'declined',
+          declined_at: new Date().toISOString()
+        })
+        .eq('id', bookingId);
+
+      if (error) throw error;
+
+      // Remove from available bookings (local state)
+      setBookings(prev => prev.filter(b => b.id !== bookingId));
+
+      console.log(`Booking ${bookingId} declined successfully`);
+    } catch (error: any) {
+      console.error('Error declining booking:', error);
+      alert('Failed to decline booking. Please try again.');
+    }
+  };
+
+  // Function to toggle online status
+  const handleToggleOnline = async () => {
+    if (!user) return;
+    
+    try {
+      const newStatus = !isOnline;
+      setIsOnline(newStatus);
+      
+      // Update driver status in database
+      const { error } = await supabase
+        .from('users')
+        .update({ is_available: newStatus })
+        .eq('id', user.id);
+
+      if (error) throw error;
+    } catch (error: any) {
+      console.error('Error toggling online status:', error);
+      setIsOnline(!isOnline); // Revert on error
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,6 +190,10 @@ export default function DriverDashboard() {
           `)
           .neq('status', 'completed')
           .neq('status', 'cancelled')
+          .neq('status', 'declined')
+          .neq('status', 'offer_accepted')
+          .neq('status', 'in_progress')
+          .is('driver_id', null) // Only show bookings without a driver assigned
           .limit(10);
 
         if (bookingsError) {
@@ -180,7 +289,7 @@ export default function DriverDashboard() {
           .from('offers')
           .select('booking_id')
           .eq('driver_id', user?.id || '')
-          .eq('status', 'accepted');
+          .in('status', ['accepted', 'pending']);
 
         let completedJobsCount = 0;
 
@@ -323,9 +432,16 @@ export default function DriverDashboard() {
                     ? 'bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400'
                     : 'bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-500/10 dark:text-green-400'
                 }`}
-                onClick={() => setIsOnline(!isOnline)}
+                onClick={handleToggleOnline}
               >
                 {isOnline ? 'GO OFFLINE' : 'GO ONLINE'}
+              </button>
+              <button
+                className="w-full mt-3 py-3 rounded-lg text-sm font-bold transition-colors tracking-wide bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 flex items-center justify-center gap-2"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-4 w-4" />
+                SIGN OUT
               </button>
             </div>
 
@@ -408,10 +524,16 @@ export default function DriverDashboard() {
                           </div>
                         </div>
                         <div className="mt-6 flex gap-3">
-                          <button className="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-sm active:scale-[0.98]">
+                          <button 
+                            className="flex-1 bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all shadow-sm active:scale-[0.98]"
+                            onClick={() => handleAcceptBooking(booking.id)}
+                          >
                             ACCEPT
                           </button>
-                          <button className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 font-bold py-3 rounded-lg transition-all">
+                          <button 
+                            className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 font-bold py-3 rounded-lg transition-all"
+                            onClick={() => handleDeclineBooking(booking.id)}
+                          >
                             DECLINE
                           </button>
                         </div>
@@ -474,18 +596,18 @@ export default function DriverDashboard() {
             <Grid3x3 className="h-5 w-5" />
             <span className="text-[10px] font-bold uppercase">Requests</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-slate-400">
+          <Link href="/driver/dashboard?view=history" className="flex flex-col items-center gap-1 text-slate-400">
             <History className="h-5 w-5" />
             <span className="text-[10px] font-bold uppercase">History</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 text-slate-400">
+          </Link>
+          <Link href="/driver/earnings" className="flex flex-col items-center gap-1 text-slate-400">
             <DollarSign className="h-5 w-5" />
             <span className="text-[10px] font-bold uppercase">Earnings</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 text-slate-400">
+          </Link>
+          <Link href="/driver/profile" className="flex flex-col items-center gap-1 text-slate-400">
             <User className="h-5 w-5" />
             <span className="text-[10px] font-bold uppercase">Profile</span>
-          </button>
+          </Link>
         </nav>
       </div>
     </div>

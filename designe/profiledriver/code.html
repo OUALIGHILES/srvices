@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Driver Profile &amp; Verification Status</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#135bec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<!-- Main Container -->
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header / Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-3 lg:px-10">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">local_taxi</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">DriveConnect</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Rides</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Earnings</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary py-1" href="#">Profile</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold leading-none">Johnathan Miller</p>
+<p class="text-xs text-slate-500 mt-1">ID: #DRV-9921</p>
+</div>
+<img class="size-10 rounded-full border-2 border-primary" data-alt="Close up portrait of a male professional driver" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOtPpYJIU53VZNCpGlD4dJRRtxdsVf7tk0xJfMN9fOXPTUHrKJSgn3sY2J8D1QmLXUmfs56G8dY1YdVgYKSQ_QYJkav-XeRdRSxAp7RRrZTRDwqHhVva21lxWa1mBxDHZXcc3-VqTa5_5k_v7yUGwqMyLrjDSe9-YQynf7wexJ9sJPpFeuQGVlbnpR0MrbkgqvDnB8C0CEqL9E4Rgqz2j4p0DM5Bs1_l-QFInhfdwRYhfVX64w8ZArU6FFz3O206BLRwwwT2cJ_DE"/>
+</div>
+</div>
+</header>
+<!-- Page Layout -->
+<main class="flex-1 flex flex-col items-center">
+<div class="w-full max-w-7xl px-4 py-8 lg:px-10">
+<!-- Page Title & Primary Status Badge -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Profile &amp; Verification</h1>
+<p class="text-slate-500 dark:text-slate-400 max-w-lg">Manage your driver identity, vehicle details, and track your platform verification status.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+<span class="material-symbols-outlined text-sm">pending_actions</span>
+<span class="text-sm font-bold uppercase tracking-wider">Pending Approval</span>
+</div>
+<button class="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-bold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">edit</span>
+                            Update Info
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Metrics & Documents -->
+<div class="lg:col-span-8 flex flex-col gap-8">
+<!-- Metric Row -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Cumulative Rating</p>
+<div class="flex items-baseline gap-2 mt-2">
+<h3 class="text-3xl font-black">4.85</h3>
+<span class="text-green-600 text-sm font-bold flex items-center">+0.05 <span class="material-symbols-outlined text-sm">arrow_upward</span></span>
+</div>
+<div class="flex gap-1 mt-2 text-amber-400">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm">star_half</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Trips</p>
+<h3 class="text-3xl font-black mt-2">1,240</h3>
+<p class="text-slate-400 text-xs mt-1 uppercase font-semibold">Gold Tier Driver</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Years Active</p>
+<h3 class="text-3xl font-black mt-2">3.5</h3>
+<p class="text-slate-400 text-xs mt-1 uppercase font-semibold">Since June 2021</p>
+</div>
+</div>
+<!-- Verification Hub -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<h2 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+                                    Verification Checklist
+                                </h2>
+<span class="text-xs font-bold text-slate-500 uppercase tracking-widest">3 of 4 Completed</span>
+</div>
+<div class="p-0">
+<!-- Document Item -->
+<div class="flex items-center justify-between p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 flex items-center justify-center">
+<span class="material-symbols-outlined">badge</span>
+</div>
+<div>
+<p class="font-bold">Driver's License</p>
+<p class="text-sm text-slate-500">Exp: 12/2026 • Verified on Jan 02, 2024</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+</div>
+<!-- Document Item -->
+<div class="flex items-center justify-between p-6 border-t border-slate-100 dark:border-slate-800 bg-amber-50/30 dark:bg-amber-900/10">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div>
+<p class="font-bold">Vehicle Registration</p>
+<p class="text-sm text-slate-500">Document submitted 2 days ago</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold uppercase text-amber-600 tracking-tighter">Under Review</span>
+<span class="material-symbols-outlined text-amber-500">schedule</span>
+</div>
+</div>
+<!-- Document Item -->
+<div class="flex items-center justify-between p-6 border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 flex items-center justify-center">
+<span class="material-symbols-outlined">policy</span>
+</div>
+<div>
+<p class="font-bold">Insurance Certificate</p>
+<p class="text-sm text-slate-500">Current Policy #INS-900-XJ</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+</div>
+<!-- Document Item -->
+<div class="flex items-center justify-between p-6 border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-700">
+<span class="material-symbols-outlined">fingerprint</span>
+</div>
+<div>
+<p class="font-bold">Background Check</p>
+<p class="text-sm text-slate-500">Required annual update</p>
+</div>
+</div>
+<button class="text-xs font-bold text-primary px-3 py-1.5 border border-primary rounded hover:bg-primary hover:text-white transition-all">START NOW</button>
+</div>
+</div>
+</div>
+<!-- Professional Details Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-bold text-lg">Professional Information</h2>
+<button class="text-primary text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">edit</span>
+                                    Edit
+                                </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+<div>
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Full Legal Name</label>
+<p class="text-slate-900 dark:text-white font-medium">Johnathan Alexander Miller</p>
+</div>
+<div>
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Primary Email</label>
+<p class="text-slate-900 dark:text-white font-medium">j.miller.drive@service.com</p>
+</div>
+<div>
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Mobile Phone</label>
+<p class="text-slate-900 dark:text-white font-medium">+1 (555) 234-5678</p>
+</div>
+<div>
+<label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Address</label>
+<p class="text-slate-900 dark:text-white font-medium">1248 Oakwood Dr, Seattle, WA 98101</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Vehicle & Photo -->
+<div class="lg:col-span-4 flex flex-col gap-8">
+<!-- Profile Photo Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 flex flex-col items-center text-center">
+<div class="relative">
+<img class="size-32 rounded-full border-4 border-background-light dark:border-slate-800 shadow-xl" data-alt="Official profile photograph of the driver" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOxipKYHyKiLn1meRHfh1IIhzCSv2MLeBmbrWpKCjl324r0J2o8eJ9u29ICP31TOH-r-Qwy0Zj7JdXDrp4gqPN-mK4UW9nAPFoezWQRdVHT8egrP4Z4_76XZg8eOhO80cymSU78_LHeW8XCQNw06kBwHuHDDbLSv2Z-VQAEMLh9tTNsytmf6JkE-_CCi4LLPmvodqUxfTVO54uWH1siViX2G7lDGSgVYpwwqXjAqSyxSi7vaSuC2X9lB5KKc9XzMcKh_kduFW7eo0"/>
+<button class="absolute bottom-0 right-0 size-10 rounded-full bg-primary text-white border-4 border-white dark:border-slate-900 flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-lg">photo_camera</span>
+</button>
+</div>
+<h3 class="mt-4 text-xl font-bold">Johnathan Miller</h3>
+<p class="text-slate-500 text-sm">Member since 2021</p>
+<div class="mt-6 w-full pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-around">
+<div>
+<p class="text-xs font-bold text-slate-400 uppercase">Points</p>
+<p class="text-lg font-black text-primary">2,450</p>
+</div>
+<div class="w-px bg-slate-100 dark:bg-slate-800"></div>
+<div>
+<p class="text-xs font-bold text-slate-400 uppercase">Rank</p>
+<p class="text-lg font-black text-primary">#12</p>
+</div>
+</div>
+</div>
+<!-- Vehicle Details Card -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="bg-slate-900 p-4 relative overflow-hidden h-32 flex items-end">
+<div class="absolute inset-0 opacity-40 bg-gradient-to-t from-slate-900 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Blue luxury sedan vehicle" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA3EjfxdVUBNPXYqaX9eqa4CprsNSlrbpTbIc8L0vM3a6zJVk2cjSMDXgTRKZiuYIAMFonevaAlL3dQoSUzqEyPGMZ-5OCVJ1ZOzWWkxw3-axNF498th5QtZYfbzFbBi8aPBPOHl1oayfU6KXlZvZVmKOiXRSwKgkMVTa96ZVbsmcmET8bZ6eYq-JcJeF2Qzz4VTgozZ7XHdyv8meKn8JBFAUTDDWl7xhy_BIJAaQdXXRKr7je0uy9cE94Qx3km_FIinI1QVkKRoTY');"></div>
+<div class="relative z-20">
+<p class="text-white text-xs font-bold uppercase tracking-widest opacity-80">Primary Vehicle</p>
+<h4 class="text-white font-black text-xl">Toyota Camry Hybrid</h4>
+</div>
+</div>
+<div class="p-6 flex flex-col gap-4">
+<div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
+<span class="text-sm text-slate-500">License Plate</span>
+<span class="font-bold text-sm bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded uppercase">WA-492-XTY</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
+<span class="text-sm text-slate-500">Year / Color</span>
+<span class="font-bold text-sm">2023 • Midnight Blue</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
+<span class="text-sm text-slate-500">Service Class</span>
+<span class="font-bold text-sm text-primary">Comfort / Green</span>
+</div>
+<button class="mt-2 w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-lg text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                                    Vehicle Documents
+                                </button>
+</div>
+</div>
+<!-- Timeline -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+<h2 class="font-bold text-sm uppercase tracking-widest text-slate-400 mb-6">Application Timeline</h2>
+<div class="relative flex flex-col gap-6">
+<div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
+<div class="relative flex items-start gap-4">
+<div class="size-6 rounded-full bg-green-500 flex items-center justify-center text-white z-10">
+<span class="material-symbols-outlined text-xs">done</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Profile Submitted</p>
+<p class="text-xs text-slate-400">June 12, 2021</p>
+</div>
+</div>
+<div class="relative flex items-start gap-4">
+<div class="size-6 rounded-full bg-green-500 flex items-center justify-center text-white z-10">
+<span class="material-symbols-outlined text-xs">done</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Identity Verified</p>
+<p class="text-xs text-slate-400">June 14, 2021</p>
+</div>
+</div>
+<div class="relative flex items-start gap-4">
+<div class="size-6 rounded-full bg-amber-500 flex items-center justify-center text-white z-10 animate-pulse">
+<span class="material-symbols-outlined text-xs">sync</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-amber-600">Re-Verification</p>
+<p class="text-xs text-slate-400">In Progress (Annual Review)</p>
+</div>
+</div>
+<div class="relative flex items-start gap-4 opacity-30">
+<div class="size-6 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-white z-10">
+<span class="material-symbols-outlined text-xs">done_all</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold">Review Completed</p>
+<p class="text-xs text-slate-400">Expected in 48h</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 px-10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-xs text-slate-500">© 2024 DriveConnect Logistics. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-xs text-slate-500 hover:text-primary" href="#">Safety Policy</a>
+<a class="text-xs text-slate-500 hover:text-primary" href="#">Driver Terms</a>
+<a class="text-xs text-slate-500 hover:text-primary" href="#">Support Center</a>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

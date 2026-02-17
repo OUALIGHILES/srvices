@@ -322,13 +322,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
-    const supabase = createClient()
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
-    
-    // Reset user and profile state after logout
-    setUser(null)
-    setProfile(null)
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+
+      // Reset user and profile state after logout
+      setUser(null)
+      setProfile(null)
+      
+      // Force redirect to login page
+      window.location.href = '/login'
+    } catch (error) {
+      console.error('Error signing out:', error)
+      throw error
+    }
   }
 
   const updateProfile = async (updates: Partial<UserProfile>) => {

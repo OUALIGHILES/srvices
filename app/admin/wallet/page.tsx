@@ -98,31 +98,40 @@ export default function AdminWalletPage() {
 
         // Fetch financial summary using the stored procedure
         const { data: summaryData, error: summaryError } = await supabase.rpc('calculate_financial_summary');
-        
+
         if (summaryError) {
-          console.error('Error fetching financial summary:', summaryError);
-          toast.error('Failed to fetch financial summary');
+          // Provide more specific error message based on error type
+          const errorMessage = summaryError.message || 'Unknown error occurred';
+          console.error('Error fetching financial summary:', errorMessage, summaryError);
           
-          // Fallback calculation if RPC fails
+          // Only show toast for actual errors (not if function simply doesn't exist)
+          if (summaryError.code !== '42883') { // 42883 = undefined_function
+            toast.error('Failed to fetch financial summary');
+          }
+
+          // Fallback calculation if RPC fails or doesn't exist
           const totalBalance = transactionsData?.reduce((sum, t) => sum + (t.gross_amount || 0), 0) || 0;
           const availableForSettle = transactionsData?.filter(t => t.status === 'completed').reduce((sum, t) => sum + (t.driver_amount || 0), 0) || 0;
           const pendingClearance = transactionsData?.filter(t => t.status === 'pending').reduce((sum, t) => sum + (t.gross_amount || 0), 0) || 0;
           const taxProvision = transactionsData?.reduce((sum, t) => sum + (t.company_fee || 0), 0) || 0;
+          const targetPayout = 50000;
+          const fundedPercentage = targetPayout > 0 ? Math.round((totalBalance / targetPayout) * 100) : 0;
 
           setFinancialSummary({
             totalBalance,
             availableForSettle,
             pendingClearance,
             taxProvision,
-            targetPayout: 50000, // Example target
-            fundedPercentage: 0, // Will be calculated below
-            customerPrepaid: 0, // Would need to query customer wallets
-            disputedFunds: 0 // Would need to query disputed transactions
+            targetPayout,
+            fundedPercentage,
+            customerPrepaid: 0,
+            disputedFunds: 0
           });
         } else if (summaryData && summaryData.length > 0) {
           // Calculate funded percentage based on target payout
-          const calculatedFundedPercentage = summaryData[0].target_payout > 0 
-            ? Math.round((summaryData[0].total_balance / summaryData[0].target_payout) * 100) 
+          const targetPayoutValue = Number(summaryData[0].target_payout) || 50000;
+          const calculatedFundedPercentage = targetPayoutValue > 0
+            ? Math.round((Number(summaryData[0].total_balance) / targetPayoutValue) * 100)
             : 0;
 
           setFinancialSummary({
@@ -130,7 +139,7 @@ export default function AdminWalletPage() {
             availableForSettle: Number(summaryData[0].available_for_settle),
             pendingClearance: Number(summaryData[0].pending_clearance),
             taxProvision: Number(summaryData[0].tax_provision),
-            targetPayout: Number(summaryData[0].target_payout),
+            targetPayout: targetPayoutValue,
             fundedPercentage: calculatedFundedPercentage,
             customerPrepaid: Number(summaryData[0].customer_prepaid),
             disputedFunds: Number(summaryData[0].disputed_funds)
@@ -218,13 +227,31 @@ export default function AdminWalletPage() {
 
       // Refresh financial summary
       const { data: summaryData, error: summaryError } = await supabase.rpc('calculate_financial_summary');
-      
+
       if (summaryError) {
         console.error('Error fetching financial summary after settlement:', summaryError);
-        toast.error('Failed to update financial summary after settlement');
+        // Use fallback calculation
+        const totalBalance = transactionsData?.reduce((sum, t) => sum + (t.gross_amount || 0), 0) || 0;
+        const availableForSettle = transactionsData?.filter(t => t.status === 'completed').reduce((sum, t) => sum + (t.driver_amount || 0), 0) || 0;
+        const pendingClearance = transactionsData?.filter(t => t.status === 'pending').reduce((sum, t) => sum + (t.gross_amount || 0), 0) || 0;
+        const taxProvision = transactionsData?.reduce((sum, t) => sum + (t.company_fee || 0), 0) || 0;
+        const targetPayout = 50000;
+        const fundedPercentage = targetPayout > 0 ? Math.round((totalBalance / targetPayout) * 100) : 0;
+
+        setFinancialSummary({
+          totalBalance,
+          availableForSettle,
+          pendingClearance,
+          taxProvision,
+          targetPayout,
+          fundedPercentage,
+          customerPrepaid: 0,
+          disputedFunds: 0
+        });
       } else if (summaryData && summaryData.length > 0) {
-        const calculatedFundedPercentage = summaryData[0].target_payout > 0 
-          ? Math.round((summaryData[0].total_balance / summaryData[0].target_payout) * 100) 
+        const targetPayoutValue = Number(summaryData[0].target_payout) || 50000;
+        const calculatedFundedPercentage = targetPayoutValue > 0
+          ? Math.round((Number(summaryData[0].total_balance) / targetPayoutValue) * 100)
           : 0;
 
         setFinancialSummary({
@@ -232,7 +259,7 @@ export default function AdminWalletPage() {
           availableForSettle: Number(summaryData[0].available_for_settle),
           pendingClearance: Number(summaryData[0].pending_clearance),
           taxProvision: Number(summaryData[0].tax_provision),
-          targetPayout: Number(summaryData[0].target_payout),
+          targetPayout: targetPayoutValue,
           fundedPercentage: calculatedFundedPercentage,
           customerPrepaid: Number(summaryData[0].customer_prepaid),
           disputedFunds: Number(summaryData[0].disputed_funds)
@@ -277,12 +304,31 @@ export default function AdminWalletPage() {
 
             // Refresh financial summary
             const { data: summaryData, error: summaryError } = await supabase.rpc('calculate_financial_summary');
-            
+
             if (summaryError) {
               console.error('Error fetching financial summary after deposit:', summaryError);
+              // Use fallback calculation
+              const totalBalance = transactionsData?.reduce((sum, t) => sum + (t.gross_amount || 0), 0) || 0;
+              const availableForSettle = transactionsData?.filter(t => t.status === 'completed').reduce((sum, t) => sum + (t.driver_amount || 0), 0) || 0;
+              const pendingClearance = transactionsData?.filter(t => t.status === 'pending').reduce((sum, t) => sum + (t.gross_amount || 0), 0) || 0;
+              const taxProvision = transactionsData?.reduce((sum, t) => sum + (t.company_fee || 0), 0) || 0;
+              const targetPayout = 50000;
+              const fundedPercentage = targetPayout > 0 ? Math.round((totalBalance / targetPayout) * 100) : 0;
+
+              setFinancialSummary({
+                totalBalance,
+                availableForSettle,
+                pendingClearance,
+                taxProvision,
+                targetPayout,
+                fundedPercentage,
+                customerPrepaid: 0,
+                disputedFunds: 0
+              });
             } else if (summaryData && summaryData.length > 0) {
-              const calculatedFundedPercentage = summaryData[0].target_payout > 0 
-                ? Math.round((summaryData[0].total_balance / summaryData[0].target_payout) * 100) 
+              const targetPayoutValue = Number(summaryData[0].target_payout) || 50000;
+              const calculatedFundedPercentage = targetPayoutValue > 0
+                ? Math.round((Number(summaryData[0].total_balance) / targetPayoutValue) * 100)
                 : 0;
 
               setFinancialSummary({
@@ -290,7 +336,7 @@ export default function AdminWalletPage() {
                 availableForSettle: Number(summaryData[0].available_for_settle),
                 pendingClearance: Number(summaryData[0].pending_clearance),
                 taxProvision: Number(summaryData[0].tax_provision),
-                targetPayout: Number(summaryData[0].target_payout),
+                targetPayout: targetPayoutValue,
                 fundedPercentage: calculatedFundedPercentage,
                 customerPrepaid: Number(summaryData[0].customer_prepaid),
                 disputedFunds: Number(summaryData[0].disputed_funds)

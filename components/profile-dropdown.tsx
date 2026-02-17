@@ -27,10 +27,12 @@ const ProfileDropdown = () => {
 
   const handleLogout = async () => {
     try {
+      setIsOpen(false);
       await signOut();
-      router.push('/login');
+      // The auth-context now handles the redirect
     } catch (error) {
       console.error('Error logging out:', error);
+      alert('Failed to logout. Please try again.');
     }
   };
 

@@ -93,9 +93,10 @@ export function Header() {
   const handleSignOut = async () => {
     try {
       await signOut()
-      window.location.href = '/login'
+      // The auth-context now handles the redirect
     } catch (error) {
       console.error('Error signing out:', error)
+      alert('Failed to sign out. Please try again.')
     }
   }
 

@@ -25,6 +25,7 @@ export default function DriverEarningsPage() {
   const router = useRouter()
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
+  const [requestingPayout, setRequestingPayout] = useState(false)
   const [stats, setStats] = useState({
     totalEarnings: 0,
     weeklyEarnings: 0,
@@ -40,7 +41,7 @@ export default function DriverEarningsPage() {
 
     const fetchTransactions = async () => {
       const supabase = createClient();
-      
+
       try {
         const { data, error } = await supabase
           .from('transactions')
@@ -80,6 +81,54 @@ export default function DriverEarningsPage() {
 
     fetchTransactions()
   }, [user, profile, router])
+
+  // Handle payout request
+  const handleRequestPayout = async () => {
+    if (!user || !profile) return;
+    
+    const availableBalance = profile.wallet_balance || 0;
+    
+    if (availableBalance <= 0) {
+      alert('No available balance to withdraw');
+      return;
+    }
+
+    setRequestingPayout(true);
+    
+    try {
+      const supabase = createClient();
+      
+      // Create a payout request record
+      const { error } = await supabase
+        .from('payout_requests')
+        .insert([{
+          driver_id: user.id,
+          amount: availableBalance,
+          status: 'pending',
+          requested_at: new Date().toISOString()
+        }]);
+
+      if (error) throw error;
+
+      // Update user wallet balance to 0
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ wallet_balance: 0 })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      alert('Payout request submitted successfully!');
+      
+      // Refresh the page to show updated balance
+      router.refresh();
+    } catch (error: any) {
+      console.error('Error requesting payout:', error);
+      alert('Failed to request payout. Please try again.');
+    } finally {
+      setRequestingPayout(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -146,9 +195,13 @@ export default function DriverEarningsPage() {
           </div>
 
           <div className="flex gap-3">
-            <Button className="flex-1 bg-white text-green-600 hover:bg-green-50">
+            <Button 
+              className="flex-1 bg-white text-green-600 hover:bg-green-50"
+              onClick={handleRequestPayout}
+              disabled={requestingPayout || (profile?.wallet_balance || 0) <= 0}
+            >
               <Download className="h-4 w-4 mr-2" />
-              Request Payout
+              {requestingPayout ? 'Processing...' : 'Request Payout'}
             </Button>
             <Button
               variant="outline"

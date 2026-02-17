@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Active Order Tracking &amp; Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#135bec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body {
+                font-family: 'Inter', sans-serif;
+            }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .map-bg {
+            background-image: radial-gradient(circle at 2px 2px, #e2e8f0 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-3 lg:px-10">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">DriveConnect</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary py-1" href="#">Orders</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Earnings</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Profile</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+</span>
+                ONLINE
+            </div>
+<button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold leading-none">Johnathan Miller</p>
+<p class="text-xs text-slate-500 mt-1">ID: #DRV-9921</p>
+</div>
+<img alt="Driver profile" class="size-10 rounded-full border-2 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOtPpYJIU53VZNCpGlD4dJRRtxdsVf7tk0xJfMN9fOXPTUHrKJSgn3sY2J8D1QmLXUmfs56G8dY1YdVgYKSQ_QYJkav-XeRdRSxAp7RRrZTRDwqHhVva21lxWa1mBxDHZXcc3-VqTa5_5k_v7yUGwqMyLrjDSe9-YQynf7wexJ9sJPpFeuQGVlbnpR0MrbkgqvDnB8C0CEqL9E4Rgqz2j4p0DM5Bs1_l-QFInhfdwRYhfVX64w8ZArU6FFz3O206BLRwwwT2cJ_DE"/>
+</div>
+</div>
+</header>
+<main class="flex-1 flex flex-col items-center">
+<div class="w-full max-w-7xl px-4 py-6 lg:px-10">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<a class="flex items-center justify-center size-10 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">arrow_back</span>
+</a>
+<div>
+<h1 class="text-2xl font-black text-slate-900 dark:text-white">Order #ORD-77219</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Active Journey • Water Delivery</p>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-bold rounded-lg border border-blue-100 dark:border-blue-800">
+                        In Progress
+                    </span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="relative bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden min-h-[500px] shadow-sm border border-slate-200 dark:border-slate-700">
+<div class="absolute inset-0 map-bg bg-slate-50 dark:bg-slate-900/50"></div>
+<svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 500">
+<path d="M150,400 Q300,350 400,250 T650,150" fill="none" stroke="#135bec" stroke-dasharray="12 8" stroke-linecap="round" stroke-width="6"></path>
+<circle cx="150" cy="400" fill="#135bec" r="8"></circle>
+<circle cx="650" cy="150" fill="#ef4444" r="8"></circle>
+</svg>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<button class="size-10 bg-white dark:bg-slate-800 rounded-lg shadow-lg flex items-center justify-center text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="size-10 bg-white dark:bg-slate-800 rounded-lg shadow-lg flex items-center justify-center text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+<button class="flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-black transition-all">
+<span class="material-symbols-outlined">navigation</span>
+                                Start Navigation
+                            </button>
+</div>
+<div class="absolute top-4 right-4 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 min-w-[180px]">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ETA</p>
+<p class="text-xl font-black text-primary">12 Minutes</p>
+<p class="text-xs text-slate-500 mt-1">3.4 km to destination</p>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+<h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-8">Order Journey</h3>
+<div class="relative flex justify-between">
+<div class="absolute top-5 left-0 w-full h-0.5 bg-slate-100 dark:bg-slate-800"></div>
+<div class="absolute top-5 left-0 w-1/3 h-0.5 bg-primary"></div>
+<div class="relative flex flex-col items-center gap-3 z-10 bg-white dark:bg-slate-900 px-4">
+<div class="size-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined text-lg">check</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold text-slate-900 dark:text-white uppercase">Accepted</p>
+<p class="text-[10px] text-slate-500">10:45 AM</p>
+</div>
+</div>
+<div class="relative flex flex-col items-center gap-3 z-10 bg-white dark:bg-slate-900 px-4">
+<div class="size-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined text-lg">local_shipping</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold text-slate-900 dark:text-white uppercase">En Route</p>
+<p class="text-[10px] text-primary font-bold">In Progress</p>
+</div>
+</div>
+<div class="relative flex flex-col items-center gap-3 z-10 bg-white dark:bg-slate-900 px-4">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center border-2 border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-lg">location_on</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold text-slate-400 uppercase">At Location</p>
+<p class="text-[10px] text-slate-400">Pending</p>
+</div>
+</div>
+<div class="relative flex flex-col items-center gap-3 z-10 bg-white dark:bg-slate-900 px-4">
+<div class="size-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center border-2 border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-lg">build</span>
+</div>
+<div class="text-center">
+<p class="text-xs font-bold text-slate-400 uppercase">Service</p>
+<p class="text-[10px] text-slate-400">Next Step</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+<div class="flex items-center gap-4 mb-6">
+<img alt="Customer profile" class="size-16 rounded-xl object-cover shadow-md" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOxipKYHyKiLn1meRHfh1IIhzCSv2MLeBmbrWpKCjl324r0J2o8eJ9u29ICP31TOH-r-Qwy0Zj7JdXDrp4gqPN-mK4UW9nAPFoezWQRdVHT8egrP4Z4_76XZg8eOhO80cymSU78_LHeW8XCQNw06kBwHuHDDbLSv2Z-VQAEMLh9tTNsytmf6JkE-_CCi4LLPmvodqUxfTVO54uWH1siViX2G7lDGSgVYpwwqXjAqSyxSi7vaSuC2X9lB5KKc9XzMcKh_kduFW7eo0"/>
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Sarah Jenkins</h3>
+<div class="flex items-center gap-1 text-amber-500">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="text-sm font-bold">4.9</span>
+<span class="text-xs text-slate-500 font-normal">(24 orders)</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">call</span>
+                                Call
+                            </button>
+<button class="flex items-center justify-center gap-2 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-lg">forum</span>
+                                Message
+                            </button>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+<h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Order Details</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-primary">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold tracking-tighter">Equipment</p>
+<p class="text-sm font-bold">Water Tanker 10t</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-500 uppercase font-bold tracking-tighter">Units</p>
+<p class="text-sm font-bold">1 Unit</p>
+</div>
+</div>
+<div class="h-px bg-slate-100 dark:bg-slate-800 w-full"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<p class="text-sm font-bold">Payment Method</p>
+</div>
+<span class="text-sm font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full">Cash</span>
+</div>
+<div class="h-px bg-slate-100 dark:bg-slate-800 w-full"></div>
+<div class="flex justify-between items-end pt-2">
+<div>
+<p class="text-xs text-slate-500 font-bold uppercase tracking-widest">Total Earnings</p>
+<p class="text-3xl font-black text-slate-900 dark:text-white">$145.00</p>
+</div>
+<div class="text-right pb-1">
+<p class="text-[10px] text-green-600 font-bold">+$12.00 Tip included</p>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-5 bg-primary text-white rounded-2xl font-black text-xl shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        I HAVE ARRIVED
+                    </button>
+<div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 p-6">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-red-500">location_on</span>
+<div>
+<p class="text-xs font-bold text-slate-400 uppercase mb-1">Destination Address</p>
+<p class="text-sm font-medium text-slate-900 dark:text-white">1248 Oakwood Dr, Seattle, WA 98101</p>
+<p class="text-xs text-slate-500 mt-2 italic">"Gate code is 1234, please call when outside."</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-6 px-10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-xs text-slate-500">© 2024 DriveConnect Logistics. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-xs text-slate-500 hover:text-primary" href="#">Safety Policy</a>
+<a class="text-xs text-slate-500 hover:text-primary" href="#">Driver Terms</a>
+<a class="text-xs text-slate-500 hover:text-primary" href="#">Support Center</a>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>
